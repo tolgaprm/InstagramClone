@@ -1,0 +1,1 @@
+/Users/tolgapirim/Android/InstagramClone/buildSrc/build/classes/kotlin/main/ProjectConfig.class

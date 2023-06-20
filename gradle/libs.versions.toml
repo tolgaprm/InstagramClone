@@ -25,6 +25,11 @@ timber_version = "5.0.1"
 firebase_bom_version = "32.1.0"
 play_services_auth_version = "20.5.0"
 google_services_version = "4.3.15"
+accompoints_version= "0.31.4-beta"
+org-jetbrains-kotlin-jvm = "1.8.21"
+com-android-library = "8.1.0-alpha11"
+appcompat = "1.6.1"
+material = "1.9.0"
 
 
 [libraries]
@@ -81,6 +86,9 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 
 # logging
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber_version" }
+# Accompanist
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompoints_version" }
+
 
 # Hilt Gradle Plugin
 hilt-android-gradle-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt_version" }
@@ -94,9 +102,13 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 mockk-agent-android = { group = "io.mockk", name = "mockk-agent-android", version.ref = "mockkVersion" }
 turbine =  { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_version" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
 [bundles]
 

@@ -15,3 +15,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "InstagramClone"
 include(":app")
+include(":home:home_data")
+include(":home:home_presentation")
+include(":core")
+include(":core:core_presentation")
