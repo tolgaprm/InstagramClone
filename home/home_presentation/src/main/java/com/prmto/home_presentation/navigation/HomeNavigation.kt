@@ -6,8 +6,12 @@ import com.prmto.core_presentation.navigation.Screen
 import com.prmto.home_presentation.HomeScreen
 
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeNavigation(
+    onNavigateToMessageScreen: () -> Unit
+) {
     composable(Screen.Home.route) {
-        HomeScreen()
+        HomeScreen(
+            onNavigateToMessageScreen = onNavigateToMessageScreen,
+        )
     }
 }

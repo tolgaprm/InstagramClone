@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.prmto.core_presentation.navigation.Screen
 import com.prmto.instagramclone.navigation.InstagramBottomNavigation
 import com.prmto.instagramclone.navigation.SetupNavigation
 import com.prmto.instagramclone.navigation.rememberBottomNavigationItems
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 bottomNavigationItems = bottomNavigationItems.map {
+                                    if (it.screen == Screen.Share) return@map it.copy(selected = false)
                                     it.copy(selected = it == navigationItem)
                                 }
                             }

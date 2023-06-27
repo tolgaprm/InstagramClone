@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.instagramclone.R
@@ -16,7 +15,6 @@ data class NavigationBottomItem(
     @DrawableRes val unselectedIcon: Int,
     @StringRes val contentDescription: Int
 )
-
 
 val bottomNavigationItems = listOf(
     NavigationBottomItem(
@@ -33,7 +31,7 @@ val bottomNavigationItems = listOf(
         contentDescription = R.string.search
     ),
     NavigationBottomItem(
-        screen = Screen.AddPost,
+        screen = Screen.Share,
         selectedIcon = R.drawable.new_post_selected,
         unselectedIcon = R.drawable.new_post_unselected,
         contentDescription = R.string.add_post

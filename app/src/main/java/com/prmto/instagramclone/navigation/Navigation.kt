@@ -1,35 +1,35 @@
 package com.prmto.instagramclone.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.prmto.core_presentation.navigation.Screen
-import com.prmto.home_presentation.navigation.homeScreen
+import com.prmto.home_presentation.navigation.homeNavigation
+import com.prmto.profile_presentation.navigation.profileNavigation
+import com.prmto.reels_presentation.navigation.reelsNavigation
+import com.prmto.search_presentation.navigation.searchNavigation
+import com.prmto.share_presentation.navigation.shareNavigation
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SetupNavigation(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     NavHost(navController = navController, startDestination = Screen.Home.route) {
-        homeScreen()
+        homeNavigation(
+            onNavigateToMessageScreen = { navController.navigate(Screen.Message.route) },
+        )
+        shareNavigation()
 
-        composable(Screen.Search.route) {
+        profileNavigation()
 
-        }
+        searchNavigation()
 
-        composable(Screen.AddPost.route) {
+        reelsNavigation()
 
-        }
-
-        composable(Screen.Reels.route) {
-
-        }
-
-        composable(Screen.Profile.route) {
-
+        composable(Screen.Message.route) {
         }
     }
 }

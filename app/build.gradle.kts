@@ -58,6 +58,10 @@ dependencies {
     implementation(project(":home:home_data"))
     implementation(project(":home:home_presentation"))
     implementation(project(":core:core_presentation"))
+    implementation(project(":share:share_presentation"))
+    implementation(project(":profile:profile_presentation"))
+    implementation(project(":search:search_presentation"))
+    implementation(project(":reels:reels_presentation"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
