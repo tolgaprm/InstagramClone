@@ -16,14 +16,30 @@ val FontFamily.Companion.SF_PRO: FontFamily
 
 
 val Typography = Typography(
-    bodyMedium = TextStyle(
+    titleSmall = TextStyle(
         fontFamily = FontFamily.SF_PRO,
         fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = FontFamily.SF_PRO,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily.SF_PRO,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 17.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = FontFamily.SF_PRO,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.SF_PRO,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
     ),
 )
