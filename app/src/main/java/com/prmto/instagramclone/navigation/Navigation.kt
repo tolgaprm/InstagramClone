@@ -35,7 +35,8 @@ fun SetupNavigation(
         )
 
         settingNavigation(
-            onNavigateBack = { navController.navigateUp() }
+            onNavigateBack = { navController.navigateUp() },
+            onNavigateToEditProfile = { navController.navigate(Screen.EditProfile.route) }
         )
 
         searchNavigation()

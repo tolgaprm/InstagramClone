@@ -6,11 +6,13 @@ import com.prmto.core_presentation.navigation.Screen
 import com.prmto.setting_presentation.SettingScreen
 
 fun NavGraphBuilder.settingNavigation(
-    onNavigateBack: () -> Unit
+    onNavigateToEditProfile: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     composable(Screen.Settings.route) {
         SettingScreen(
-            onNavigateBack = onNavigateBack
+            onNavigateBack = onNavigateBack,
+            onNavigateToEditProfile = onNavigateToEditProfile
         )
     }
 }

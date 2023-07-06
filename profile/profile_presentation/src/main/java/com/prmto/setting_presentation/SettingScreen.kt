@@ -37,7 +37,8 @@ import com.prmto.setting_presentation.components.SettingSection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToEditProfile: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -68,7 +69,7 @@ fun SettingScreen(
                 SettingItem(
                     imageVector = Icons.Outlined.Edit,
                     settingName = stringResource(id = R.string.edit_profile),
-                    onClickSettingItem = { }
+                    onClickSettingItem = onNavigateToEditProfile
                 )
 
                 SettingItem(
