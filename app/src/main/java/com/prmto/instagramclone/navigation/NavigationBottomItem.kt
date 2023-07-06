@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.instagramclone.R
+import com.prmto.core_presentation.R as coreRes
 
 data class NavigationBottomItem(
     val selected: Boolean = false,
@@ -44,8 +45,8 @@ val bottomNavigationItems = listOf(
     ),
     NavigationBottomItem(
         screen = Screen.Profile,
-        selectedIcon = R.drawable.account,
-        unselectedIcon = R.drawable.account,
+        selectedIcon = coreRes.drawable.account,
+        unselectedIcon = coreRes.drawable.account,
         contentDescription = R.string.profile
     )
 )

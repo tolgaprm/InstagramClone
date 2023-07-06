@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.navigation.Screen
 
 @Composable
@@ -43,11 +44,23 @@ fun InstagramBottomNavigation(
                         onNavigate(navigationItem)
                     },
                     icon = {
-                        Icon(
-                            painter = painterResource(id = setBottomNavigationIcon(navigationItem)),
-                            contentDescription = stringResource(id = navigationItem.contentDescription),
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
+                        if (navigationItem.screen == Screen.Profile) {
+                            CircleProfileImage(
+                                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s",
+                                imageSize = 36.dp,
+                                borderWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(
+                                    id = setBottomNavigationIcon(
+                                        navigationItem
+                                    )
+                                ),
+                                contentDescription = stringResource(id = navigationItem.contentDescription),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     },
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.background,
