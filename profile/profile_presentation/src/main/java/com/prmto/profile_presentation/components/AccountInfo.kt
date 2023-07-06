@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -19,20 +17,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.profile_presentation.R
 import com.prmto.core_presentation.R as CoreR
 
 @Composable
 fun AccountInfo(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickEditProfile: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -43,21 +39,8 @@ fun AccountInfo(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s")
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(CircleShape)
-                    .border(
-                        width = 3.dp,
-                        color = Color.LightGray,
-                        shape = CircleShape
-                    ),
-                contentScale = ContentScale.Crop
+            CircleProfileImage(
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s"
             )
             Statistics()
         }
@@ -66,7 +49,9 @@ fun AccountInfo(
             name = "Jacob",
             bio = "Android Developer"
         )
-        EditProfileButton()
+        EditProfileButton(
+            onClick = onClickEditProfile
+        )
     }
 }
 
@@ -139,7 +124,8 @@ fun AccountNameAndBio(
 
 @Composable
 fun EditProfileButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Button(
         modifier = modifier
@@ -152,7 +138,7 @@ fun EditProfileButton(
                 shape = RoundedCornerShape(6.dp)
             )
             .clip(RoundedCornerShape(6.dp)),
-        onClick = { /*TODO*/ }
+        onClick = onClick
     ) {
         Text(text = stringResource(id = R.string.edit_profile))
     }

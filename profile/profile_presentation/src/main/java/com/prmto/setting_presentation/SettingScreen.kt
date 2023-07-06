@@ -85,7 +85,7 @@ fun SettingScreen(
                     Row {
                         SettingItem(
                             imageVector = Icons.Outlined.Lock,
-                            settingName = "Private Account",
+                            settingName = stringResource(R.string.private_account),
                         )
                     }
 

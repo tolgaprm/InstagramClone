@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.prmto.core_presentation.navigation.Screen
+import com.prmto.edit_profile_presentation.navigation.editProfileNavigation
 import com.prmto.home_presentation.navigation.homeNavigation
 import com.prmto.profile_presentation.navigation.profileNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
@@ -26,6 +27,11 @@ fun SetupNavigation(
 
         profileNavigation(
             onNavigateToSettingScreen = { navController.navigate(Screen.Settings.route) },
+            onNavigateToEditProfileScreen = { navController.navigate(Screen.EditProfile.route) }
+        )
+
+        editProfileNavigation(
+            onPopBackStack = { navController.popBackStack() }
         )
 
         settingNavigation(

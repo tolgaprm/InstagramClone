@@ -14,4 +14,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="saved">Saved</string>
+    <string name="close">Close</string>
+    <string name="change_profile_photo">Change Profile Photo</string>
+    <string name="private_account">Private Account</string>
 </resources>

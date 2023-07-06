@@ -19,7 +19,8 @@ import com.prmto.profile_presentation.components.AccountInfo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    onNavigateToSettingScreen: () -> Unit
+    onNavigateToSettingScreen: () -> Unit,
+    onNavigateToEditProfileScreen: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -43,7 +44,8 @@ fun ProfileScreen(
         },
     ) {
         AccountInfo(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it),
+            onClickEditProfile = onNavigateToEditProfileScreen
         )
     }
 }
