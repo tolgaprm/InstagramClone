@@ -77,7 +77,7 @@ fun Statistics() {
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         StatisticColumn(
-            count = "54",
+            count = "90",
             label = stringResource(R.string.posts)
         )
 

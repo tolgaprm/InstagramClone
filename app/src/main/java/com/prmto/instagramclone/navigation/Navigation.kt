@@ -10,6 +10,7 @@ import com.prmto.home_presentation.navigation.homeNavigation
 import com.prmto.profile_presentation.navigation.profileNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
+import com.prmto.setting_presentation.navigation.settingNavigation
 import com.prmto.share_presentation.navigation.shareNavigation
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -23,7 +24,13 @@ fun SetupNavigation(
         )
         shareNavigation()
 
-        profileNavigation()
+        profileNavigation(
+            onNavigateToSettingScreen = { navController.navigate(Screen.Settings.route) },
+        )
+
+        settingNavigation(
+            onNavigateBack = { navController.navigateUp() }
+        )
 
         searchNavigation()
 

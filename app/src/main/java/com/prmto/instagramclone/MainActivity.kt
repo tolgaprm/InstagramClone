@@ -17,10 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.prmto.core_presentation.navigation.Screen
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.instagramclone.navigation.InstagramBottomNavigation
 import com.prmto.instagramclone.navigation.SetupNavigation
 import com.prmto.instagramclone.navigation.rememberBottomNavigationItems
-import com.prmto.instagramclone.ui.theme.InstagramCloneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

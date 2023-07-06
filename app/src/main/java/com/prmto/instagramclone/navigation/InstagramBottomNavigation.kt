@@ -76,8 +76,7 @@ private fun ShowBottomNavigation(
 ) {
     val currentRoute = currentBackStackEntry?.destination?.route
 
-
-    if (bottomNavigationItems.any { it.screen.route == currentRoute } && currentRoute != Screen.Share.route) {
+    if (bottomNavigationItems.any { it.screen.route == currentRoute } && currentRoute != Screen.Share.route || currentRoute == Screen.Settings.route) {
         content()
     } else {
         return
