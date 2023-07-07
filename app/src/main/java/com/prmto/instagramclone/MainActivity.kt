@@ -40,12 +40,14 @@ class MainActivity : ComponentActivity() {
                             currentBackStackEntry = currentBackStackEntry.value,
                             bottomNavigationItems = bottomNavigationItems,
                             onNavigate = { navigationItem ->
-                                navController.navigate(navigationItem.screen.route) {
+                                navController.navigate(navigationItem.route) {
                                     launchSingleTop = true
                                 }
 
+
+
                                 bottomNavigationItems = bottomNavigationItems.map {
-                                    if (it.screen == Screen.Share) return@map it.copy(selected = false)
+                                    if (it.route == Screen.Share.route) return@map it.copy(selected = false)
                                     it.copy(selected = it == navigationItem)
                                 }
                             }

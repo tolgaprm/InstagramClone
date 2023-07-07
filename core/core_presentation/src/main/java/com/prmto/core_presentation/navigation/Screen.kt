@@ -10,3 +10,8 @@ sealed class Screen(val route: String) {
     object Settings : Screen("settings_screen")
     object Message : Screen("message_screen")
 }
+
+
+sealed class NestedNavigation(val route: String) {
+    object Profile : NestedNavigation("profile_nested_navigation")
+}

@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import com.prmto.core_presentation.components.CircleProfileImage
+import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 
 @Composable
@@ -44,7 +45,7 @@ fun InstagramBottomNavigation(
                         onNavigate(navigationItem)
                     },
                     icon = {
-                        if (navigationItem.screen == Screen.Profile) {
+                        if (navigationItem.route == NestedNavigation.Profile.route) {
                             CircleProfileImage(
                                 imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s",
                                 imageSize = 36.dp,
@@ -89,7 +90,11 @@ private fun ShowBottomNavigation(
 ) {
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    if (bottomNavigationItems.any { it.screen.route == currentRoute } && currentRoute != Screen.Share.route || currentRoute == Screen.Settings.route) {
+    if (bottomNavigationItems.any { it.route == currentRoute } &&
+        currentRoute != Screen.Share.route
+        || currentRoute == Screen.Settings.route
+        || (currentBackStackEntry?.destination?.parent?.route == NestedNavigation.Profile.route && currentRoute != Screen.EditProfile.route)
+    ) {
         content()
     } else {
         return
