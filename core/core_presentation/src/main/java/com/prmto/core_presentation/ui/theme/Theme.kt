@@ -1,4 +1,4 @@
-package com.prmto.instagramclone.ui.theme
+package com.prmto.core_presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

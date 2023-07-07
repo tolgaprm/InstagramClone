@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.home_presentation.navigation.homeNavigation
-import com.prmto.profile_presentation.navigation.profileNavigation
+import com.prmto.navigation.profileNestedNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
 import com.prmto.share_presentation.navigation.shareNavigation
@@ -23,7 +23,12 @@ fun SetupNavigation(
         )
         shareNavigation()
 
-        profileNavigation()
+        profileNestedNavigation(
+            onNavigateToSettingScreen = { navController.navigate(Screen.Settings.route) },
+            onNavigateToEditProfileScreen = { navController.navigate(Screen.EditProfile.route) },
+            onPopBackStack = { navController.popBackStack() },
+            onNavigateBack = { navController.navigateUp() }
+        )
 
         searchNavigation()
 

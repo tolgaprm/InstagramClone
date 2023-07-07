@@ -5,8 +5,16 @@ import androidx.navigation.compose.composable
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.profile_presentation.ProfileScreen
 
-fun NavGraphBuilder.profileNavigation() {
+fun NavGraphBuilder.profileNavigation(
+    onNavigateToSettingScreen: () -> Unit,
+    onNavigateToEditProfileScreen: () -> Unit
+
+) {
     composable(Screen.Profile.route) {
-        ProfileScreen()
+        ProfileScreen(
+            onNavigateToSettingScreen = onNavigateToSettingScreen,
+            onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
+
+        )
     }
 }

@@ -14,6 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import com.prmto.core_presentation.components.CircleProfileImage
+import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 
 @Composable
@@ -43,11 +45,23 @@ fun InstagramBottomNavigation(
                         onNavigate(navigationItem)
                     },
                     icon = {
-                        Icon(
-                            painter = painterResource(id = setBottomNavigationIcon(navigationItem)),
-                            contentDescription = stringResource(id = navigationItem.contentDescription),
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
+                        if (navigationItem.route == NestedNavigation.Profile.route) {
+                            CircleProfileImage(
+                                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s",
+                                imageSize = 36.dp,
+                                borderWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(
+                                    id = setBottomNavigationIcon(
+                                        navigationItem
+                                    )
+                                ),
+                                contentDescription = stringResource(id = navigationItem.contentDescription),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     },
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.background,
@@ -76,8 +90,11 @@ private fun ShowBottomNavigation(
 ) {
     val currentRoute = currentBackStackEntry?.destination?.route
 
-
-    if (bottomNavigationItems.any { it.screen.route == currentRoute } && currentRoute != Screen.Share.route) {
+    if (bottomNavigationItems.any { it.route == currentRoute } &&
+        currentRoute != Screen.Share.route
+        || currentRoute == Screen.Settings.route
+        || (currentBackStackEntry?.destination?.parent?.route == NestedNavigation.Profile.route && currentRoute != Screen.EditProfile.route)
+    ) {
         content()
     } else {
         return

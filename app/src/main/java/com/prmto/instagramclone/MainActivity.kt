@@ -17,10 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.prmto.core_presentation.navigation.Screen
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.instagramclone.navigation.InstagramBottomNavigation
 import com.prmto.instagramclone.navigation.SetupNavigation
 import com.prmto.instagramclone.navigation.rememberBottomNavigationItems
-import com.prmto.instagramclone.ui.theme.InstagramCloneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,12 +40,14 @@ class MainActivity : ComponentActivity() {
                             currentBackStackEntry = currentBackStackEntry.value,
                             bottomNavigationItems = bottomNavigationItems,
                             onNavigate = { navigationItem ->
-                                navController.navigate(navigationItem.screen.route) {
+                                navController.navigate(navigationItem.route) {
                                     launchSingleTop = true
                                 }
 
+
+
                                 bottomNavigationItems = bottomNavigationItems.map {
-                                    if (it.screen == Screen.Share) return@map it.copy(selected = false)
+                                    if (it.route == Screen.Share.route) return@map it.copy(selected = false)
                                     it.copy(selected = it == navigationItem)
                                 }
                             }
