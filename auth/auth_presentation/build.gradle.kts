@@ -1,24 +1,19 @@
 plugins {
-    alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("com.android.library")
+    kotlin("android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
-    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.prmto.instagramclone"
+    namespace = "com.prmto.auth_presentation"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.prmto.instagramclone"
         minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -27,10 +22,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
     compileOptions {
@@ -55,14 +46,7 @@ android {
 
 dependencies {
 
-    implementation(project(":home:home_data"))
-    implementation(project(":home:home_presentation"))
     implementation(project(":core:core_presentation"))
-    implementation(project(":share:share_presentation"))
-    implementation(project(":profile:profile_presentation"))
-    implementation(project(":search:search_presentation"))
-    implementation(project(":reels:reels_presentation"))
-    implementation(project(":auth:auth_presentation"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -87,34 +71,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
-    // coroutines for getting off the UI thread
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.android)
-
-    // Room
-    implementation(libs.room.runtime)
-    annotationProcessor(libs.room.compiler)
-    kapt(libs.room.compiler)
-    implementation(libs.room.ktx)
-
-    // Work Manager
-    implementation(libs.work.runtime.ktx)
-    implementation(libs.hilt.work)
-
-    // DataStore
-    implementation(libs.datastore.preferences)
 
     //Coil
     implementation(libs.coil)
     implementation(libs.coil.svg)
-
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.play.services.auth)
-    implementation(libs.firebase.firestore.ktx)
-
 
     testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
