@@ -33,9 +33,7 @@ fun SetupNavigation(
             onNavigateBack = { navController.navigateUp() }
         )
 
-        authNestedNavigation(
-            onNavigateToLogin = { }
-        )
+        authNestedNavigation(navController = navController)
 
         searchNavigation()
 

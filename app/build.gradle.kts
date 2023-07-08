@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":search:search_presentation"))
     implementation(project(":reels:reels_presentation"))
     implementation(project(":auth:auth_presentation"))
+    implementation(project(":auth:auth_data"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)

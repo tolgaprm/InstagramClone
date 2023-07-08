@@ -15,12 +15,13 @@ import com.prmto.core_presentation.ui.theme.InstaBlue
 fun AuthButton(
     modifier: Modifier = Modifier,
     buttonText: String,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
         modifier = modifier.height(48.dp),
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color.InstaBlue.copy(alpha = 0.5f)),
         colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(

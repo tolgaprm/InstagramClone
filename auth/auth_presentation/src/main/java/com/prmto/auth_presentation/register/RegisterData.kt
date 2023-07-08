@@ -4,7 +4,8 @@ data class RegisterData(
     val selectedTab: SelectedTab = SelectedTab.PHONE_NUMBER,
     val phoneNumber: String = "",
     val email: String = "",
-    val isNextButtonEnabled: Boolean = false
+    val isNextButtonEnabled: Boolean = false,
+    val verificationCodeTextField: String = ""
 )
 
 

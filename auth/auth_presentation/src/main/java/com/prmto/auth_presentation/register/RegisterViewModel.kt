@@ -3,7 +3,13 @@ package com.prmto.auth_presentation.register
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.prmto.auth_presentation.navigation.RegisterScreen
+import com.prmto.core_presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,6 +18,8 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     private val _state = mutableStateOf(RegisterData())
     val state: State<RegisterData> = _state
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
@@ -34,11 +42,20 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             }
 
             RegisterEvent.OnClickNext -> {
-                if (_state.value.isPhoneNumberSelected()) {
-                    registerWithPhone()
-                } else {
-                    registerWithEmail()
+                viewModelScope.launch {
+                    if (state.value.isPhoneNumberSelected()) {
+                        _eventFlow.emit(
+                            UiEvent.Navigate(RegisterScreen.VerifyPhoneNumber.route)
+                        )
+                    } else {
+
+                    }
                 }
+            }
+
+            is RegisterEvent.EnteredVerificationCode -> {
+                _state.value =
+                    _state.value.copy(verificationCodeTextField = event.verificationCode)
             }
         }
     }
@@ -55,9 +72,4 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             isNextButtonEnabled = isEnabled
         )
     }
-
-
-    private fun registerWithPhone() {}
-
-    private fun registerWithEmail() {}
 }

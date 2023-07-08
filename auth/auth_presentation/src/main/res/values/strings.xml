@@ -5,4 +5,7 @@
     <string name="next">Next</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="login">Login</string>
+    <string name="enter_the_verification_code">Enter The Verification Code</string>
+    <string name="we_have_sent_a_verification_code_to">We have sent a verification code to: \n</string>
+    <string name="verification_code">Verification Code</string>
 </resources>
