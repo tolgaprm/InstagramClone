@@ -9,6 +9,7 @@ import com.prmto.auth_presentation.navigation.authNestedNavigation
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.home_presentation.navigation.homeNavigation
+import com.prmto.navigation.ProfileScreen
 import com.prmto.navigation.profileNestedNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
@@ -26,8 +27,8 @@ fun SetupNavigation(
         shareNavigation()
 
         profileNestedNavigation(
-            onNavigateToSettingScreen = { navController.navigate(Screen.Settings.route) },
-            onNavigateToEditProfileScreen = { navController.navigate(Screen.EditProfile.route) },
+            onNavigateToSettingScreen = { navController.navigate(ProfileScreen.Settings.route) },
+            onNavigateToEditProfileScreen = { navController.navigate(ProfileScreen.EditProfile.route) },
             onPopBackStack = { navController.popBackStack() },
             onNavigateBack = { navController.navigateUp() }
         )

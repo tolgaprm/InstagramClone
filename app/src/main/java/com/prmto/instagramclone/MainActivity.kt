@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(navigationItem.route) {
                                     launchSingleTop = true
                                 }
-                                
+
                                 bottomNavigationItems = bottomNavigationItems.map {
                                     if (it.route == Screen.Share.route) return@map it.copy(selected = false)
                                     it.copy(selected = it == navigationItem)

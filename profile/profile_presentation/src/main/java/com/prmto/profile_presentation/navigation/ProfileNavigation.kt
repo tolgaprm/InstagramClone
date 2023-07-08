@@ -2,7 +2,7 @@ package com.prmto.profile_presentation.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.prmto.core_presentation.navigation.Screen
+import com.prmto.navigation.ProfileScreen
 import com.prmto.profile_presentation.ProfileScreen
 
 fun NavGraphBuilder.profileNavigation(
@@ -10,7 +10,7 @@ fun NavGraphBuilder.profileNavigation(
     onNavigateToEditProfileScreen: () -> Unit
 
 ) {
-    composable(Screen.Profile.route) {
+    composable(ProfileScreen.Profile.route) {
         ProfileScreen(
             onNavigateToSettingScreen = onNavigateToSettingScreen,
             onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
