@@ -9,9 +9,11 @@ sealed class Screen(val route: String) {
     object EditProfile : Screen("edit_profile_screen")
     object Settings : Screen("settings_screen")
     object Message : Screen("message_screen")
+    object Register : Screen("register_screen")
 }
 
 
 sealed class NestedNavigation(val route: String) {
     object Profile : NestedNavigation("profile_nested_navigation")
+    object Auth : NestedNavigation("auth_nested_navigation")
 }

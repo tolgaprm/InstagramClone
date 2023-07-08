@@ -48,6 +48,7 @@ dependencies {
 
     implementation(project(":core:core_presentation"))
 
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
