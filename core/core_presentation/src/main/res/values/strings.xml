@@ -3,4 +3,5 @@
     <string name="logo">logo</string>
 
     <string name="notifications">Notifications</string>
+    <string name="error_unknown">Unknown Error</string>
 </resources>

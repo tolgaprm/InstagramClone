@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":reels:reels_presentation"))
     implementation(project(":auth:auth_presentation"))
     implementation(project(":auth:auth_data"))
+    implementation(project(":auth:auth_domain"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
