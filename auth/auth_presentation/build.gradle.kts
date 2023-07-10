@@ -47,6 +47,8 @@ android {
 dependencies {
 
     implementation(project(":core:core_presentation"))
+    implementation(project(":auth:auth_domain"))
+
 
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.core.ktx)

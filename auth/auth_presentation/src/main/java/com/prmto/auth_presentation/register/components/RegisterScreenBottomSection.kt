@@ -43,7 +43,7 @@ fun RegisterScreenBottomSection(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.login),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.small)
                     .clickable {
