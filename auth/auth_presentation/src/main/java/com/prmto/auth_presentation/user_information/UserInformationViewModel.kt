@@ -4,17 +4,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.prmto.auth_domain.register.model.UserData
+import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_presentation.util.Error
 import com.prmto.core_presentation.util.TextFieldError
 import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val createUserWithEmailAndPasswordUseCase: CreateUserWithEmailAndPasswordUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserInfoData())
@@ -61,7 +65,20 @@ class UserInformationViewModel @Inject constructor(
                     state.value.usernameTextField.isErrorNull() &&
                     state.value.passwordTextField.isErrorNull()
                 ) {
-
+                    createUserWithEmailAndPasswordUseCase(
+                        userData = UserData(
+                            email = state.value.email,
+                            fullName = state.value.fullNameTextField.text,
+                            username = state.value.usernameTextField.text,
+                            password = state.value.passwordTextField.text
+                        ),
+                        onSuccess = {
+                            Timber.d("User created successfully")
+                        },
+                        onError = {
+                            Timber.d("Error creating user: $it")
+                        }
+                    )
                 }
             }
         }
