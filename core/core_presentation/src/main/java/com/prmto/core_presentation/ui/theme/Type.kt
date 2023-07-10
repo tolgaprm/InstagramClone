@@ -16,6 +16,11 @@ val FontFamily.Companion.SF_PRO: FontFamily
 
 
 val Typography = Typography(
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.SF_PRO,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp
+    ),
     titleSmall = TextStyle(
         fontFamily = FontFamily.SF_PRO,
         fontWeight = FontWeight.SemiBold,
