@@ -1,5 +1,6 @@
 package com.prmto.auth_presentation.register
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -93,8 +94,8 @@ class RegisterViewModel @Inject constructor(
         )
     }
 
-
-    private fun isNextButtonEnabled() {
+    @VisibleForTesting
+    fun isNextButtonEnabled() {
         val isEnabled = if (state.value.isPhoneNumberSelected()) {
             state.value.phoneNumberTextField.text.isNotBlank() && state.value.phoneNumberTextField.text.length == 10
         } else {
