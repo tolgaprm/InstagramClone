@@ -26,7 +26,10 @@ fun NavGraphBuilder.authNestedNavigation(
             arguments = RegisterScreen.UserInformation.arguments
         ) {
             val viewModel = hiltViewModel<UserInformationViewModel>()
-            UserInformationScreen()
+            UserInformationScreen(
+                userInfoData = viewModel.state.value,
+                onEvent = viewModel::onEvent
+            )
         }
     }
 }

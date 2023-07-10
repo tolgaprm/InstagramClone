@@ -62,18 +62,18 @@ fun RegisterScreen(
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = registerData.phoneNumber,
                     onValueChange = {
                         onEvent(RegisterEvent.EnteredPhoneNumber(it))
                     },
                     label = stringResource(id = R.string.phone_number),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    textFieldState = registerData.phoneNumberTextField
                 )
             } else {
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = registerData.email,
+                    textFieldState = registerData.emailTextField,
                     onValueChange = {
                         onEvent(RegisterEvent.EnteredEmail(it))
                     },

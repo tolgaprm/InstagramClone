@@ -1,9 +1,11 @@
 package com.prmto.auth_presentation.register
 
+import com.prmto.core_presentation.util.TextFieldState
+
 data class RegisterData(
     val selectedTab: SelectedTab = SelectedTab.PHONE_NUMBER,
-    val phoneNumber: String = "",
-    val email: String = "",
+    val phoneNumberTextField: TextFieldState = TextFieldState(),
+    val emailTextField: TextFieldState = TextFieldState(),
     val isNextButtonEnabled: Boolean = false,
     val verificationCodeTextField: String = ""
 )

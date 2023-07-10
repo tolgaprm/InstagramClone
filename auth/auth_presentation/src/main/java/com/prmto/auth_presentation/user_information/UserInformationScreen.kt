@@ -18,7 +18,10 @@ import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 
 @Composable
-fun UserInformationScreen() {
+fun UserInformationScreen(
+    userInfoData: UserInfoData,
+    onEvent: (UserInfoEvents) -> Unit
+) {
 
     Column(
         modifier = Modifier
@@ -38,35 +41,36 @@ fun UserInformationScreen() {
         AuthTextField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.name_and_surname),
-            value = "",
+            textFieldState = userInfoData.fullNameTextField,
             onValueChange = {
-
+                onEvent(UserInfoEvents.EnterFullName(it))
             }
         )
 
         AuthTextField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.username),
-            value = "",
+            textFieldState = userInfoData.usernameTextField,
             onValueChange = {
-
+                onEvent(UserInfoEvents.EnterUsername(it))
             }
         )
 
         AuthTextField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.password),
-            value = "",
+            textFieldState = userInfoData.passwordTextField,
             onValueChange = {
-
+                onEvent(UserInfoEvents.EnterPassword(it))
             }
         )
 
         AuthButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonText = stringResource(R.string.register)
-        ) {
-
-        }
+            buttonText = stringResource(R.string.register),
+            onClick = {
+                onEvent(UserInfoEvents.Register)
+            }
+        )
     }
 }

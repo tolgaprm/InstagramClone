@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
+import com.prmto.core_presentation.util.TextFieldState
 
 @Composable
 fun VerifyPhoneNumberScreen(
@@ -55,7 +56,9 @@ fun VerifyPhoneNumberScreen(
         AuthTextField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.verification_code),
-            value = verificationCodeValue,
+            textFieldState = TextFieldState(
+                text = verificationCodeValue
+            ),
             onValueChange = {
                 onEvent(RegisterEvent.EnteredVerificationCode(it))
             }

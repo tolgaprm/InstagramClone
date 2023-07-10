@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.prmto.auth_presentation.util.Constants
+import com.prmto.core_presentation.util.Error
+import com.prmto.core_presentation.util.TextFieldError
+import com.prmto.core_presentation.util.isBlank
+import com.prmto.core_presentation.util.isErrorNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class UserInformationViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserInfoData())
@@ -22,11 +26,84 @@ class UserInformationViewModel @Inject constructor(
                 email = email
             )
         }
+    }
 
-        savedStateHandle.get<String>(Constants.UserInfoPhoneArgumentName)?.let { phoneNumber ->
-            _state.value = state.value.copy(
-                phoneNumber = phoneNumber
+    fun onEvent(event: UserInfoEvents) {
+        when (event) {
+            is UserInfoEvents.EnterFullName -> {
+                updateFullName(fullName = event.fullName)
+            }
+
+            is UserInfoEvents.EnterUsername -> {
+                updateUsername(username = event.username)
+            }
+
+            is UserInfoEvents.EnterPassword -> {
+                updatePassword(password = event.password)
+            }
+
+            is UserInfoEvents.Register -> {
+                updateFullName(
+                    fullName = state.value.fullNameTextField.text,
+                    error = state.value.fullNameTextField.isBlank()
+                )
+                updateUsername(
+                    username = state.value.usernameTextField.text,
+                    error = state.value.usernameTextField.isBlank()
+                )
+
+                updatePassword(
+                    password = state.value.passwordTextField.text,
+                    error = validatePassword(state.value.passwordTextField.text)
+                )
+
+                if (state.value.fullNameTextField.isErrorNull() &&
+                    state.value.usernameTextField.isErrorNull() &&
+                    state.value.passwordTextField.isErrorNull()
+                ) {
+
+                }
+            }
+        }
+    }
+
+    private fun updateFullName(fullName: String, error: Error? = null) {
+        _state.value = state.value.copy(
+            fullNameTextField = state.value.fullNameTextField.copy(
+                text = fullName, error = error
             )
+        )
+    }
+
+    private fun updateUsername(username: String, error: Error? = null) {
+        _state.value = state.value.copy(
+            usernameTextField = state.value.usernameTextField.copy(
+                text = username, error = error
+            )
+        )
+    }
+
+    private fun updatePassword(password: String, error: Error? = null) {
+        _state.value = state.value.copy(
+            passwordTextField = state.value.passwordTextField.copy(
+                text = password, error = error
+            )
+        )
+    }
+
+    private fun validatePassword(password: String): Error? {
+        return when {
+            password.isBlank() -> {
+                TextFieldError.Empty
+            }
+
+            password.length < 6 -> {
+                TextFieldError.PasswordInvalid
+            }
+
+            else -> {
+                null
+            }
         }
     }
 }

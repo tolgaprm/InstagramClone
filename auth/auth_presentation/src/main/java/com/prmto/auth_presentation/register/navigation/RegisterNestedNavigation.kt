@@ -57,7 +57,7 @@ fun NavGraphBuilder.registerNestedNavigation(
         composable(RegisterScreen.VerifyPhoneNumber.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
             VerifyPhoneNumberScreen(
-                phoneNumber = viewModel.state.value.phoneNumber,
+                phoneNumber = viewModel.state.value.phoneNumberTextField.text,
                 verificationCodeValue = viewModel.state.value.verificationCodeTextField,
                 onEvent = viewModel::onEvent
             )
