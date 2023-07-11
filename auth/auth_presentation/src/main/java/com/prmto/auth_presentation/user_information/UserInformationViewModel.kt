@@ -4,15 +4,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.register.model.UserData
 import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_presentation.util.Error
 import com.prmto.core_presentation.util.TextFieldError
+import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_presentation.util.UiText
 import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +28,10 @@ class UserInformationViewModel @Inject constructor(
 
     private val _state = mutableStateOf(UserInfoData())
     val state: State<UserInfoData> = _state
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
 
     init {
         savedStateHandle.get<String>(Constants.UserInfoEmailArgumentName)?.let { email ->
@@ -44,6 +53,14 @@ class UserInformationViewModel @Inject constructor(
 
             is UserInfoEvents.EnterPassword -> {
                 updatePassword(password = event.password)
+            }
+
+            is UserInfoEvents.TogglePasswordVisibility -> {
+                _state.value = state.value.copy(
+                    passwordTextField = state.value.passwordTextField.copy(
+                        isPasswordVisible = !state.value.passwordTextField.isPasswordVisible
+                    )
+                )
             }
 
             is UserInfoEvents.Register -> {
@@ -73,10 +90,14 @@ class UserInformationViewModel @Inject constructor(
                             password = state.value.passwordTextField.text
                         ),
                         onSuccess = {
-                            Timber.d("User created successfully")
+                            viewModelScope.launch {
+                                _eventFlow.emit(UiEvent.ShowMessage(UiText.DynamicString("User created successfully")))
+                            }
                         },
                         onError = {
-                            Timber.d("Error creating user: $it")
+                            viewModelScope.launch {
+                                _eventFlow.emit(UiEvent.ShowMessage(UiText.DynamicString("Error creating user: $it")))
+                            }
                         }
                     )
                 }
@@ -100,7 +121,10 @@ class UserInformationViewModel @Inject constructor(
         )
     }
 
-    private fun updatePassword(password: String, error: Error? = null) {
+    private fun updatePassword(
+        password: String,
+        error: Error? = null
+    ) {
         _state.value = state.value.copy(
             passwordTextField = state.value.passwordTextField.copy(
                 text = password, error = error

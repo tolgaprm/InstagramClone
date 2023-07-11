@@ -59,9 +59,12 @@ fun UserInformationScreen(
         AuthTextField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.password),
-            textFieldState = userInfoData.passwordTextField,
+            passwordTextFieldState = userInfoData.passwordTextField,
             onValueChange = {
                 onEvent(UserInfoEvents.EnterPassword(it))
+            },
+            onTogglePasswordVisibility = {
+                onEvent(UserInfoEvents.TogglePasswordVisibility)
             }
         )
 

@@ -5,4 +5,5 @@ sealed class UserInfoEvents {
     data class EnterUsername(val username: String) : UserInfoEvents()
     data class EnterPassword(val password: String) : UserInfoEvents()
     object Register : UserInfoEvents()
+    object TogglePasswordVisibility : UserInfoEvents()
 }
