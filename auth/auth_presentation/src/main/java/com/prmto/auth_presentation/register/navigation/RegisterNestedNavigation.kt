@@ -11,9 +11,9 @@ import com.prmto.auth_presentation.navigation.RegisterScreen
 import com.prmto.auth_presentation.register.RegisterScreen
 import com.prmto.auth_presentation.register.RegisterViewModel
 import com.prmto.auth_presentation.register.VerifyPhoneNumberScreen
+import com.prmto.core_domain.util.asString
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.core_presentation.util.asString
 import com.prmto.core_presentation.util.sharedViewModel
 import kotlinx.coroutines.flow.collectLatest
 

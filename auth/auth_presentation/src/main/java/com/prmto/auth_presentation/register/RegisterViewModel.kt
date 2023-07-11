@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.usecase.RegisterUseCases
 import com.prmto.auth_presentation.navigation.RegisterScreen
-import com.prmto.core_presentation.util.TextFieldError
+import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.util.TextFieldState
 import com.prmto.core_presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

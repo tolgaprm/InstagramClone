@@ -3,7 +3,7 @@ package com.prmto.auth_presentation.register
 import com.google.common.truth.Truth.assertThat
 import com.prmto.auth_domain.usecase.RegisterUseCases
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
-import com.prmto.core_presentation.util.TextFieldError
+import com.prmto.auth_presentation.util.MainDispatcherRule
 import com.prmto.core_presentation.util.TextFieldState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -98,7 +98,7 @@ class RegisterViewModelTest {
         assertThat(
             viewModel.state.value.emailTextField.error
         ).isEqualTo(
-            TextFieldError.EmailInvalid
+            com.prmto.core_domain.util.TextFieldError.EmailInvalid
         )
     }
 

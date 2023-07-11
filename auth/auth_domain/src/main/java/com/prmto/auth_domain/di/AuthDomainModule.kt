@@ -1,7 +1,11 @@
 package com.prmto.auth_domain.di
 
+import com.prmto.auth_domain.register.repository.RegisterRepository
+import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
 import com.prmto.auth_domain.usecase.RegisterUseCases
+import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
+import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +21,17 @@ object AuthDomainModule {
     fun provideRegisterUseCases(): RegisterUseCases {
         return RegisterUseCases(
             ValidateEmailUseCase()
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUserInformationUseCases(
+        repository: RegisterRepository
+    ): UserInformationUseCases {
+        return UserInformationUseCases(
+            validatePassword = ValidatePasswordUseCase(),
+            createUserWithEmailAndPassword = CreateUserWithEmailAndPasswordUseCase(repository)
         )
     }
 }

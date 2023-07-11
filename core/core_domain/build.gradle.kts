@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.prmto.auth_domain"
+    namespace = "com.prmto.core_domain"
     compileSdk = 33
 
     defaultConfig {
@@ -39,8 +39,6 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
-
-    implementation(project(":core:core_domain"))
 
     implementation(libs.core.ktx)
 

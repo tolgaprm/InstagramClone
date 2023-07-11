@@ -11,9 +11,9 @@ import androidx.navigation.navigation
 import com.prmto.auth_presentation.register.navigation.registerNestedNavigation
 import com.prmto.auth_presentation.user_information.UserInformationScreen
 import com.prmto.auth_presentation.user_information.UserInformationViewModel
+import com.prmto.core_domain.util.asString
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.core_presentation.util.asString
 import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.authNestedNavigation(

@@ -53,6 +53,7 @@ fun AuthTextField(
     onTogglePasswordVisibility: () -> Unit = {},
 ) {
 
+
     var visualTransformation by remember {
         mutableStateOf(
             VisualTransformation.None

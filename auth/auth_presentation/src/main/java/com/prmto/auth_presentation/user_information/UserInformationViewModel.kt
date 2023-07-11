@@ -6,12 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.register.model.UserData
-import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
+import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_presentation.util.Constants
-import com.prmto.core_presentation.util.Error
-import com.prmto.core_presentation.util.TextFieldError
+import com.prmto.core_domain.util.Error
+import com.prmto.core_domain.util.UiText
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.core_presentation.util.UiText
 import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val createUserWithEmailAndPasswordUseCase: CreateUserWithEmailAndPasswordUseCase
+    private val userInformationUseCases: UserInformationUseCases,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserInfoData())
@@ -75,14 +74,14 @@ class UserInformationViewModel @Inject constructor(
 
                 updatePassword(
                     password = state.value.passwordTextField.text,
-                    error = validatePassword(state.value.passwordTextField.text)
+                    error = userInformationUseCases.validatePassword(state.value.passwordTextField.text)
                 )
 
                 if (state.value.fullNameTextField.isErrorNull() &&
                     state.value.usernameTextField.isErrorNull() &&
                     state.value.passwordTextField.isErrorNull()
                 ) {
-                    createUserWithEmailAndPasswordUseCase(
+                    userInformationUseCases.createUserWithEmailAndPassword(
                         userData = UserData(
                             email = state.value.email,
                             fullName = state.value.fullNameTextField.text,
@@ -130,21 +129,5 @@ class UserInformationViewModel @Inject constructor(
                 text = password, error = error
             )
         )
-    }
-
-    private fun validatePassword(password: String): Error? {
-        return when {
-            password.isBlank() -> {
-                TextFieldError.Empty
-            }
-
-            password.length < 6 -> {
-                TextFieldError.PasswordInvalid
-            }
-
-            else -> {
-                null
-            }
-        }
     }
 }

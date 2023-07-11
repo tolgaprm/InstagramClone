@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.register
+package com.prmto.auth_presentation.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

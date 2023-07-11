@@ -1,6 +1,6 @@
-package com.prmto.core_presentation.util
+package com.prmto.core_domain.util
 
-import com.prmto.core_presentation.R
+import com.prmto.core_domain.R
 
 abstract class Error(open val message: UiText? = null)
 
