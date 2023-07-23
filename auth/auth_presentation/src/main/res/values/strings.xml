@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="next">Next</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="login">Login</string>
+    <string name="enter_the_verification_code">Enter The Verification Code</string>
+    <string name="we_have_sent_a_verification_code_to">We have sent a verification code to: \n</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address</string>
+    <string name="user_information">User Information</string>
+    <string name="name_and_surname">Name and Surname</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="user_created_successfully">User created successfully</string>
+</resources>
