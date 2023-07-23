@@ -6,10 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.register.model.UserData
-import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_domain.util.Error
+import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_domain.util.UiText
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
@@ -25,7 +25,6 @@ import javax.inject.Inject
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val userInformationUseCases: UserInformationUseCases,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserInfoData())
@@ -98,23 +97,19 @@ class UserInformationViewModel @Inject constructor(
                 username = state.value.usernameTextField.text,
                 password = state.value.passwordTextField.text
             )
-            userInformationUseCases.createUserWithEmailAndPassword(
-                userData = userData,
-                onSuccess = { userUID ->
-                    saveUserInfoToDatabase(userData, userUID)
-                },
-                onError = { error ->
-                    emitUIEvent {
-                        UiEvent.ShowMessage(
-                            uiText = UiText.DynamicString(
-                                value = error
-                            )
-                        )
-                    }
-                    _state.value = state.value.copy(isRegistering = false)
 
+            checkIfExistAUserWithTheSameUsername {
+                if (it) {
+                    _state.value = state.value.copy(
+                        isRegistering = false,
+                        usernameTextField = state.value.usernameTextField.copy(
+                            error = TextFieldError.UsernameAlreadyExists
+                        )
+                    )
+                } else {
+                    createUserWithEmailAndPassword(userData = userData)
                 }
-            )
+            }
         }
     }
 
@@ -122,7 +117,7 @@ class UserInformationViewModel @Inject constructor(
         userData: UserData,
         userUID: String
     ) {
-        userRepository.saveUser(
+        userInformationUseCases.saveUserToDatabase(
             userData = userData,
             userUid = userUID,
             onSuccess = {
@@ -142,6 +137,52 @@ class UserInformationViewModel @Inject constructor(
                     )
                 }
                 _state.value = state.value.copy(isRegistering = false)
+            }
+        )
+    }
+
+    private fun checkIfExistAUserWithTheSameUsername(
+        onCompleted: (Boolean) -> Unit
+    ) {
+        userInformationUseCases.getUsers(
+            onSuccess = {
+                val result = it.map {
+                    it.username == state.value.usernameTextField.text
+                }.find { true }
+
+                onCompleted(result ?: false)
+            },
+            onError = { error ->
+                emitUIEvent {
+                    UiEvent.ShowMessage(
+                        uiText = UiText.DynamicString(
+                            value = error
+                        )
+                    )
+                }
+            }
+        )
+    }
+
+    private fun createUserWithEmailAndPassword(userData: UserData) {
+        userInformationUseCases.createUserWithEmailAndPassword(
+            userData = userData,
+            onSuccess = { userUID ->
+                saveUserInfoToDatabase(
+                    userData = userData,
+                    userUID = userUID
+                )
+            },
+            onError = { error ->
+                emitUIEvent {
+                    UiEvent.ShowMessage(
+                        uiText = UiText.DynamicString(
+                            value = error
+                        )
+                    )
+                }
+                _state.value = state.value.copy(isRegistering = false)
+
             }
         )
     }

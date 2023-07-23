@@ -1,8 +1,11 @@
 package com.prmto.auth_domain.di
 
 import com.prmto.auth_domain.repository.AuthRepository
+import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
+import com.prmto.auth_domain.usecase.GetUsersUseCase
 import com.prmto.auth_domain.usecase.RegisterUseCases
+import com.prmto.auth_domain.usecase.SaveUserToDatabaseUseCase
 import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
@@ -27,11 +30,14 @@ object AuthDomainModule {
     @Provides
     @ViewModelScoped
     fun provideUserInformationUseCases(
-        repository: AuthRepository
+        repository: AuthRepository,
+        userRepository: UserRepository
     ): UserInformationUseCases {
         return UserInformationUseCases(
             validatePassword = ValidatePasswordUseCase(),
-            createUserWithEmailAndPassword = CreateUserWithEmailAndPasswordUseCase(repository)
+            createUserWithEmailAndPassword = CreateUserWithEmailAndPasswordUseCase(repository),
+            saveUserToDatabase = SaveUserToDatabaseUseCase(userRepository),
+            getUsers = GetUsersUseCase(userRepository)
         )
     }
 }

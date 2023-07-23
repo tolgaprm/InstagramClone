@@ -17,4 +17,8 @@ sealed class TextFieldError(override val message: UiText) : Error() {
     object PasswordInvalid : TextFieldError(
         message = UiText.StringResource(R.string.password_invalid_field)
     )
+
+    object UsernameAlreadyExists : TextFieldError(
+        message = UiText.StringResource(R.string.username_already_exists)
+    )
 }

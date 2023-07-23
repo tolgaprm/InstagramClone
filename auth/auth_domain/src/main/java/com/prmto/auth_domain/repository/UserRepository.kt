@@ -10,4 +10,9 @@ interface UserRepository {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
+
+    fun getUsers(
+        onSuccess: (List<UserData>) -> Unit,
+        onError: (String) -> Unit
+    )
 }

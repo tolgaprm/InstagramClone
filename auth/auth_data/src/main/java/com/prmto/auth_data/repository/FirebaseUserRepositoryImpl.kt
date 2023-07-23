@@ -23,4 +23,19 @@ class FirebaseUserRepositoryImpl @Inject constructor(
                 onError(it.localizedMessage ?: "Unknown error")
             }
     }
+
+    override fun getUsers(
+        onSuccess: (List<UserData>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        firebaseFirestore.collection("Users")
+            .get()
+            .addOnSuccessListener { result ->
+                val users = result.toObjects(UserData::class.java)
+                onSuccess(users)
+            }
+            .addOnFailureListener { exception ->
+                onError(exception.localizedMessage ?: "Unknown error")
+            }
+    }
 }
