@@ -19,8 +19,9 @@ import com.prmto.share_presentation.navigation.shareNavigation
 @Composable
 fun SetupNavigation(
     navController: NavHostController,
+    startDestination: String
 ) {
-    NavHost(navController = navController, startDestination = NestedNavigation.Auth.route) {
+    NavHost(navController = navController, startDestination = startDestination) {
         homeNavigation(
             onNavigateToMessageScreen = { navController.navigate(Screen.Message.route) },
         )

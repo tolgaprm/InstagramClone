@@ -1,6 +1,5 @@
 package com.prmto.auth_data.di
 
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.prmto.auth_data.repository.FirebaseAuthRepositoryImpl
@@ -16,13 +15,6 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 object AuthDataModule {
-    @Provides
-    @ViewModelScoped
-    fun provideFirebaseAuth(
-        firebaseApp: FirebaseApp
-    ): FirebaseAuth {
-        return FirebaseAuth.getInstance(firebaseApp)
-    }
 
     @Provides
     @ViewModelScoped

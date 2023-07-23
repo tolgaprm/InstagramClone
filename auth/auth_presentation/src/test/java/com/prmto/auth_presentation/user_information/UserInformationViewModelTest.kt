@@ -2,7 +2,7 @@ package com.prmto.auth_presentation.user_information
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
-import com.prmto.auth_domain.register.repository.RegisterRepository
+import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
 import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
@@ -38,13 +38,14 @@ class UserInformationViewModelTest {
         userInformationUseCases = UserInformationUseCases(
             validatePassword = ValidatePasswordUseCase(),
             createUserWithEmailAndPassword = CreateUserWithEmailAndPasswordUseCase(
-                mockk<RegisterRepository>(relaxed = true),
+                mockk<AuthRepository>(relaxed = true),
             )
         )
 
         viewModel = UserInformationViewModel(
             savedStateHandle = savedStateHandle,
-            userInformationUseCases = userInformationUseCases
+            userInformationUseCases = userInformationUseCases,
+            userRepository = mockk(relaxed = true)
         )
     }
 

@@ -16,15 +16,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.prmto.core_domain.repository.FirebaseAuthCore
+import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.instagramclone.navigation.InstagramBottomNavigation
 import com.prmto.instagramclone.navigation.SetupNavigation
 import com.prmto.instagramclone.navigation.rememberBottomNavigationItems
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var firebaseAuthCore: FirebaseAuthCore
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +60,14 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     SetSystemBarColor()
-                    SetupNavigation(navController = navController)
+                    val startDestination = firebaseAuthCore.currentUser()?.let {
+                        Screen.Home.route
+                    } ?: NestedNavigation.Auth.route
+
+                    SetupNavigation(
+                        navController = navController,
+                        startDestination = startDestination
+                    )
                 }
             }
         }

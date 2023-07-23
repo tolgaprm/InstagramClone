@@ -59,6 +59,7 @@ dependencies {
     implementation(project(":home:home_presentation"))
     implementation(project(":core:core_presentation"))
     implementation(project(":core:core_domain"))
+    implementation(project(":core:core_data"))
     implementation(project(":share:share_presentation"))
     implementation(project(":profile:profile_presentation"))
     implementation(project(":search:search_presentation"))
