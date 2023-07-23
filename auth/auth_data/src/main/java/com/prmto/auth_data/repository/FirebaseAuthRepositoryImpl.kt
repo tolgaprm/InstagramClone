@@ -1,26 +1,27 @@
 package com.prmto.auth_data.repository
 
 import com.google.firebase.auth.FirebaseAuth
-import com.prmto.auth_domain.register.model.UserData
-import com.prmto.auth_domain.register.repository.RegisterRepository
+import com.prmto.auth_domain.repository.AuthRepository
 
-class FirebaseRegisterRepositoryImpl(
+class FirebaseAuthRepositoryImpl(
     private val auth: FirebaseAuth,
-) : RegisterRepository {
+) : AuthRepository {
     override fun createUserWithEmailAndPassword(
-        userData: UserData,
-        onSuccess: () -> Unit,
+        email: String,
+        password: String,
+        onSuccess: (uid: String) -> Unit,
         onError: (String) -> Unit
     ) {
         auth.createUserWithEmailAndPassword(
-            userData.email,
-            userData.password
+            email,
+            password
         )
             .addOnSuccessListener {
-                onSuccess()
+                onSuccess(it.user?.uid ?: "")
             }
             .addOnFailureListener { exception ->
                 onError(exception.localizedMessage ?: "Unknown error")
             }
     }
+
 }

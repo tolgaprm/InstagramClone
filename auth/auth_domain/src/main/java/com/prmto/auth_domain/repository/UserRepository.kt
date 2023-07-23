@@ -1,10 +1,12 @@
-package com.prmto.auth_domain.register.repository
+package com.prmto.auth_domain.repository
 
 import com.prmto.auth_domain.register.model.UserData
 
-interface RegisterRepository {
-    fun createUserWithEmailAndPassword(
+interface UserRepository {
+
+    fun saveUser(
         userData: UserData,
+        userUid: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )

@@ -33,7 +33,16 @@ fun SetupNavigation(
             onNavigateBack = { navController.navigateUp() }
         )
 
-        authNestedNavigation(navController = navController)
+        authNestedNavigation(
+            navController = navController,
+            onNavigateToHomeScreen = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(NestedNavigation.Auth.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
 
         searchNavigation()
 

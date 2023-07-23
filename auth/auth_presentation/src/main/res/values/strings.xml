@@ -16,4 +16,5 @@
     <string name="register">Register</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
+    <string name="user_created_successfully">User created successfully</string>
 </resources>

@@ -13,11 +13,13 @@ import com.prmto.auth_presentation.user_information.UserInformationScreen
 import com.prmto.auth_presentation.user_information.UserInformationViewModel
 import com.prmto.core_domain.util.asString
 import com.prmto.core_presentation.navigation.NestedNavigation
+import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.authNestedNavigation(
-    navController: NavController
+    navController: NavController,
+    onNavigateToHomeScreen: () -> Unit
 ) {
     navigation(
         route = NestedNavigation.Auth.route,
@@ -29,7 +31,7 @@ fun NavGraphBuilder.authNestedNavigation(
 
         composable(
             route = RegisterScreen.UserInformation.route,
-            arguments = RegisterScreen.UserInformation.arguments
+            arguments = RegisterScreen.UserInformation.arguments,
         ) {
             val viewModel = hiltViewModel<UserInformationViewModel>()
             UserInformationScreen(
@@ -43,6 +45,10 @@ fun NavGraphBuilder.authNestedNavigation(
                 viewModel.eventFlow.collectLatest { event ->
                     when (event) {
                         is UiEvent.Navigate -> {
+                            if (event.route == Screen.Home.route) {
+                                onNavigateToHomeScreen()
+                                return@collectLatest
+                            }
                             navController.navigate(event.route)
                         }
 
@@ -52,6 +58,10 @@ fun NavGraphBuilder.authNestedNavigation(
                                 event.uiText.asString(context),
                                 Toast.LENGTH_SHORT
                             ).show()
+                        }
+
+                        else -> {
+                            return@collectLatest
                         }
                     }
                 }

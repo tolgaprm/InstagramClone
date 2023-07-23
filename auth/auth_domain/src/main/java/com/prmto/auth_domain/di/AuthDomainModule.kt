@@ -1,6 +1,6 @@
 package com.prmto.auth_domain.di
 
-import com.prmto.auth_domain.register.repository.RegisterRepository
+import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
 import com.prmto.auth_domain.usecase.RegisterUseCases
 import com.prmto.auth_domain.usecase.UserInformationUseCases
@@ -27,7 +27,7 @@ object AuthDomainModule {
     @Provides
     @ViewModelScoped
     fun provideUserInformationUseCases(
-        repository: RegisterRepository
+        repository: AuthRepository
     ): UserInformationUseCases {
         return UserInformationUseCases(
             validatePassword = ValidatePasswordUseCase(),

@@ -49,6 +49,10 @@ fun NavGraphBuilder.registerNestedNavigation(
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+                        else -> {
+                            return@collectLatest
+                        }
                     }
                 }
             }

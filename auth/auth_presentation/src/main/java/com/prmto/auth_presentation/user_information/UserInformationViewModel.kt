@@ -6,10 +6,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.register.model.UserData
+import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.UiText
+import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val userInformationUseCases: UserInformationUseCases,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserInfoData())
@@ -77,31 +80,70 @@ class UserInformationViewModel @Inject constructor(
                     error = userInformationUseCases.validatePassword(state.value.passwordTextField.text)
                 )
 
-                if (state.value.fullNameTextField.isErrorNull() &&
-                    state.value.usernameTextField.isErrorNull() &&
-                    state.value.passwordTextField.isErrorNull()
-                ) {
-                    userInformationUseCases.createUserWithEmailAndPassword(
-                        userData = UserData(
-                            email = state.value.email,
-                            fullName = state.value.fullNameTextField.text,
-                            username = state.value.usernameTextField.text,
-                            password = state.value.passwordTextField.text
-                        ),
-                        onSuccess = {
-                            viewModelScope.launch {
-                                _eventFlow.emit(UiEvent.ShowMessage(UiText.DynamicString("User created successfully")))
-                            }
-                        },
-                        onError = {
-                            viewModelScope.launch {
-                                _eventFlow.emit(UiEvent.ShowMessage(UiText.DynamicString("Error creating user: $it")))
-                            }
-                        }
-                    )
-                }
+                registerUser()
             }
         }
+    }
+
+
+    private fun registerUser() {
+        if (state.value.fullNameTextField.isErrorNull() &&
+            state.value.usernameTextField.isErrorNull() &&
+            state.value.passwordTextField.isErrorNull()
+        ) {
+            _state.value = state.value.copy(isRegistering = true)
+            val userData = UserData(
+                email = state.value.email,
+                fullName = state.value.fullNameTextField.text,
+                username = state.value.usernameTextField.text,
+                password = state.value.passwordTextField.text
+            )
+            userInformationUseCases.createUserWithEmailAndPassword(
+                userData = userData,
+                onSuccess = { userUID ->
+                    saveUserInfoToDatabase(userData, userUID)
+                },
+                onError = { error ->
+                    emitUIEvent {
+                        UiEvent.ShowMessage(
+                            uiText = UiText.DynamicString(
+                                value = error
+                            )
+                        )
+                    }
+                    _state.value = state.value.copy(isRegistering = false)
+
+                }
+            )
+        }
+    }
+
+    private fun saveUserInfoToDatabase(
+        userData: UserData,
+        userUID: String
+    ) {
+        userRepository.saveUser(
+            userData = userData,
+            userUid = userUID,
+            onSuccess = {
+                emitUIEvent {
+                    UiEvent.Navigate(
+                        route = Screen.Home.route
+                    )
+                }
+                _state.value = state.value.copy(isRegistering = false)
+            },
+            onError = { error ->
+                emitUIEvent {
+                    UiEvent.ShowMessage(
+                        uiText = UiText.DynamicString(
+                            value = error
+                        )
+                    )
+                }
+                _state.value = state.value.copy(isRegistering = false)
+            }
+        )
     }
 
     private fun updateFullName(fullName: String, error: Error? = null) {
@@ -129,5 +171,11 @@ class UserInformationViewModel @Inject constructor(
                 text = password, error = error
             )
         )
+    }
+
+    private fun emitUIEvent(func: (uiEvent: UiEvent) -> UiEvent) {
+        viewModelScope.launch {
+            _eventFlow.emit(func(UiEvent.Idle))
+        }
     }
 }

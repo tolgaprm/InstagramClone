@@ -1,19 +1,20 @@
 package com.prmto.auth_domain.usecase
 
 import com.prmto.auth_domain.register.model.UserData
-import com.prmto.auth_domain.register.repository.RegisterRepository
+import com.prmto.auth_domain.repository.AuthRepository
 import javax.inject.Inject
 
 class CreateUserWithEmailAndPasswordUseCase @Inject constructor(
-    private val registerRepository: RegisterRepository
+    private val authRepository: AuthRepository
 ) {
     operator fun invoke(
         userData: UserData,
-        onSuccess: () -> Unit,
+        onSuccess: (uid: String) -> Unit,
         onError: (String) -> Unit
     ) {
-        registerRepository.createUserWithEmailAndPassword(
-            userData,
+        authRepository.createUserWithEmailAndPassword(
+            email = userData.email,
+            password = userData.password,
             onSuccess = onSuccess,
             onError = onError
         )
