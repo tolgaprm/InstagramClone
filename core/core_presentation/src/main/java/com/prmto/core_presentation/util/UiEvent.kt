@@ -1,7 +1,7 @@
 package com.prmto.core_presentation.util
 
 import androidx.annotation.StringRes
-import com.prmto.core_domain.util.UiText
+import com.prmto.core_domain.constants.UiText
 
 abstract class Event
 

@@ -2,7 +2,7 @@ package com.prmto.auth_presentation.register
 
 import com.prmto.core_presentation.util.TextFieldState
 
-data class RegisterData(
+data class RegisterUiStateData(
     val selectedTab: SelectedTab = SelectedTab.PHONE_NUMBER,
     val phoneNumberTextField: TextFieldState = TextFieldState(),
     val emailTextField: TextFieldState = TextFieldState(),
@@ -11,7 +11,7 @@ data class RegisterData(
 )
 
 
-fun RegisterData.isPhoneNumberSelected(): Boolean {
+fun RegisterUiStateData.isPhoneNumberSelected(): Boolean {
     return selectedTab == SelectedTab.PHONE_NUMBER
 }
 

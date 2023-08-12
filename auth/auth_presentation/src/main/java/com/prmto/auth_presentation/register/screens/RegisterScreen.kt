@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.register
+package com.prmto.auth_presentation.register.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,12 +28,16 @@ import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
+import com.prmto.auth_presentation.register.RegisterUiStateData
+import com.prmto.auth_presentation.register.SelectedTab
 import com.prmto.auth_presentation.register.components.RegisterScreenBottomSection
+import com.prmto.auth_presentation.register.event.RegisterEvent
+import com.prmto.auth_presentation.register.isPhoneNumberSelected
 import com.prmto.core_presentation.R as CoreRes
 
 @Composable
 fun RegisterScreen(
-    registerData: RegisterData,
+    registerUiStateData: RegisterUiStateData,
     onNavigateToLogin: () -> Unit,
     onEvent: (RegisterEvent) -> Unit
 ) {
@@ -53,12 +57,12 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             RegisterScreenTopSection(
-                registerData = registerData,
+                registerUiStateData = registerUiStateData,
                 onEvent = onEvent
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (registerData.isPhoneNumberSelected()) {
+            if (registerUiStateData.isPhoneNumberSelected()) {
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -67,13 +71,13 @@ fun RegisterScreen(
                     },
                     label = stringResource(id = R.string.phone_number),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    textFieldState = registerData.phoneNumberTextField
+                    textFieldState = registerUiStateData.phoneNumberTextField
                 )
             } else {
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    textFieldState = registerData.emailTextField,
+                    textFieldState = registerUiStateData.emailTextField,
                     onValueChange = {
                         onEvent(RegisterEvent.EnteredEmail(it))
                     },
@@ -85,7 +89,7 @@ fun RegisterScreen(
             AuthButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                enabled = registerData.isNextButtonEnabled,
+                enabled = registerUiStateData.isNextButtonEnabled,
                 buttonText = stringResource(R.string.next),
                 onClick = {
                     onEvent(RegisterEvent.OnClickNext)
@@ -98,7 +102,7 @@ fun RegisterScreen(
 
 @Composable
 fun RegisterScreenTopSection(
-    registerData: RegisterData,
+    registerUiStateData: RegisterUiStateData,
     onEvent: (RegisterEvent) -> Unit
 ) {
     Image(
@@ -112,16 +116,16 @@ fun RegisterScreenTopSection(
     TabRow(
         modifier = Modifier
             .padding(top = 16.dp),
-        selectedTabIndex = registerData.selectedTab.ordinal,
+        selectedTabIndex = registerUiStateData.selectedTab.ordinal,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[registerData.selectedTab.ordinal]),
+                modifier = Modifier.tabIndicatorOffset(tabPositions[registerUiStateData.selectedTab.ordinal]),
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
     ) {
         InstaRegisterTab(
-            selected = registerData.isPhoneNumberSelected(),
+            selected = registerUiStateData.isPhoneNumberSelected(),
             tabName = stringResource(R.string.phone_number),
             onClick = {
                 onEvent(RegisterEvent.OnClickTab(SelectedTab.PHONE_NUMBER))
@@ -129,7 +133,7 @@ fun RegisterScreenTopSection(
         )
 
         InstaRegisterTab(
-            selected = !registerData.isPhoneNumberSelected(),
+            selected = !registerUiStateData.isPhoneNumberSelected(),
             tabName = stringResource(R.string.email),
             onClick = {
                 onEvent(RegisterEvent.OnClickTab(SelectedTab.EMAIL))

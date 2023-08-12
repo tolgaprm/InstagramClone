@@ -29,9 +29,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
+import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.util.PasswordTextFieldState
@@ -52,8 +52,6 @@ fun AuthTextField(
     onValueChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit = {},
 ) {
-
-
     var visualTransformation by remember {
         mutableStateOf(
             VisualTransformation.None
@@ -150,8 +148,7 @@ fun ShowErrorMessage(
     }
 }
 
-
-@Preview
+@UiModePreview
 @Composable
 fun AuthTextFieldPreview() {
     InstagramCloneTheme {

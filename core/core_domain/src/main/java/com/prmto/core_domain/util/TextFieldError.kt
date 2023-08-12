@@ -1,6 +1,7 @@
 package com.prmto.core_domain.util
 
 import com.prmto.core_domain.R
+import com.prmto.core_domain.constants.UiText
 
 abstract class Error(open val message: UiText? = null)
 

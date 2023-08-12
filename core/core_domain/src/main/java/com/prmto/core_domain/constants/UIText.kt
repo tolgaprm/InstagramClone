@@ -1,4 +1,4 @@
-package com.prmto.core_domain.util
+package com.prmto.core_domain.constants
 
 import android.content.Context
 import androidx.annotation.StringRes

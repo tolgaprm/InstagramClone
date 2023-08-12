@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(project(":auth:auth_domain"))
+    implementation(project(":core:core_domain"))
 
     // Firebase
     implementation(platform(libs.firebase.bom))

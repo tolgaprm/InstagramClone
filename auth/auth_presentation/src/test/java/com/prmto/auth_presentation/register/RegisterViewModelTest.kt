@@ -1,8 +1,8 @@
 package com.prmto.auth_presentation.register
 
 import com.google.common.truth.Truth.assertThat
-import com.prmto.auth_domain.usecase.RegisterUseCases
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
+import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.auth_presentation.util.MainDispatcherRule
 import com.prmto.core_presentation.util.TextFieldState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +40,7 @@ class RegisterViewModelTest {
         assertThat(
             viewModel.state.value
         ).isEqualTo(
-            RegisterData(
+            RegisterUiStateData(
                 selectedTab = selectedTab,
                 phoneNumberTextField = TextFieldState(),
                 emailTextField = TextFieldState(),
@@ -60,7 +60,7 @@ class RegisterViewModelTest {
         assertThat(
             viewModel.state.value
         ).isEqualTo(
-            RegisterData(
+            RegisterUiStateData(
                 selectedTab = SelectedTab.EMAIL,
                 phoneNumberTextField = TextFieldState(),
                 emailTextField = TextFieldState(text = email),
@@ -77,7 +77,7 @@ class RegisterViewModelTest {
         assertThat(
             viewModel.state.value
         ).isEqualTo(
-            RegisterData(
+            RegisterUiStateData(
                 selectedTab = SelectedTab.PHONE_NUMBER,
                 phoneNumberTextField = TextFieldState(
                     text = phoneNumber

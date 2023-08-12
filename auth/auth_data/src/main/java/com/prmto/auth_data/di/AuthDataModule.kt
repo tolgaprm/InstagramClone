@@ -2,6 +2,10 @@ package com.prmto.auth_data.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.prmto.auth_data.remote.datasource.auth.FirebaseAuthDataSource
+import com.prmto.auth_data.remote.datasource.auth.FirebaseAuthDataSourceImpl
+import com.prmto.auth_data.remote.datasource.user.FirebaseUserDataSource
+import com.prmto.auth_data.remote.datasource.user.FirebaseUserDataSourceImpl
 import com.prmto.auth_data.repository.FirebaseAuthRepositoryImpl
 import com.prmto.auth_data.repository.FirebaseUserRepositoryImpl
 import com.prmto.auth_domain.repository.AuthRepository
@@ -15,24 +19,43 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 object AuthDataModule {
-
     @Provides
     @ViewModelScoped
-    fun provideFirebaseRegisterRepository(
+    fun provideFirebaseAuthDataSource(
         auth: FirebaseAuth
-    ): AuthRepository {
-        return FirebaseAuthRepositoryImpl(
+    ): FirebaseAuthDataSource {
+        return FirebaseAuthDataSourceImpl(
             auth
         )
     }
 
     @Provides
     @ViewModelScoped
-    fun provideFirebaseUserRepositoryRepository(
+    fun provideFirebaseAuthRepository(
+        authRemoteDataSource: FirebaseAuthDataSource
+    ): AuthRepository {
+        return FirebaseAuthRepositoryImpl(
+            authRemoteDataSource
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideFirebaseUserDataSource(
         firestore: FirebaseFirestore
+    ): FirebaseUserDataSource {
+        return FirebaseUserDataSourceImpl(
+            firestore
+        )
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideFirebaseUserRepositoryRepository(
+        userDataSource: FirebaseUserDataSource
     ): UserRepository {
         return FirebaseUserRepositoryImpl(
-            firestore
+            userDataSource
         )
     }
 }

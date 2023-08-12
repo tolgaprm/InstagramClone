@@ -3,7 +3,7 @@ package com.prmto.auth_presentation.user_information
 import com.prmto.core_presentation.util.PasswordTextFieldState
 import com.prmto.core_presentation.util.TextFieldState
 
-data class UserInfoData(
+data class UserInfoUiData(
     val isRegistering: Boolean = false,
     val email: String = "",
     val phoneNumber: String = "",

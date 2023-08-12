@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -11,7 +12,7 @@ import androidx.navigation.navigation
 import com.prmto.auth_presentation.register.navigation.registerNestedNavigation
 import com.prmto.auth_presentation.user_information.UserInformationScreen
 import com.prmto.auth_presentation.user_information.UserInformationViewModel
-import com.prmto.core_domain.util.asString
+import com.prmto.core_domain.constants.asString
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
@@ -34,8 +35,9 @@ fun NavGraphBuilder.authNestedNavigation(
             arguments = RegisterScreen.UserInformation.arguments,
         ) {
             val viewModel = hiltViewModel<UserInformationViewModel>()
+            val userInfoUiData = viewModel.state.collectAsStateWithLifecycle()
             UserInformationScreen(
-                userInfoData = viewModel.state.value,
+                userInfoUiData = userInfoUiData.value,
                 onEvent = viewModel::onEvent
             )
 

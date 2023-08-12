@@ -3,8 +3,6 @@ package com.prmto.auth_presentation.user_information
 import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
-import com.prmto.auth_domain.usecase.UserInformationUseCases
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.auth_presentation.util.MainDispatcherRule
