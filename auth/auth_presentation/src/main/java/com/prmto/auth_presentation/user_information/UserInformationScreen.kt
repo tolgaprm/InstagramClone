@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
+import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 
 @Composable

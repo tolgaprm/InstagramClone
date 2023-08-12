@@ -2,9 +2,11 @@ package com.prmto.auth_presentation.register
 
 import com.google.common.truth.Truth.assertThat
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
+import com.prmto.auth_presentation.navigation.AuthNestedScreens
 import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.auth_presentation.util.MainDispatcherRule
 import com.prmto.core_presentation.util.TextFieldState
+import com.prmto.core_presentation.util.UiEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
@@ -12,21 +14,15 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class RegisterViewModelTest {
-
-    private lateinit var viewModel: RegisterViewModel
-    private lateinit var registerUseCases: RegisterUseCases
-
     @get:Rule
     var mainCoroutineRule = MainDispatcherRule()
 
+    private lateinit var viewModel: RegisterViewModel
+
     @Before
     fun setUp() {
-        registerUseCases = RegisterUseCases(
-            ValidateEmailUseCase()
-        )
-
         viewModel = RegisterViewModel(
-            registerUseCases = registerUseCases
+            validateEmailUseCase = ValidateEmailUseCase()
         )
     }
 
@@ -99,6 +95,20 @@ class RegisterViewModelTest {
             viewModel.state.value.emailTextField.error
         ).isEqualTo(
             com.prmto.core_domain.util.TextFieldError.EmailInvalid
+        )
+    }
+
+    @Test
+    fun `given valid email entered,when event is OnClickNext, then consumable event is Navigate to UserInfoScreen`() {
+        val email = "test@gmail.com"
+        viewModel.onEvent(RegisterEvent.OnClickTab(position = SelectedTab.EMAIL))
+        viewModel.onEvent(RegisterEvent.EnteredEmail(email = email))
+        viewModel.onEvent(RegisterEvent.OnClickNext)
+        val state = viewModel.state.value
+        assertThat(state.consumableViewEvents.first()).isEqualTo(
+            UiEvent.Navigate(
+                AuthNestedScreens.UserInformation.passEmail(email)
+            )
         )
     }
 

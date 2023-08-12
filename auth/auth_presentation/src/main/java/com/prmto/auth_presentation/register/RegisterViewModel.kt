@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
-import com.prmto.auth_presentation.navigation.RegisterScreen
+import com.prmto.auth_presentation.navigation.AuthNestedScreens
 import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.util.TextFieldState
@@ -57,7 +57,7 @@ class RegisterViewModel @Inject constructor(
                         if (validateEmailUseCase(state.value.emailTextField.text)) {
                             addNewConsumableEvent(
                                 UiEvent.Navigate(
-                                    RegisterScreen.UserInformation.passEmail(state.value.emailTextField.text)
+                                    AuthNestedScreens.UserInformation.passEmail(state.value.emailTextField.text)
                                 )
                             )
                         } else {

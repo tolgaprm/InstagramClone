@@ -98,7 +98,7 @@ fun AuthTextField(
                         imageVector = if (it.isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = if (it.isPasswordVisible) stringResource(R.string.hide_password) else stringResource(
                             R.string.show_password
-                        ),
+                        )
                     )
                 }
             },
@@ -129,9 +129,7 @@ fun AuthTextField(
             )
         }
     }
-
 }
-
 
 @Composable
 fun ShowErrorMessage(
@@ -144,7 +142,6 @@ fun ShowErrorMessage(
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)
         )
-
     }
 }
 
@@ -156,6 +153,25 @@ fun AuthTextFieldPreview() {
             label = "Email",
             textFieldState = TextFieldState(
                 ""
+            ),
+            onValueChange = {},
+            enabled = true,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default,
+            singleLine = true,
+            modifier = Modifier
+        )
+    }
+}
+
+@UiModePreview
+@Composable
+fun AuthTextPasswordFieldPreview() {
+    InstagramCloneTheme {
+        AuthTextField(
+            label = "Password",
+            passwordTextFieldState = PasswordTextFieldState(
+                text = ""
             ),
             onValueChange = {},
             enabled = true,

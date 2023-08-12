@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.prmto.auth_presentation.navigation.RegisterScreen
+import com.prmto.auth_presentation.navigation.AuthNestedScreens
 import com.prmto.auth_presentation.register.RegisterViewModel
 import com.prmto.auth_presentation.register.screens.RegisterScreen
 import com.prmto.auth_presentation.register.screens.VerifyPhoneNumberScreen
@@ -19,15 +19,16 @@ fun NavGraphBuilder.registerNestedNavigation(
     navController: NavController
 ) {
     navigation(
-        startDestination = RegisterScreen.Register.route,
+        startDestination = AuthNestedScreens.Register.route,
         route = NestedNavigation.Register.route
     ) {
-        composable(RegisterScreen.Register.route) {
+        composable(AuthNestedScreens.Register.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
             val registerUiData by viewModel.state.collectAsStateWithLifecycle()
             RegisterScreen(
                 registerUiStateData = registerUiData,
                 onNavigateToLogin = {
+                    navController.navigate(AuthNestedScreens.Login.route)
                 },
                 onEvent = viewModel::onEvent
             )
@@ -48,7 +49,7 @@ fun NavGraphBuilder.registerNestedNavigation(
             }
         }
 
-        composable(RegisterScreen.VerifyPhoneNumber.route) {
+        composable(AuthNestedScreens.VerifyPhoneNumber.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
             val registerUiData = viewModel.state.collectAsStateWithLifecycle().value
             VerifyPhoneNumberScreen(
