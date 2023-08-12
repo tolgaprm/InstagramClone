@@ -18,12 +18,11 @@ import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
 import com.prmto.core_presentation.util.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,9 +35,6 @@ class UserInformationViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(UserInfoUiData())
     val state: StateFlow<UserInfoUiData> = _state.asStateFlow()
-
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         savedStateHandle.get<String>(Constants.UserInfoEmailArgumentName)?.let { email ->
@@ -92,10 +88,7 @@ class UserInformationViewModel @Inject constructor(
 
 
     private fun registerUser() {
-        if (state.value.fullNameTextField.isErrorNull() &&
-            state.value.usernameTextField.isErrorNull() &&
-            state.value.passwordTextField.isErrorNull()
-        ) {
+        if (state.value.fullNameTextField.isErrorNull() && state.value.usernameTextField.isErrorNull() && state.value.passwordTextField.isErrorNull()) {
             _state.update { it.copy(isRegistering = true) }
             val userData = UserData(
                 email = state.value.email,
@@ -122,26 +115,24 @@ class UserInformationViewModel @Inject constructor(
     }
 
     private fun saveUserInfoToDatabase(
-        userData: UserData,
-        userUID: String
+        userData: UserData, userUID: String
     ) {
         viewModelScope.launch {
             userRepository.saveUser(
-                userData = userData,
-                userUid = userUID
+                userData = userData, userUid = userUID
             ).onSuccess {
-                emitUIEvent {
+                addNewConsumableEvent(
                     UiEvent.Navigate(
                         route = Screen.Home.route
                     )
-                }
+                )
                 _state.update { it.copy(isRegistering = false) }
             }.onError { uiText ->
-                emitUIEvent {
+                addNewConsumableEvent(
                     UiEvent.ShowMessage(
                         uiText = uiText
                     )
-                }
+                )
                 _state.update { it.copy(isRegistering = false) }
             }
         }
@@ -151,38 +142,34 @@ class UserInformationViewModel @Inject constructor(
         onCompleted: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            userRepository.getUsers()
-                .onSuccess { users ->
-                    val result = users.map { it.username == state.value.usernameTextField.text }
-                        .find { true }
-                    onCompleted(result ?: false)
-                }
-                .onError { uiText ->
-                    emitUIEvent {
-                        UiEvent.ShowMessage(
-                            uiText = uiText
-                        )
-                    }
-                }
+            userRepository.getUsers().onSuccess { users ->
+                val result = users.map { it.username == state.value.usernameTextField.text }
+                    .find { true }
+                onCompleted(result ?: false)
+            }.onError { uiText ->
+                addNewConsumableEvent(
+                    UiEvent.ShowMessage(
+                        uiText = uiText
+                    )
+                )
+            }
         }
     }
 
     private fun createUserWithEmailAndPassword(userData: UserData) {
         viewModelScope.launch {
             authRepository.createUserWithEmailAndPassword(
-                email = userData.email,
-                password = userData.password
+                email = userData.email, password = userData.password
             ).onSuccess { userUID ->
                 saveUserInfoToDatabase(
-                    userData = userData,
-                    userUID = userUID
+                    userData = userData, userUID = userUID
                 )
             }.onError { uiText ->
-                emitUIEvent {
+                addNewConsumableEvent(
                     UiEvent.ShowMessage(
                         uiText = uiText
                     )
-                }
+                )
                 _state.update { it.copy(isRegistering = false) }
             }
         }
@@ -192,8 +179,7 @@ class UserInformationViewModel @Inject constructor(
         _state.update {
             it.copy(
                 fullNameTextField = state.value.fullNameTextField.updateState(
-                    text = fullName,
-                    error = error
+                    text = fullName, error = error
                 )
             )
         }
@@ -203,30 +189,37 @@ class UserInformationViewModel @Inject constructor(
         _state.update {
             it.copy(
                 usernameTextField = state.value.usernameTextField.updateState(
-                    text = username,
-                    error = error
+                    text = username, error = error
                 )
             )
         }
     }
 
     private fun updatePassword(
-        password: String,
-        error: Error? = null
+        password: String, error: Error? = null
     ) {
         _state.update {
             it.copy(
                 passwordTextField = state.value.passwordTextField.updateState(
-                    text = password,
-                    error = error
+                    text = password, error = error
                 )
             )
         }
     }
 
-    private fun emitUIEvent(func: (uiEvent: UiEvent) -> UiEvent) {
-        viewModelScope.launch {
-            _eventFlow.emit(func(UiEvent.Idle))
+    fun onEventConsumed() {
+        _state.update {
+            it.copy(
+                consumableViewEvents = state.value.consumableViewEvents.drop(1)
+            )
+        }
+    }
+
+    private fun addNewConsumableEvent(event: UiEvent) {
+        _state.updateAndGet {
+            it.copy(
+                consumableViewEvents = state.value.consumableViewEvents + event
+            )
         }
     }
 }

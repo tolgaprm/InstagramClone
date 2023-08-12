@@ -11,12 +11,11 @@ import com.prmto.core_presentation.util.TextFieldState
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_presentation.util.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,9 +25,6 @@ class RegisterViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegisterUiStateData())
     val state: StateFlow<RegisterUiStateData> = _state.asStateFlow()
-
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
@@ -59,7 +55,7 @@ class RegisterViewModel @Inject constructor(
                         return@launch
                     } else {
                         if (validateEmailUseCase(state.value.emailTextField.text)) {
-                            _eventFlow.emit(
+                            addNewConsumableEvent(
                                 UiEvent.Navigate(
                                     RegisterScreen.UserInformation.passEmail(state.value.emailTextField.text)
                                 )
@@ -110,5 +106,21 @@ class RegisterViewModel @Inject constructor(
             state.value.emailTextField.text.isNotBlank()
         }
         _state.update { it.copy(isNextButtonEnabled = isEnabled) }
+    }
+
+    fun onEventConsumed() {
+        _state.update {
+            it.copy(
+                consumableViewEvents = state.value.consumableViewEvents.drop(1)
+            )
+        }
+    }
+
+    private fun addNewConsumableEvent(event: UiEvent) {
+        _state.updateAndGet {
+            it.copy(
+                consumableViewEvents = state.value.consumableViewEvents + event
+            )
+        }
     }
 }
