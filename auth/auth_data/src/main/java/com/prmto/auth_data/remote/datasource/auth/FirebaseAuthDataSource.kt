@@ -1,8 +1,8 @@
-package com.prmto.auth_domain.repository
+package com.prmto.auth_data.remote.datasource.auth
 
 import com.prmto.core_domain.constants.Resource
 
-interface AuthRepository {
+interface FirebaseAuthDataSource {
     suspend fun createUserWithEmailAndPassword(
         email: String,
         password: String

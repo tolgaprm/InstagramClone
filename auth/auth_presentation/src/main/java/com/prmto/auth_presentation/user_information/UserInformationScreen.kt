@@ -23,7 +23,7 @@ import com.prmto.core_presentation.ui.theme.InstaBlue
 
 @Composable
 fun UserInformationScreen(
-    userInfoData: UserInfoData,
+    userInfoUiData: UserInfoUiData,
     onEvent: (UserInfoEvents) -> Unit
 ) {
     Box(
@@ -46,7 +46,7 @@ fun UserInformationScreen(
             AuthTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.name_and_surname),
-                textFieldState = userInfoData.fullNameTextField,
+                textFieldState = userInfoUiData.fullNameTextField,
                 onValueChange = {
                     onEvent(UserInfoEvents.EnterFullName(it))
                 }
@@ -55,7 +55,7 @@ fun UserInformationScreen(
             AuthTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.username),
-                textFieldState = userInfoData.usernameTextField,
+                textFieldState = userInfoUiData.usernameTextField,
                 onValueChange = {
                     onEvent(UserInfoEvents.EnterUsername(it))
                 }
@@ -64,7 +64,7 @@ fun UserInformationScreen(
             AuthTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.password),
-                passwordTextFieldState = userInfoData.passwordTextField,
+                passwordTextFieldState = userInfoUiData.passwordTextField,
                 onValueChange = {
                     onEvent(UserInfoEvents.EnterPassword(it))
                 },
@@ -76,13 +76,13 @@ fun UserInformationScreen(
             AuthButton(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(R.string.register),
-                enabled = !userInfoData.isRegistering,
+                enabled = !userInfoUiData.isRegistering,
                 onClick = {
                     onEvent(UserInfoEvents.Register)
                 }
             )
 
-            if (userInfoData.isRegistering) {
+            if (userInfoUiData.isRegistering) {
                 CircularProgressIndicator(
                     color = Color.InstaBlue
                 )

@@ -1,5 +1,6 @@
 package com.prmto.auth_presentation.register.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prmto.auth_presentation.R
+import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.ui.theme.colorBlur
 
 @Composable
@@ -29,7 +32,8 @@ fun RegisterScreenBottomSection(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .shadow(2.dp),
+            .shadow(2.dp)
+            .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -44,6 +48,7 @@ fun RegisterScreenBottomSection(
             Text(
                 text = stringResource(R.string.login),
                 style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.small)
                     .clickable {
@@ -52,5 +57,13 @@ fun RegisterScreenBottomSection(
                     .padding(4.dp)
             )
         }
+    }
+}
+
+@UiModePreview
+@Composable
+fun RegisterScreenBottomSectionPreview() {
+    InstagramCloneTheme {
+        RegisterScreenBottomSection(onNavigateToLogin = {})
     }
 }

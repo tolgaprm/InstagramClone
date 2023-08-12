@@ -1,30 +1,37 @@
 package com.prmto.auth_presentation.user_information
 
 import androidx.lifecycle.SavedStateHandle
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.usecase.CreateUserWithEmailAndPasswordUseCase
-import com.prmto.auth_domain.usecase.UserInformationUseCases
+import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
+import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
+import com.prmto.auth_presentation.fake_repository.FakeUserRepository
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.auth_presentation.util.MainDispatcherRule
+import com.prmto.auth_presentation.util.TestConstants
+import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.util.TextFieldError
+import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.PasswordTextFieldState
 import com.prmto.core_presentation.util.TextFieldState
+import com.prmto.core_presentation.util.UiEvent
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class UserInformationViewModelTest {
-
     private lateinit var viewModel: UserInformationViewModel
     private lateinit var savedStateHandle: SavedStateHandle
-    private lateinit var userInformationUseCases: UserInformationUseCases
+    private lateinit var authRepository: AuthRepository
+    private lateinit var userRepository: UserRepository
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
     var mainCoroutineRule = MainDispatcherRule()
 
@@ -33,19 +40,17 @@ class UserInformationViewModelTest {
         savedStateHandle = mockk(relaxed = true)
         every {
             savedStateHandle.get<String>(UserInfoEmailArgumentName)
-        } returns "test@gmail.com"
+        } returns TestConstants.ENTERED_EMAIL
 
-        userInformationUseCases = UserInformationUseCases(
-            validatePassword = ValidatePasswordUseCase(),
-            createUserWithEmailAndPassword = CreateUserWithEmailAndPasswordUseCase(
-                mockk<AuthRepository>(relaxed = true),
-            )
-        )
+        authRepository = FakeAuthRepository()
+
+        userRepository = FakeUserRepository()
 
         viewModel = UserInformationViewModel(
             savedStateHandle = savedStateHandle,
-            userInformationUseCases = userInformationUseCases,
-            userRepository = mockk(relaxed = true)
+            userRepository = userRepository,
+            authRepository = authRepository,
+            validatePasswordUseCase = ValidatePasswordUseCase()
         )
     }
 
@@ -128,7 +133,7 @@ class UserInformationViewModelTest {
         viewModel.onEvent(UserInfoEvents.Register)
 
         val state = viewModel.state.value
-        assertThat(state.fullNameTextField.error).isEqualTo(com.prmto.core_domain.util.TextFieldError.Empty)
+        assertThat(state.fullNameTextField.error).isEqualTo(TextFieldError.Empty)
     }
 
     @Test
@@ -143,7 +148,7 @@ class UserInformationViewModelTest {
         viewModel.onEvent(UserInfoEvents.Register)
 
         val state = viewModel.state.value
-        assertThat(state.usernameTextField.error).isEqualTo(com.prmto.core_domain.util.TextFieldError.Empty)
+        assertThat(state.usernameTextField.error).isEqualTo(TextFieldError.Empty)
     }
 
     @Test
@@ -159,5 +164,85 @@ class UserInformationViewModelTest {
 
         val state = viewModel.state.value
         assertThat(state.passwordTextField.error).isEqualTo(TextFieldError.PasswordInvalid)
+    }
+
+    @Test
+    fun `when entered valid all field and username has exists in the database, then usernameTextField update UsernameAlreadyExists`() =
+        runTest {
+            val fullName = "John Doe"
+            val username = TestConstants.USER_EXISTS_USERNAME
+            val password = "123456"
+
+            viewModel.onEvent(UserInfoEvents.EnterFullName(fullName))
+            viewModel.onEvent(UserInfoEvents.EnterUsername(username))
+            viewModel.onEvent(UserInfoEvents.EnterPassword(password))
+            viewModel.onEvent(UserInfoEvents.Register)
+
+            viewModel.state.test {
+                val state = awaitItem()
+                assertThat(state.usernameTextField.error).isEqualTo(TextFieldError.UsernameAlreadyExists)
+            }
+        }
+
+    @Test
+    fun `when entered valid all field, email is already exists, uiEvent is ShowMessage `() =
+        runTest {
+            val fullName = "John Doe"
+            val username = "john"
+            val password = "123456"
+
+            viewModel.onEvent(UserInfoEvents.EnterFullName(fullName))
+            viewModel.onEvent(UserInfoEvents.EnterUsername(username))
+            viewModel.onEvent(UserInfoEvents.EnterPassword(password))
+            viewModel.onEvent(UserInfoEvents.Register)
+
+            viewModel.state.test {
+                val state = awaitItem()
+                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                    UiEvent.ShowMessage(
+                        UiText.DynamicString(TestConstants.USER_EXISTS)
+                    )
+                )
+            }
+        }
+
+    @Test
+    fun `when entered valid all field, user is created and registered, event is UiNavigate to HomeScreen `() =
+        runTest {
+            val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+            every {
+                savedStateHandle.get<String>(UserInfoEmailArgumentName)
+            } returns "john@gmail.com"
+
+            passNewSavedStateHandleWithNewEmail(savedStateHandle)
+
+            val fullName = "John Doe"
+            val username = "john"
+            val password = "123456"
+
+            viewModel.onEvent(UserInfoEvents.EnterFullName(fullName))
+            viewModel.onEvent(UserInfoEvents.EnterUsername(username))
+            viewModel.onEvent(UserInfoEvents.EnterPassword(password))
+            viewModel.onEvent(UserInfoEvents.Register)
+
+            viewModel.state.test {
+                val state = awaitItem()
+                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                    UiEvent.Navigate(
+                        Screen.Home.route
+                    )
+                )
+            }
+        }
+
+    private fun passNewSavedStateHandleWithNewEmail(
+        newSavedStateHandle: SavedStateHandle
+    ) {
+        viewModel = UserInformationViewModel(
+            savedStateHandle = newSavedStateHandle,
+            userRepository = userRepository,
+            authRepository = authRepository,
+            validatePasswordUseCase = ValidatePasswordUseCase()
+        )
     }
 }

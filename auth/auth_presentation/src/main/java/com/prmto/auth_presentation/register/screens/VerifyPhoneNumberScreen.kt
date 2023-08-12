@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.register
+package com.prmto.auth_presentation.register.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
+import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.core_presentation.util.TextFieldState
 
 @Composable

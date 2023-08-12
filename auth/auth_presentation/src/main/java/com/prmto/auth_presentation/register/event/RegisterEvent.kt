@@ -1,4 +1,6 @@
-package com.prmto.auth_presentation.register
+package com.prmto.auth_presentation.register.event
+
+import com.prmto.auth_presentation.register.SelectedTab
 
 sealed class RegisterEvent {
     data class OnClickTab(val position: SelectedTab) : RegisterEvent()

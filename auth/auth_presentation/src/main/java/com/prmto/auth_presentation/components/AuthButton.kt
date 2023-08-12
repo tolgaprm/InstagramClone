@@ -8,8 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
 @Composable
 fun AuthButton(
@@ -33,5 +35,15 @@ fun AuthButton(
             text = buttonText,
             color = if (enabled) Color.White else Color.InstaBlue,
         )
+    }
+}
+
+@Preview
+@Composable
+fun AuthButtonPreview() {
+    InstagramCloneTheme {
+        AuthButton(buttonText = "SignIn") {
+
+        }
     }
 }

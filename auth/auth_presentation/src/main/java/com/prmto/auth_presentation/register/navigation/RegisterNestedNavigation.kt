@@ -1,21 +1,19 @@
 package com.prmto.auth_presentation.register.navigation
 
-import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.prmto.auth_presentation.navigation.RegisterScreen
-import com.prmto.auth_presentation.register.RegisterScreen
 import com.prmto.auth_presentation.register.RegisterViewModel
-import com.prmto.auth_presentation.register.VerifyPhoneNumberScreen
-import com.prmto.core_domain.util.asString
+import com.prmto.auth_presentation.register.screens.RegisterScreen
+import com.prmto.auth_presentation.register.screens.VerifyPhoneNumberScreen
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_presentation.util.sharedViewModel
-import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.registerNestedNavigation(
     navController: NavController
@@ -26,43 +24,36 @@ fun NavGraphBuilder.registerNestedNavigation(
     ) {
         composable(RegisterScreen.Register.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
-            val registerData = viewModel.state.value
-            val context = LocalContext.current
+            val registerUiData by viewModel.state.collectAsStateWithLifecycle()
             RegisterScreen(
-                registerData = registerData,
+                registerUiStateData = registerUiData,
                 onNavigateToLogin = {
                 },
                 onEvent = viewModel::onEvent
             )
 
-            LaunchedEffect(key1 = true) {
-                viewModel.eventFlow.collectLatest { event ->
-                    when (event) {
+            LaunchedEffect(key1 = registerUiData.consumableViewEvents) {
+                if (registerUiData.consumableViewEvents.isEmpty()) return@LaunchedEffect
+                registerUiData.consumableViewEvents.forEach { uiEvent ->
+                    when (uiEvent) {
                         is UiEvent.Navigate -> {
-                            navController.navigate(event.route)
+                            navController.navigate(uiEvent.route)
+                            viewModel.onEventConsumed()
                         }
 
-                        is UiEvent.ShowMessage -> {
-                            Toast.makeText(
-                                context,
-                                event.uiText.asString(context),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        else -> {
-                            return@collectLatest
-                        }
+                        else -> return@LaunchedEffect
                     }
                 }
+
             }
         }
 
         composable(RegisterScreen.VerifyPhoneNumber.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
+            val registerUiData = viewModel.state.collectAsStateWithLifecycle().value
             VerifyPhoneNumberScreen(
-                phoneNumber = viewModel.state.value.phoneNumberTextField.text,
-                verificationCodeValue = viewModel.state.value.verificationCodeTextField,
+                phoneNumber = registerUiData.phoneNumberTextField.text,
+                verificationCodeValue = registerUiData.verificationCodeTextField,
                 onEvent = viewModel::onEvent
             )
         }

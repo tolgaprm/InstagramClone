@@ -1,26 +1,23 @@
 package com.prmto.auth_data.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.prmto.auth_data.remote.datasource.user.FirebaseUserDataSource
 import com.prmto.auth_domain.register.model.UserData
 import com.prmto.auth_domain.repository.UserRepository
+import com.prmto.core_domain.constants.Resource
+import com.prmto.core_domain.constants.SimpleResource
 import javax.inject.Inject
 
 class FirebaseUserRepositoryImpl @Inject constructor(
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseUserDataSource: FirebaseUserDataSource
 ) : UserRepository {
-    override fun saveUser(
+    override suspend fun saveUser(
         userData: UserData,
-        userUid: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        firebaseFirestore.collection("Users").document(userUid)
-            .set(userData)
-            .addOnSuccessListener {
-                onSuccess()
-            }
-            .addOnFailureListener {
-                onError(it.localizedMessage ?: "Unknown error")
-            }
+        userUid: String
+    ): SimpleResource {
+        return firebaseUserDataSource.saveUser(userData = userData, userUid = userUid)
+    }
+
+    override suspend fun getUsers(): Resource<List<UserData>> {
+        return firebaseUserDataSource.getUsers()
     }
 }

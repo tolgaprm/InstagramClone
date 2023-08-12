@@ -2,7 +2,7 @@ package com.prmto.core_presentation.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.prmto.core_domain.util.UiText
+import com.prmto.core_domain.constants.UiText
 
 @Composable
 fun UiText.asString(): String {

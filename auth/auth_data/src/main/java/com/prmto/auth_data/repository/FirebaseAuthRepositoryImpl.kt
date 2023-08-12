@@ -1,27 +1,17 @@
 package com.prmto.auth_data.repository
 
-import com.google.firebase.auth.FirebaseAuth
+import com.prmto.auth_data.remote.datasource.auth.FirebaseAuthDataSource
 import com.prmto.auth_domain.repository.AuthRepository
+import com.prmto.core_domain.constants.Resource
+import javax.inject.Inject
 
-class FirebaseAuthRepositoryImpl(
-    private val auth: FirebaseAuth,
+class FirebaseAuthRepositoryImpl @Inject constructor(
+    private val firebaseAuthDataSource: FirebaseAuthDataSource
 ) : AuthRepository {
-    override fun createUserWithEmailAndPassword(
+    override suspend fun createUserWithEmailAndPassword(
         email: String,
-        password: String,
-        onSuccess: (uid: String) -> Unit,
-        onError: (String) -> Unit
-    ) {
-        auth.createUserWithEmailAndPassword(
-            email,
-            password
-        )
-            .addOnSuccessListener {
-                onSuccess(it.user?.uid ?: "")
-            }
-            .addOnFailureListener { exception ->
-                onError(exception.localizedMessage ?: "Unknown error")
-            }
+        password: String
+    ): Resource<String> {
+        return firebaseAuthDataSource.createUserWithEmailAndPassword(email, password)
     }
-
 }
