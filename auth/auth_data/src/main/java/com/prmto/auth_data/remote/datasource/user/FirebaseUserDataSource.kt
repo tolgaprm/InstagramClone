@@ -8,4 +8,6 @@ interface FirebaseUserDataSource {
     suspend fun saveUser(userData: UserData, userUid: String): SimpleResource
 
     suspend fun getUsers(): Resource<List<UserData>>
+
+    suspend fun getUserEmailBySearchingUsername(username: String): Resource<String>
 }

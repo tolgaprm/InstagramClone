@@ -20,4 +20,8 @@ class FirebaseUserRepositoryImpl @Inject constructor(
     override suspend fun getUsers(): Resource<List<UserData>> {
         return firebaseUserDataSource.getUsers()
     }
+
+    override suspend fun getUserEmailBySearchingUsername(username: String): Resource<String> {
+        return firebaseUserDataSource.getUserEmailBySearchingUsername(username = username)
+    }
 }
