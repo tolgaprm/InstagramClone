@@ -1,3 +1,4 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -6,7 +7,9 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
 }
-
+var properties = Properties().apply {
+    load(project.rootProject.file("local.properties").inputStream())
+}
 android {
     namespace = "com.prmto.instagramclone"
     compileSdk = 33
@@ -17,7 +20,21 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField(
+            "String",
+            "FIREBASE_PROJECT_ID",
+            "\"${properties.getProperty("FIREBASE_PROJECT_ID")}\""
+        )
+        buildConfigField(
+            "String",
+            "FIREBASE_APPLICATION_ID",
+            "\"${properties.getProperty("FIREBASE_APPLICATION_ID")}\""
+        )
+        buildConfigField(
+            "String",
+            "FIREBASE_API_KEY",
+            "\"${properties.getProperty("FIREBASE_API_KEY")}\""
+        )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -41,6 +58,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {

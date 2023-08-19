@@ -7,6 +7,7 @@ import com.prmto.auth_domain.register.model.UserData
 import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
+import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_domain.constants.onError
 import com.prmto.core_domain.constants.onSuccess

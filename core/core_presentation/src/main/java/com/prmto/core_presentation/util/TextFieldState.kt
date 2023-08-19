@@ -40,3 +40,8 @@ fun PasswordTextFieldState.updateState(
 ): PasswordTextFieldState {
     return copy(text = text, error = error, isPasswordVisible = isPasswordVisible)
 }
+
+fun PasswordTextFieldState.updatePasswordVisibility(
+): PasswordTextFieldState {
+    return copy(text = text, error = error, isPasswordVisible = !isPasswordVisible)
+}

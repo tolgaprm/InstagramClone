@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.user_information
+package com.prmto.auth_presentation.user_information.event
 
 sealed class UserInfoEvents {
     data class EnterFullName(val fullName: String) : UserInfoEvents()
