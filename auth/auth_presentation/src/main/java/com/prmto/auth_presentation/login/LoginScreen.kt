@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -94,11 +95,14 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-            AuthButton(modifier = Modifier.fillMaxWidth(),
+
+            AuthButton(
+                modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(id = R.string.login),
                 onClick = {
                     onEvent(LoginUiEvent.OnLoginClicked)
-                }
+                },
+                enabled = !loginUiState.isLoading
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -110,6 +114,14 @@ fun LoginScreen(
             SignUpSection(
                 onNavigateToRegisterScreen = onNavigateToRegisterScreen
             )
+
+            if (loginUiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    color = Color.InstaBlue
+                )
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.prmto.auth_presentation.register.navigation
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -12,7 +11,7 @@ import com.prmto.auth_presentation.register.RegisterViewModel
 import com.prmto.auth_presentation.register.screens.RegisterScreen
 import com.prmto.auth_presentation.register.screens.VerifyPhoneNumberScreen
 import com.prmto.core_presentation.navigation.NestedNavigation
-import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.util.sharedViewModel
 
 fun NavGraphBuilder.registerNestedNavigation(
@@ -28,25 +27,20 @@ fun NavGraphBuilder.registerNestedNavigation(
             RegisterScreen(
                 registerUiStateData = registerUiData,
                 onNavigateToLogin = {
-                    navController.navigate(AuthNestedScreens.Login.route)
+                    navController.navigate(AuthNestedScreens.Login.route) {
+                        popUpTo(AuthNestedScreens.Register.route) {
+                            inclusive = true
+                        }
+                    }
                 },
                 onEvent = viewModel::onEvent
             )
 
-            LaunchedEffect(key1 = registerUiData.consumableViewEvents) {
-                if (registerUiData.consumableViewEvents.isEmpty()) return@LaunchedEffect
-                registerUiData.consumableViewEvents.forEach { uiEvent ->
-                    when (uiEvent) {
-                        is UiEvent.Navigate -> {
-                            navController.navigate(uiEvent.route)
-                            viewModel.onEventConsumed()
-                        }
-
-                        else -> return@LaunchedEffect
-                    }
-                }
-
-            }
+            HandleConsumableViewEvents(
+                consumableViewEvents = registerUiData.consumableViewEvents,
+                onEventNavigate = navController::navigate,
+                onEventConsumed = viewModel::onEventConsumed
+            )
         }
 
         composable(AuthNestedScreens.VerifyPhoneNumber.route) {

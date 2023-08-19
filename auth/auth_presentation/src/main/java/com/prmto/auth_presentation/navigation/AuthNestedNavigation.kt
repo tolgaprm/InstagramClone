@@ -27,6 +27,9 @@ fun NavGraphBuilder.authNestedNavigation(
         loginNavigation(
             onNavigateToRegisterScreen = {
                 navController.navigate(NestedNavigation.Register.route)
+            },
+            onNavigateToHomeScreen = {
+                onNavigateToHomeScreen()
             }
         )
     }
