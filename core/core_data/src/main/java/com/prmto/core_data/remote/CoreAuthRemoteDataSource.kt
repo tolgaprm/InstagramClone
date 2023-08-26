@@ -1,10 +1,8 @@
-package com.prmto.core_domain.repository
+package com.prmto.core_data.remote
 
 import com.google.firebase.auth.FirebaseUser
 
-interface FirebaseAuthCore {
-
+interface CoreAuthRemoteDataSource {
     fun signOut()
-
     fun currentUser(): FirebaseUser?
 }

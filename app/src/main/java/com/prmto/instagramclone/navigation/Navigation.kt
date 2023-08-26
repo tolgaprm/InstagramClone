@@ -30,6 +30,13 @@ fun SetupNavigation(
         profileNestedNavigation(
             onNavigateToSettingScreen = { navController.navigate(ProfileScreen.Settings.route) },
             onNavigateToEditProfileScreen = { navController.navigate(ProfileScreen.EditProfile.route) },
+            onNavigateToNestedAuth = {
+                navController.navigate(NestedNavigation.Auth.route) {
+                    popUpTo(NestedNavigation.Profile.route) {
+                        inclusive = true
+                    }
+                }
+            },
             onPopBackStack = { navController.popBackStack() },
             onNavigateBack = { navController.navigateUp() }
         )

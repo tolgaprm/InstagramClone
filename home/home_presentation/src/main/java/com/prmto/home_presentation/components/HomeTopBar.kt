@@ -20,15 +20,15 @@ import com.prmto.core_presentation.R
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeTopBar(
-    onNavigateToMessageScreen: () -> Unit,
-
-    ) {
+    onNavigateToMessageScreen: () -> Unit
+) {
     TopAppBar(
         title = {
             Icon(
                 painter = painterResource(id = R.drawable.logo),
                 tint = MaterialTheme.colorScheme.onBackground,
-                contentDescription = stringResource(R.string.logo)
+                contentDescription = stringResource(R.string.logo),
+                modifier = Modifier
             )
         },
         modifier = Modifier

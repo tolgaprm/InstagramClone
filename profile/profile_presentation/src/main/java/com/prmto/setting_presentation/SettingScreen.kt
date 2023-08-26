@@ -12,16 +12,23 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -33,31 +40,27 @@ import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.profile_presentation.R
 import com.prmto.setting_presentation.components.SettingItem
 import com.prmto.setting_presentation.components.SettingSection
+import com.prmto.setting_presentation.event.SettingScreenEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     onNavigateBack: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
+    onEvent: (SettingScreenEvent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.shadow(elevation = 8.dp),
-                title = {
-                    Text(text = stringResource(R.string.settings))
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) {
+    var isShowAlertDialog by remember { mutableStateOf(false) }
+    Scaffold(topBar = {
+        TopAppBar(modifier = Modifier.shadow(elevation = 8.dp), title = {
+            Text(text = stringResource(R.string.settings))
+        }, navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack, contentDescription = null
+                )
+            }
+        })
+    }) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -72,11 +75,9 @@ fun SettingScreen(
                     onClickSettingItem = onNavigateToEditProfile
                 )
 
-                SettingItem(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.outline_password_24),
+                SettingItem(imageVector = ImageVector.vectorResource(id = R.drawable.outline_password_24),
                     settingName = stringResource(R.string.change_password),
-                    onClickSettingItem = { }
-                )
+                    onClickSettingItem = { })
 
                 Row(
                     modifier = Modifier
@@ -110,36 +111,70 @@ fun SettingScreen(
             SettingSection(
                 sectionName = stringResource(R.string.other_settings)
             ) {
-                SettingItem(
-                    imageVector = ImageVector.vectorResource(com.prmto.core_presentation.R.drawable.save),
+                SettingItem(imageVector = ImageVector.vectorResource(com.prmto.core_presentation.R.drawable.save),
                     settingName = stringResource(R.string.saved),
-                    onClickSettingItem = {}
-                )
+                    onClickSettingItem = {})
 
-                SettingItem(
-                    imageVector = Icons.Outlined.FavoriteBorder,
+                SettingItem(imageVector = Icons.Outlined.FavoriteBorder,
                     settingName = stringResource(R.string.liked_your_posts),
-                    onClickSettingItem = { }
-                )
+                    onClickSettingItem = { })
 
-                SettingItem(
-                    imageVector = Icons.Outlined.Delete,
+                SettingItem(imageVector = Icons.Outlined.Delete,
                     settingName = stringResource(R.string.clear_the_search_history),
                     textColor = Color.InstaBlue,
-                    onClickSettingItem = { }
-                )
+                    onClickSettingItem = { })
             }
 
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
             SettingSection(sectionName = stringResource(R.string.login)) {
-                SettingItem(
-                    imageVector = Icons.Outlined.ExitToApp,
+                SettingItem(imageVector = Icons.Outlined.ExitToApp,
                     settingName = stringResource(R.string.logout),
                     textColor = Color.InstaBlue,
-                    onClickSettingItem = { }
-                )
+                    onClickSettingItem = {
+                        isShowAlertDialog = true
+                    })
             }
+        }
+
+        if (isShowAlertDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    isShowAlertDialog = false
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        onEvent(SettingScreenEvent.Logout)
+                        isShowAlertDialog = false
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.yes),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.InstaBlue
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { isShowAlertDialog = false }) {
+                        Text(
+                            text = stringResource(id = R.string.cancel),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                },
+                title = {
+                    Text(
+                        text = stringResource(R.string.logout),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        text = stringResource(R.string.logout_message),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            )
         }
     }
 }

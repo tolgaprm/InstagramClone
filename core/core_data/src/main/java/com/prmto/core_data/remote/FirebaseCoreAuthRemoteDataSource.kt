@@ -1,13 +1,12 @@
-package com.prmto.core_data.repository
+package com.prmto.core_data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.prmto.core_domain.repository.FirebaseAuthCore
 import javax.inject.Inject
 
-class FirebaseAuthCoreDataRepoIml @Inject constructor(
+internal class FirebaseCoreAuthRemoteDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth
-) : FirebaseAuthCore {
+) : CoreAuthRemoteDataSource {
     override fun signOut() {
         firebaseAuth.signOut()
     }
