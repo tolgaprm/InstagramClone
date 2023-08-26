@@ -103,6 +103,7 @@ class LoginViewModel @Inject constructor(
                         Screen.Home.route
                     )
                 )
+                _loginUiState.update { it.copy(isLoading = false) }
             }.onError { uiText ->
                 addNewConsumableEvent(
                     UiEvent.ShowMessage(
