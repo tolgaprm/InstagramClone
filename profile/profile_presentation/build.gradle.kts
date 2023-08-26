@@ -47,7 +47,9 @@ android {
 dependencies {
 
     implementation(project(":core:core_presentation"))
+    implementation(project(":core:core_domain"))
 
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)

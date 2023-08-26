@@ -11,4 +11,6 @@ interface UserRepository {
     ): SimpleResource
 
     suspend fun getUsers(): Resource<List<UserData>>
+
+    suspend fun getUserEmailBySearchingUsername(username: String): Resource<String>
 }

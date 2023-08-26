@@ -10,6 +10,7 @@ import com.prmto.setting_presentation.navigation.settingNavigation
 fun NavGraphBuilder.profileNestedNavigation(
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit,
+    onNavigateToNestedAuth: () -> Unit,
     onPopBackStack: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -26,7 +27,8 @@ fun NavGraphBuilder.profileNestedNavigation(
         )
         settingNavigation(
             onNavigateBack = onNavigateBack,
-            onNavigateToEditProfile = onNavigateToEditProfileScreen
+            onNavigateToEditProfile = onNavigateToEditProfileScreen,
+            onNavigateToNestedAuth = onNavigateToNestedAuth
         )
     }
 }

@@ -2,8 +2,10 @@ package com.prmto.core_data.di
 
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.prmto.core_data.repository.FirebaseAuthCoreDataRepoIml
-import com.prmto.core_domain.repository.FirebaseAuthCore
+import com.prmto.core_data.remote.CoreAuthRemoteDataSource
+import com.prmto.core_data.remote.FirebaseCoreAuthRemoteDataSource
+import com.prmto.core_data.repository.FirebaseAuthCoreRepositoryRepoImpl
+import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +26,17 @@ object CoreDataDi {
 
     @Provides
     @Singleton
+    fun provideCoreAuthRemoteDataSource(
+        firebaseAuth: FirebaseAuth
+    ): CoreAuthRemoteDataSource {
+        return FirebaseCoreAuthRemoteDataSource(firebaseAuth)
+    }
+
+    @Provides
+    @Singleton
     fun provideFirebaseAuthCoreRepo(
-        auth: FirebaseAuth
-    ): FirebaseAuthCore {
-        return FirebaseAuthCoreDataRepoIml(auth)
+        auth: CoreAuthRemoteDataSource
+    ): FirebaseAuthCoreRepository {
+        return FirebaseAuthCoreRepositoryRepoImpl(auth)
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
@@ -48,6 +49,7 @@ fun AuthTextField(
     enabled: Boolean = true,
     maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
     onValueChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit = {},
@@ -91,6 +93,7 @@ fun AuthTextField(
                 )
             },
             keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             trailingIcon = {
                 passwordTextFieldState?.let {
                     Icon(
@@ -98,7 +101,7 @@ fun AuthTextField(
                         imageVector = if (it.isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = if (it.isPasswordVisible) stringResource(R.string.hide_password) else stringResource(
                             R.string.show_password
-                        ),
+                        )
                     )
                 }
             },
@@ -129,9 +132,7 @@ fun AuthTextField(
             )
         }
     }
-
 }
-
 
 @Composable
 fun ShowErrorMessage(
@@ -144,7 +145,6 @@ fun ShowErrorMessage(
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)
         )
-
     }
 }
 
@@ -156,6 +156,25 @@ fun AuthTextFieldPreview() {
             label = "Email",
             textFieldState = TextFieldState(
                 ""
+            ),
+            onValueChange = {},
+            enabled = true,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default,
+            singleLine = true,
+            modifier = Modifier
+        )
+    }
+}
+
+@UiModePreview
+@Composable
+fun AuthTextPasswordFieldPreview() {
+    InstagramCloneTheme {
+        AuthTextField(
+            label = "Password",
+            passwordTextFieldState = PasswordTextFieldState(
+                text = ""
             ),
             onValueChange = {},
             enabled = true,

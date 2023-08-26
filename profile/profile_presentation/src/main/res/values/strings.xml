@@ -17,4 +17,7 @@
     <string name="close">Close</string>
     <string name="change_profile_photo">Change Profile Photo</string>
     <string name="private_account">Private Account</string>
+    <string name="logout_message">Are you sure you want to logout?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

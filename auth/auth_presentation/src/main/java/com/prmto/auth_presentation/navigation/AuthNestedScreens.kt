@@ -5,16 +5,18 @@ import androidx.navigation.navArgument
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.core_presentation.navigation.ScreenRoot
 
-sealed class RegisterScreen(val route: String) : ScreenRoot() {
-    object Register : RegisterScreen("register_screen")
-    object VerifyPhoneNumber : RegisterScreen("verify_phone_number_screen}") {
+sealed class AuthNestedScreens(val route: String) : ScreenRoot() {
+    object Register : AuthNestedScreens("register_screen")
+    object VerifyPhoneNumber : AuthNestedScreens("verify_phone_number_screen}") {
         fun passPhoneNumber(phoneNumber: String): String {
             return "verify_phone_number_screen/$phoneNumber"
         }
     }
 
+    object Login : AuthNestedScreens("login_screen")
+
     object UserInformation :
-        RegisterScreen("user_information_screen?$UserInfoEmailArgumentName={$UserInfoEmailArgumentName}") {
+        AuthNestedScreens("user_information_screen?$UserInfoEmailArgumentName={$UserInfoEmailArgumentName}") {
 
 
         fun passEmail(email: String): String {

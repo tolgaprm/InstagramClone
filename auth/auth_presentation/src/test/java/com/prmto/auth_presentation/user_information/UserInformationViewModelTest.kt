@@ -8,6 +8,7 @@ import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
 import com.prmto.auth_presentation.fake_repository.FakeUserRepository
+import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.auth_presentation.util.MainDispatcherRule
 import com.prmto.auth_presentation.util.TestConstants

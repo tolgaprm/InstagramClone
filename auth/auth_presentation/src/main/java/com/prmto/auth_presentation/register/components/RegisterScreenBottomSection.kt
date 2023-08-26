@@ -26,7 +26,7 @@ import com.prmto.core_presentation.ui.theme.colorBlur
 
 @Composable
 fun RegisterScreenBottomSection(
-    onNavigateToLogin: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     Box(
         modifier = Modifier

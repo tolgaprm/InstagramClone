@@ -17,4 +17,9 @@
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
     <string name="user_created_successfully">User created successfully</string>
+    <string name="email_or_username">Email or username</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="username_not_found">Username not found</string>
 </resources>
