@@ -47,7 +47,7 @@ class LoginViewModelTest {
     fun `when event is entered email or username then update email or username`() = runTest {
         val emailOrUsername = TestConstants.ENTERED_EMAIL
         viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(emailOrUsername))
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(emailOrUsername).isEqualTo(awaitItem().emailOrUserNameTextFieldState.text)
         }
     }
@@ -56,7 +56,7 @@ class LoginViewModelTest {
     fun `when event is entered password then update password`() = runTest {
         val password = "password"
         viewModel.onEvent(LoginUiEvent.EnteredPassword(password))
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(password).isEqualTo(awaitItem().passwordTextFieldState.text)
         }
     }
@@ -64,11 +64,11 @@ class LoginViewModelTest {
     @Test
     fun `when event is toggle password visibility then update password visibility`() = runTest {
         viewModel.onEvent(LoginUiEvent.TogglePasswordVisibility)
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(awaitItem().passwordTextFieldState.isPasswordVisible).isTrue()
         }
         viewModel.onEvent(LoginUiEvent.TogglePasswordVisibility)
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(awaitItem().passwordTextFieldState.isPasswordVisible).isFalse()
         }
     }
@@ -78,7 +78,7 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(""))
         viewModel.onEvent(LoginUiEvent.EnteredPassword("password"))
         viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(awaitItem().emailOrUserNameTextFieldState.error).isEqualTo(TextFieldError.Empty)
         }
     }
@@ -88,7 +88,7 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(TestConstants.ENTERED_EMAIL))
         viewModel.onEvent(LoginUiEvent.EnteredPassword(""))
         viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(awaitItem().passwordTextFieldState.error).isEqualTo(TextFieldError.Empty)
         }
     }
@@ -98,7 +98,7 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(TestConstants.ENTERED_EMAIL))
         viewModel.onEvent(LoginUiEvent.EnteredPassword("12345"))
         viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-        viewModel.loginUiState.test {
+        viewModel.uiState.test {
             assertThat(awaitItem().passwordTextFieldState.error).isEqualTo(TextFieldError.PasswordInvalid)
         }
     }
@@ -110,7 +110,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(TestConstants.ENTERED_EMAIL))
             viewModel.onEvent(LoginUiEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-            viewModel.loginUiState.test {
+            viewModel.uiState.test {
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()
@@ -127,7 +127,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(TestConstants.ENTERED_EMAIL))
             viewModel.onEvent(LoginUiEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-            viewModel.loginUiState.test {
+            viewModel.uiState.test {
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()
@@ -143,7 +143,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginUiEvent.EnteredEmailOrUsername(TestConstants.ENTERED_USERNAME))
             viewModel.onEvent(LoginUiEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-            viewModel.loginUiState.test {
+            viewModel.uiState.test {
                 val state = awaitItem()
                 // LoginWithUsername function is working
                 assertThat(state.isLoading).isTrue()
@@ -171,7 +171,7 @@ class LoginViewModelTest {
             )
             viewModel.onEvent(LoginUiEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginUiEvent.OnLoginClicked)
-            viewModel.loginUiState.test {
+            viewModel.uiState.test {
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()

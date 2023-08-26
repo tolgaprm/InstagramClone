@@ -15,6 +15,7 @@ import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_presentation.util.addNewUiEvent
 import com.prmto.core_presentation.util.updatePasswordVisibility
 import com.prmto.core_presentation.util.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,8 +34,8 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _loginUiState = MutableStateFlow(LoginUiState())
-    val loginUiState: StateFlow<LoginUiState> = _loginUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun onEvent(event: LoginUiEvent) {
         when (event) {
@@ -56,9 +56,9 @@ class LoginViewModel @Inject constructor(
             }
 
             LoginUiEvent.TogglePasswordVisibility -> {
-                _loginUiState.update {
+                _uiState.update {
                     it.copy(
-                        passwordTextFieldState = loginUiState.value.passwordTextFieldState.updatePasswordVisibility()
+                        passwordTextFieldState = uiState.value.passwordTextFieldState.updatePasswordVisibility()
                     )
                 }
             }
@@ -66,7 +66,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
-        val emailOrUsernameText = loginUiState.value.emailOrUserNameTextFieldState.text
+        val emailOrUsernameText = uiState.value.emailOrUserNameTextFieldState.text
         if (emailOrUsernameText.isBlank()) {
             updateEmailOrUsername(
                 error = TextFieldError.Empty
@@ -77,7 +77,7 @@ class LoginViewModel @Inject constructor(
         val isEmail = validateEmailUseCase(email = emailOrUsernameText)
 
         val passwordErrorOrNull =
-            validatePasswordUseCase(loginUiState.value.passwordTextFieldState.text)
+            validatePasswordUseCase(uiState.value.passwordTextFieldState.text)
 
         if (passwordErrorOrNull != null) {
             updatePassword(error = passwordErrorOrNull)
@@ -93,53 +93,65 @@ class LoginViewModel @Inject constructor(
 
     private fun loginWithEmail(email: String) {
         viewModelScope.launch {
-            _loginUiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true) }
             authRepository.signInWithEmailAndPassword(
                 email,
-                loginUiState.value.passwordTextFieldState.text
+                uiState.value.passwordTextFieldState.text
             ).onSuccess {
-                addNewConsumableEvent(
-                    UiEvent.Navigate(
-                        Screen.Home.route
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
+                            UiEvent.Navigate(
+                                Screen.Home.route
+                            )
+                        )
                     )
-                )
-                _loginUiState.update { it.copy(isLoading = false) }
+                }
             }.onError { uiText ->
-                addNewConsumableEvent(
-                    UiEvent.ShowMessage(
-                        uiText = uiText
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
+                            UiEvent.ShowMessage(
+                                uiText = uiText
+                            )
+                        )
                     )
-                )
-                _loginUiState.update { it.copy(isLoading = false) }
+                }
             }
         }
     }
 
     private fun loginWithUserName() {
         viewModelScope.launch {
-            _loginUiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true) }
             userRepository.getUserEmailBySearchingUsername(
-                username = loginUiState.value.emailOrUserNameTextFieldState.text
+                username = uiState.value.emailOrUserNameTextFieldState.text
             ).onSuccess { email ->
                 loginWithEmail(email = email)
             }.onError {
-                addNewConsumableEvent(
-                    UiEvent.ShowMessage(
-                        uiText = UiText.StringResource(R.string.username_not_found)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
+                            UiEvent.ShowMessage(
+                                uiText = UiText.StringResource(R.string.username_not_found)
+                            )
+                        )
                     )
-                )
-                _loginUiState.update { it.copy(isLoading = false) }
+                }
             }
         }
     }
 
     private fun updateEmailOrUsername(
-        emailOrUsername: String = loginUiState.value.emailOrUserNameTextFieldState.text,
+        emailOrUsername: String = uiState.value.emailOrUserNameTextFieldState.text,
         error: Error? = null
     ) {
-        _loginUiState.update {
+        _uiState.update {
             it.copy(
-                emailOrUserNameTextFieldState = loginUiState.value.emailOrUserNameTextFieldState.updateState(
+                emailOrUserNameTextFieldState = uiState.value.emailOrUserNameTextFieldState.updateState(
                     text = emailOrUsername,
                     error = error
                 )
@@ -148,11 +160,11 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun updatePassword(
-        password: String = loginUiState.value.passwordTextFieldState.text, error: Error? = null
+        password: String = uiState.value.passwordTextFieldState.text, error: Error? = null
     ) {
-        _loginUiState.update {
+        _uiState.update {
             it.copy(
-                passwordTextFieldState = loginUiState.value.passwordTextFieldState.updateState(
+                passwordTextFieldState = uiState.value.passwordTextFieldState.updateState(
                     text = password, error = error
                 )
             )
@@ -160,17 +172,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onEventConsumed() {
-        _loginUiState.update {
+        _uiState.update {
             it.copy(
-                consumableViewEvents = loginUiState.value.consumableViewEvents.drop(1)
-            )
-        }
-    }
-
-    private fun addNewConsumableEvent(event: UiEvent) {
-        _loginUiState.updateAndGet {
-            it.copy(
-                consumableViewEvents = loginUiState.value.consumableViewEvents + event
+                consumableViewEvents = uiState.value.consumableViewEvents.drop(1)
             )
         }
     }

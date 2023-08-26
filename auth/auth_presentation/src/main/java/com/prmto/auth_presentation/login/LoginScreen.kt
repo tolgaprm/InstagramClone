@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +24,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prmto.auth_presentation.R
@@ -39,12 +46,16 @@ import com.prmto.core_presentation.util.toDp
 import com.prmto.core_presentation.R as coreR
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     loginUiState: LoginUiState,
     onEvent: (LoginUiEvent) -> Unit,
     onNavigateToRegisterScreen: () -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -63,6 +74,14 @@ fun LoginScreen(
             AuthTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.email_or_username),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
                 textFieldState = loginUiState.emailOrUserNameTextFieldState,
                 onValueChange = {
                     onEvent(LoginUiEvent.EnteredEmailOrUsername(it))
@@ -73,6 +92,16 @@ fun LoginScreen(
             AuthTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(id = R.string.password),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        onEvent(LoginUiEvent.OnLoginClicked)
+                    }
+                ),
                 passwordTextFieldState = loginUiState.passwordTextFieldState,
                 onValueChange = {
                     onEvent(LoginUiEvent.EnteredPassword(it))
@@ -100,6 +129,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(id = R.string.login),
                 onClick = {
+                    keyboardController?.hide()
                     onEvent(LoginUiEvent.OnLoginClicked)
                 },
                 enabled = !loginUiState.isLoading

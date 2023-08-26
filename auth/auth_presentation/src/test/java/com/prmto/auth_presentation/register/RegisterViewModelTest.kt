@@ -34,7 +34,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(event)
 
         assertThat(
-            viewModel.state.value
+            viewModel.uiState.value
         ).isEqualTo(
             RegisterUiStateData(
                 selectedTab = selectedTab,
@@ -54,7 +54,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.EnteredEmail(email = email))
 
         assertThat(
-            viewModel.state.value
+            viewModel.uiState.value
         ).isEqualTo(
             RegisterUiStateData(
                 selectedTab = SelectedTab.EMAIL,
@@ -71,7 +71,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.EnteredPhoneNumber(phoneNumber = phoneNumber))
 
         assertThat(
-            viewModel.state.value
+            viewModel.uiState.value
         ).isEqualTo(
             RegisterUiStateData(
                 selectedTab = SelectedTab.PHONE_NUMBER,
@@ -92,7 +92,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.OnClickNext)
 
         assertThat(
-            viewModel.state.value.emailTextField.error
+            viewModel.uiState.value.emailTextField.error
         ).isEqualTo(
             com.prmto.core_domain.util.TextFieldError.EmailInvalid
         )
@@ -104,7 +104,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.OnClickTab(position = SelectedTab.EMAIL))
         viewModel.onEvent(RegisterEvent.EnteredEmail(email = email))
         viewModel.onEvent(RegisterEvent.OnClickNext)
-        val state = viewModel.state.value
+        val state = viewModel.uiState.value
         assertThat(state.consumableViewEvents.first()).isEqualTo(
             UiEvent.Navigate(
                 AuthNestedScreens.UserInformation.passEmail(email)
@@ -118,7 +118,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.EnteredPhoneNumber(phoneNumber = "55555"))
 
         assertThat(
-            viewModel.state.value.isNextButtonEnabled
+            viewModel.uiState.value.isNextButtonEnabled
         ).isFalse()
     }
 
@@ -128,7 +128,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.EnteredPhoneNumber(phoneNumber = "5555555555"))
 
         assertThat(
-            viewModel.state.value.isNextButtonEnabled
+            viewModel.uiState.value.isNextButtonEnabled
         ).isTrue()
     }
 
@@ -138,7 +138,7 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.EnteredEmail(email = ""))
 
         assertThat(
-            viewModel.state.value.isNextButtonEnabled
+            viewModel.uiState.value.isNextButtonEnabled
         ).isFalse()
     }
 
@@ -149,7 +149,7 @@ class RegisterViewModelTest {
 
 
         assertThat(
-            viewModel.state.value.isNextButtonEnabled
+            viewModel.uiState.value.isNextButtonEnabled
         ).isTrue()
     }
 }

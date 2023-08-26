@@ -23,7 +23,7 @@ fun NavGraphBuilder.registerNestedNavigation(
     ) {
         composable(AuthNestedScreens.Register.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
-            val registerUiData by viewModel.state.collectAsStateWithLifecycle()
+            val registerUiData by viewModel.uiState.collectAsStateWithLifecycle()
             RegisterScreen(
                 registerUiStateData = registerUiData,
                 onNavigateToLogin = {
@@ -45,7 +45,7 @@ fun NavGraphBuilder.registerNestedNavigation(
 
         composable(AuthNestedScreens.VerifyPhoneNumber.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
-            val registerUiData = viewModel.state.collectAsStateWithLifecycle().value
+            val registerUiData = viewModel.uiState.collectAsStateWithLifecycle().value
             VerifyPhoneNumberScreen(
                 phoneNumber = registerUiData.phoneNumberTextField.text,
                 verificationCodeValue = registerUiData.verificationCodeTextField,

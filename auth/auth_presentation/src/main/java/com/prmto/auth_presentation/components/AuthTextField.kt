@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
@@ -48,6 +49,7 @@ fun AuthTextField(
     enabled: Boolean = true,
     maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
     onValueChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit = {},
@@ -91,6 +93,7 @@ fun AuthTextField(
                 )
             },
             keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             trailingIcon = {
                 passwordTextFieldState?.let {
                     Icon(

@@ -19,8 +19,10 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,12 +37,15 @@ import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.auth_presentation.register.isPhoneNumberSelected
 import com.prmto.core_presentation.R as CoreRes
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     registerUiStateData: RegisterUiStateData,
     onNavigateToLogin: () -> Unit,
     onEvent: (RegisterEvent) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Scaffold(
         bottomBar = {
             RegisterScreenBottomSection(
@@ -93,6 +98,7 @@ fun RegisterScreen(
                 buttonText = stringResource(R.string.next),
                 onClick = {
                     onEvent(RegisterEvent.OnClickNext)
+                    keyboardController?.hide()
                 }
             )
         }
