@@ -12,6 +12,10 @@ class TestConstants {
 
         const val USER_EXISTS_USERNAME = "test_username"
 
+        const val ENTERED_USERNAME = "username"
+
+        const val ENTERED_VALID_PASSWORD = "123456"
+
         val listOfUserData = listOf(
             UserData(
                 email = ENTERED_EMAIL,
