@@ -1,38 +1,16 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
     //   id("com.google.gms.google-services")
+    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 android {
     namespace = "com.prmto.home_data"
-    compileSdk =33
-
-    defaultConfig {
-        minSdk = 24
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    compileSdk = 33
 }
 
 dependencies {
@@ -40,15 +18,11 @@ dependencies {
 
     //dagger - hilt
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
 
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.truth.library)
-    testImplementation(libs.mockk)
-    testImplementation(libs.turbine)
+    testImplementation(libs.bundles.test)
 
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.truth.library)

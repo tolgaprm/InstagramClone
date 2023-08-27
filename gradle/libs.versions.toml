@@ -1,6 +1,6 @@
 [versions]
 com-android-application = "8.1.0"
-org-jetbrains-kotlin-android = "1.8.21"
+org-jetbrains-kotlin-android = "1.9.0"
 core-ktx = "1.9.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -8,7 +8,7 @@ espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
 compose-bom = "2023.06.00"
-hilt_version = '2.45'
+hilt_version = '2.47'
 hilt_complier_version = '1.0.0'
 coroutines_version = '1.7.1'
 room_version = "2.5.1"
@@ -21,11 +21,12 @@ turbineVersion = "0.13.0"
 navigationVersion = "2.6.0"
 hiltNavigationComposeVersion = "1.1.0-alpha01"
 timber_version = "5.0.1"
+com-google-devtools-ksp = "1.9.0-1.0.13"
 
 firebase_bom_version = "32.1.0"
 play_services_auth_version = "20.5.0"
 google_services_version = "4.3.15"
-accompoints_version= "0.31.4-beta"
+accompoints_version = "0.31.4-beta"
 org-jetbrains-kotlin-jvm = "1.8.21"
 com-android-library = "8.1.0-alpha11"
 appcompat = "1.6.1"
@@ -54,7 +55,7 @@ material3 = { group = "androidx.compose.material3", name = "material3" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt_version" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt_version" }
 hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt_complier_version" }
-hilt-navigation-compose= { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }
 
 # coroutines for getting off the UI thread
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines_version" }
@@ -101,7 +102,7 @@ truth-library = { group = "com.google.truth", name = "truth", version.ref = "tru
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 mockk-agent-android = { group = "io.mockk", name = "mockk-agent-android", version.ref = "mockkVersion" }
-turbine =  { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_version" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -111,5 +112,28 @@ com-android-application = { id = "com.android.application", version.ref = "com-a
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
-[bundles]
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "com-google-devtools-ksp" }
 
+[bundles]
+ui-related = [
+    "lifecycle-runtime-compose",
+    "core-ktx",
+    "lifecycle-runtime-ktx",
+    "activity-compose",
+    "ui",
+    "ui-graphics",
+    "ui-tooling-preview",
+    "material3",
+    "viewmodel-compose",
+    "material",
+    "accompanist-systemuicontroller",
+    "icons-extended"
+]
+
+test = [
+    "coroutines-test",
+    "junit",
+    "truth-library",
+    "mockk",
+    "turbine"
+]
