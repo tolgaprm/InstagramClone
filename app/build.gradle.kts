@@ -1,11 +1,13 @@
 import java.util.Properties
+
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    alias(libs.plugins.com.google.devtools.ksp)
 }
 var properties = Properties().apply {
     load(project.rootProject.file("local.properties").inputStream())
@@ -62,7 +64,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -86,17 +88,8 @@ dependencies {
     implementation(project(":auth:auth_data"))
     implementation(project(":auth:auth_domain"))
 
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    implementation(libs.viewmodel.compose)
-    implementation(libs.accompanist.systemuicontroller)
-
+    implementation(libs.bundles.ui.related)
 
     implementation(libs.timber)
 
@@ -105,8 +98,8 @@ dependencies {
 
     //dagger - hilt
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     // coroutines for getting off the UI thread
@@ -116,7 +109,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 
     // Work Manager
@@ -137,12 +130,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.firestore.ktx)
 
-
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.truth.library)
-    testImplementation(libs.mockk)
-    testImplementation(libs.turbine)
+    testImplementation(libs.bundles.test)
 
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.truth.library)
