@@ -1,15 +1,16 @@
-package com.prmto.auth_data.repository
+package com.prmto.core_data.repository.user
 
-import com.prmto.auth_data.remote.datasource.user.FirebaseUserDataSource
-import com.prmto.auth_domain.register.model.UserData
-import com.prmto.auth_domain.repository.UserRepository
+import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSource
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
+import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import javax.inject.Inject
 
-class FirebaseUserRepositoryImpl @Inject constructor(
+class FirebaseFirebaseUserCoreRepositoryImpl @Inject constructor(
     private val firebaseUserDataSource: FirebaseUserDataSource
-) : UserRepository {
+) : FirebaseUserCoreRepository {
     override suspend fun saveUser(
         userData: UserData,
         userUid: String
@@ -23,5 +24,12 @@ class FirebaseUserRepositoryImpl @Inject constructor(
 
     override suspend fun getUserEmailBySearchingUsername(username: String): Resource<String> {
         return firebaseUserDataSource.getUserEmailBySearchingUsername(username = username)
+    }
+
+    override suspend fun updateUserDetail(userDetail: UserDetail, userUid: String): SimpleResource {
+        return firebaseUserDataSource.updateUserDetail(
+            userUid = userUid,
+            userDetail = userDetail
+        )
     }
 }

@@ -1,12 +1,14 @@
-package com.prmto.auth_data.remote.datasource.user
+package com.prmto.core_data.remote.datasource.user
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.prmto.auth_data.remote.util.FirebaseCollectionNames
-import com.prmto.auth_data.remote.util.FirebaseFieldName
-import com.prmto.auth_data.remote.util.safeCallWithTryCatch
-import com.prmto.auth_domain.register.model.UserData
+import com.google.firebase.firestore.SetOptions
+import com.prmto.core_data.remote.util.FirebaseCollectionNames
+import com.prmto.core_data.remote.util.FirebaseFieldName
+import com.prmto.core_data.remote.util.safeCallWithTryCatch
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
+import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -36,6 +38,17 @@ class FirebaseUserDataSourceImpl @Inject constructor(
                 .whereEqualTo(FirebaseFieldName.USERNAME_FIELD, username).get().await()
             val user = result.toObjects(UserData::class.java)
             Resource.Success(user[0].email)
+        }
+    }
+
+    override suspend fun updateUserDetail(userUid: String, userDetail: UserDetail): SimpleResource {
+        return safeCallWithTryCatch {
+            firestore.collection(FirebaseCollectionNames.USERS_COLLECTION)
+                .document(userUid).set(
+                    userDetail,
+                    SetOptions.mergeFields(FirebaseFieldName.USER_DETAIL_FIELD)
+                ).await()
+            Resource.Success(Unit)
         }
     }
 }

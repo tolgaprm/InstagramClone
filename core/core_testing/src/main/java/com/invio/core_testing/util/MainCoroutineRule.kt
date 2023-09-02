@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.util
+package com.invio.core_testing.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

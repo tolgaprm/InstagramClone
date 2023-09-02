@@ -58,7 +58,9 @@ fun EditProfileSection(
                 value = value,
                 onValueChange = onValueChange,
                 maxLines = 1,
-                textStyle = MaterialTheme.typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             )
             Divider(
                 color = if (isFocus) Color.InstaBlue else MaterialTheme.colorScheme.onBackground.copy(

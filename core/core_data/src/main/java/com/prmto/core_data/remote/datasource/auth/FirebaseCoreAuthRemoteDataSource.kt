@@ -1,4 +1,4 @@
-package com.prmto.core_data.remote
+package com.prmto.core_data.remote.datasource.auth
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

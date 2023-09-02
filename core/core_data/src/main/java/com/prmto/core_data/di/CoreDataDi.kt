@@ -2,10 +2,15 @@ package com.prmto.core_data.di
 
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.prmto.core_data.remote.CoreAuthRemoteDataSource
-import com.prmto.core_data.remote.FirebaseCoreAuthRemoteDataSource
-import com.prmto.core_data.repository.FirebaseAuthCoreRepositoryRepoImpl
+import com.google.firebase.firestore.FirebaseFirestore
+import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
+import com.prmto.core_data.remote.datasource.auth.FirebaseCoreAuthRemoteDataSource
+import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSource
+import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSourceImpl
+import com.prmto.core_data.repository.auth.FirebaseAuthCoreRepositoryRepoImpl
+import com.prmto.core_data.repository.user.FirebaseFirebaseUserCoreRepositoryImpl
 import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
+import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +43,25 @@ object CoreDataDi {
         auth: CoreAuthRemoteDataSource
     ): FirebaseAuthCoreRepository {
         return FirebaseAuthCoreRepositoryRepoImpl(auth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUserDataSource(
+        firestore: FirebaseFirestore
+    ): FirebaseUserDataSource {
+        return FirebaseUserDataSourceImpl(
+            firestore
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUserRepositoryRepository(
+        userDataSource: FirebaseUserDataSource
+    ): FirebaseUserCoreRepository {
+        return FirebaseFirebaseUserCoreRepositoryImpl(
+            userDataSource
+        )
     }
 }

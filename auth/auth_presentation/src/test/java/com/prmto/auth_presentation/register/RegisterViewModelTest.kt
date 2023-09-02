@@ -1,10 +1,10 @@
 package com.prmto.auth_presentation.register
 
 import com.google.common.truth.Truth.assertThat
+import com.invio.core_testing.util.MainDispatcherRule
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_presentation.navigation.AuthNestedScreens
 import com.prmto.auth_presentation.register.event.RegisterEvent
-import com.prmto.auth_presentation.util.MainDispatcherRule
 import com.prmto.core_presentation.util.TextFieldState
 import com.prmto.core_presentation.util.UiEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi

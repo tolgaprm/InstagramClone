@@ -3,14 +3,12 @@ package com.prmto.auth_presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
-import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.login.event.LoginUiEvent
-import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.constants.onError
 import com.prmto.core_domain.constants.onSuccess
+import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
@@ -31,7 +29,7 @@ class LoginViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val firebaseUserCoreRepository: FirebaseUserCoreRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -126,17 +124,17 @@ class LoginViewModel @Inject constructor(
     private fun loginWithUserName() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            userRepository.getUserEmailBySearchingUsername(
+            firebaseUserCoreRepository.getUserEmailBySearchingUsername(
                 username = uiState.value.emailOrUserNameTextFieldState.text
             ).onSuccess { email ->
                 loginWithEmail(email = email)
-            }.onError {
+            }.onError { uiText ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
                             UiEvent.ShowMessage(
-                                uiText = UiText.StringResource(R.string.username_not_found)
+                                uiText = uiText
                             )
                         )
                     )

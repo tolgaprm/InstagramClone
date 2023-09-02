@@ -2,15 +2,15 @@ package com.prmto.auth_presentation.login
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.invio.core_testing.fake_repository.FakeFirebaseUserCoreRepository
+import com.invio.core_testing.fake_repository.TestConstants
+import com.invio.core_testing.util.MainDispatcherRule
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
-import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
-import com.prmto.auth_presentation.fake_repository.FakeUserRepository
 import com.prmto.auth_presentation.login.event.LoginUiEvent
-import com.prmto.auth_presentation.util.MainDispatcherRule
-import com.prmto.auth_presentation.util.TestConstants
 import com.prmto.core_domain.constants.UiText
+import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
@@ -29,17 +29,17 @@ class LoginViewModelTest {
 
     private lateinit var viewModel: LoginViewModel
     private lateinit var authRepository: FakeAuthRepository
-    private lateinit var userRepository: FakeUserRepository
+    private lateinit var userRepository: FirebaseUserCoreRepository
 
     @Before
     fun setUp() {
         authRepository = FakeAuthRepository()
-        userRepository = FakeUserRepository()
+        userRepository = FakeFirebaseUserCoreRepository()
         viewModel = LoginViewModel(
             validateEmailUseCase = ValidateEmailUseCase(),
             validatePasswordUseCase = ValidatePasswordUseCase(),
             authRepository = authRepository,
-            userRepository = userRepository
+            firebaseUserCoreRepository = userRepository
         )
     }
 
@@ -161,7 +161,7 @@ class LoginViewModelTest {
     fun `when event is login, emailOrUsername is username, username is not find, then login error `() =
         runTest {
             val exceptedUiEvent =
-                UiEvent.ShowMessage(UiText.StringResource(R.string.username_not_found))
+                UiEvent.ShowMessage(UiText.DynamicString(TestConstants.USERNAME_DOES_NOT_EXIST_ERROR))
             viewModel.onEvent(
                 LoginUiEvent.EnteredEmailOrUsername(
                     TestConstants.ENTERED_USERNAME.plus(

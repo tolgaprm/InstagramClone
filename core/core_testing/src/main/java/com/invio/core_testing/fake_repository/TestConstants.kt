@@ -1,6 +1,6 @@
-package com.prmto.auth_presentation.util
+package com.invio.core_testing.fake_repository
 
-import com.prmto.auth_domain.register.model.UserData
+import com.prmto.core_domain.model.UserData
 
 class TestConstants {
     companion object {
@@ -15,6 +15,8 @@ class TestConstants {
         const val ENTERED_USERNAME = "username"
 
         const val ENTERED_VALID_PASSWORD = "123456"
+
+        const val USERNAME_DOES_NOT_EXIST_ERROR = "Username does not exist"
 
         val listOfUserData = listOf(
             UserData(

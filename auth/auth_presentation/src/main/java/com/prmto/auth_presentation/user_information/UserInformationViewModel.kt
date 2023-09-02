@@ -3,14 +3,15 @@ package com.prmto.auth_presentation.user_information
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prmto.auth_domain.register.model.UserData
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants
 import com.prmto.core_domain.constants.onError
 import com.prmto.core_domain.constants.onSuccess
+import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
@@ -31,7 +32,7 @@ import javax.inject.Inject
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
+    private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(UserInfoUiData())
@@ -95,7 +96,8 @@ class UserInformationViewModel @Inject constructor(
                 email = state.value.email,
                 fullName = state.value.fullNameTextField.text,
                 username = state.value.usernameTextField.text,
-                password = state.value.passwordTextField.text
+                password = state.value.passwordTextField.text,
+                userDetail = UserDetail()
             )
 
             checkIfExistAUserWithTheSameUsername { isUserExist ->
@@ -119,7 +121,7 @@ class UserInformationViewModel @Inject constructor(
         userData: UserData, userUID: String
     ) {
         viewModelScope.launch {
-            userRepository.saveUser(
+            firebaseUserCoreRepository.saveUser(
                 userData = userData, userUid = userUID
             ).onSuccess {
                 addNewConsumableEvent(
@@ -143,7 +145,7 @@ class UserInformationViewModel @Inject constructor(
         onCompleted: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            userRepository.getUsers().onSuccess { users ->
+            firebaseUserCoreRepository.getUsers().onSuccess { users ->
                 val result = users.map { it.username == state.value.usernameTextField.text }
                     .find { true }
                 onCompleted(result ?: false)

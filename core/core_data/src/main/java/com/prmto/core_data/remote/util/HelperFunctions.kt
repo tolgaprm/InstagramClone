@@ -1,4 +1,4 @@
-package com.prmto.auth_data.remote.util
+package com.prmto.core_data.remote.util
 
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.UiText

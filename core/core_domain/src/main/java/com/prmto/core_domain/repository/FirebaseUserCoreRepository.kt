@@ -1,10 +1,11 @@
-package com.prmto.auth_domain.repository
+package com.prmto.core_domain.repository
 
-import com.prmto.auth_domain.register.model.UserData
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
+import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
 
-interface UserRepository {
+interface FirebaseUserCoreRepository {
     suspend fun saveUser(
         userData: UserData,
         userUid: String
@@ -13,4 +14,9 @@ interface UserRepository {
     suspend fun getUsers(): Resource<List<UserData>>
 
     suspend fun getUserEmailBySearchingUsername(username: String): Resource<String>
+
+    suspend fun updateUserDetail(
+        userDetail: UserDetail,
+        userUid: String
+    ): SimpleResource
 }

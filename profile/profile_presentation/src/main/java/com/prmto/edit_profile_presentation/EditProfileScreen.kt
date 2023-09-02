@@ -44,7 +44,7 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircleProfileImage(
-                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s"
+                imageUrl = ""
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(

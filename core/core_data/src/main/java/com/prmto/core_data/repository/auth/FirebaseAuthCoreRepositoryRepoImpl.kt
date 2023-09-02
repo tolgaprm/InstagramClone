@@ -1,7 +1,7 @@
-package com.prmto.core_data.repository
+package com.prmto.core_data.repository.auth
 
 import com.google.firebase.auth.FirebaseUser
-import com.prmto.core_data.remote.CoreAuthRemoteDataSource
+import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
 import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
 import javax.inject.Inject
 
