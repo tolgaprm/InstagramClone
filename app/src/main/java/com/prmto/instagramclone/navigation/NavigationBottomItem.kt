@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.instagramclone.R
+import java.io.Serializable
 import com.prmto.core_presentation.R as coreRes
 
 data class NavigationBottomItem(
@@ -16,7 +17,7 @@ data class NavigationBottomItem(
     @DrawableRes val selectedIcon: Int,
     @DrawableRes val unselectedIcon: Int,
     @StringRes val contentDescription: Int
-)
+) : Serializable
 
 val bottomNavigationItems = listOf(
     NavigationBottomItem(
