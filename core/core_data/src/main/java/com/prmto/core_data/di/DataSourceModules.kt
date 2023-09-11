@@ -1,16 +1,15 @@
 package com.prmto.core_data.di
 
-import com.google.firebase.FirebaseApp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.prmto.core_data.local.datasource.preferences.CoreUserPreferencesLocalDataSource
+import com.prmto.core_data.local.datasource.preferences.CoreUserPreferencesLocalDataSourceImpl
 import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
 import com.prmto.core_data.remote.datasource.auth.FirebaseCoreAuthRemoteDataSource
 import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSource
 import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSourceImpl
-import com.prmto.core_data.repository.auth.FirebaseAuthCoreRepositoryRepoImpl
-import com.prmto.core_data.repository.user.FirebaseFirebaseUserCoreRepositoryImpl
-import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
-import com.prmto.core_domain.repository.FirebaseUserCoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,30 +18,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object CoreDataDi {
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth(
-        firebaseApp: FirebaseApp
-    ): FirebaseAuth {
-        return FirebaseAuth.getInstance(firebaseApp)
-    }
-
+object DataSourceModules {
     @Provides
     @Singleton
     fun provideCoreAuthRemoteDataSource(
         firebaseAuth: FirebaseAuth
     ): CoreAuthRemoteDataSource {
         return FirebaseCoreAuthRemoteDataSource(firebaseAuth)
-    }
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAuthCoreRepo(
-        auth: CoreAuthRemoteDataSource
-    ): FirebaseAuthCoreRepository {
-        return FirebaseAuthCoreRepositoryRepoImpl(auth)
     }
 
     @Provides
@@ -57,11 +39,9 @@ object CoreDataDi {
 
     @Provides
     @Singleton
-    fun provideFirebaseUserRepositoryRepository(
-        userDataSource: FirebaseUserDataSource
-    ): FirebaseUserCoreRepository {
-        return FirebaseFirebaseUserCoreRepositoryImpl(
-            userDataSource
-        )
+    fun provideCoreUserPreferencesLocalDataSource(
+        dataStore: DataStore<Preferences>
+    ): CoreUserPreferencesLocalDataSource {
+        return CoreUserPreferencesLocalDataSourceImpl(dataStore)
     }
 }

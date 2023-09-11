@@ -12,7 +12,7 @@ import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.core_domain.constants.UiText
-import com.prmto.core_domain.repository.FirebaseUserCoreRepository
+import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.PasswordTextFieldState

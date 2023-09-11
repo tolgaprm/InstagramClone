@@ -5,10 +5,10 @@ import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
-import com.prmto.core_domain.repository.FirebaseUserCoreRepository
+import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import javax.inject.Inject
 
-class FirebaseFirebaseUserCoreRepositoryImpl @Inject constructor(
+class FirebaseUserCoreRepositoryImpl @Inject constructor(
     private val firebaseUserDataSource: FirebaseUserDataSource
 ) : FirebaseUserCoreRepository {
     override suspend fun saveUser(
@@ -22,14 +22,18 @@ class FirebaseFirebaseUserCoreRepositoryImpl @Inject constructor(
         return firebaseUserDataSource.getUsers()
     }
 
-    override suspend fun getUserEmailBySearchingUsername(username: String): Resource<String> {
-        return firebaseUserDataSource.getUserEmailBySearchingUsername(username = username)
-    }
-
     override suspend fun updateUserDetail(userDetail: UserDetail, userUid: String): SimpleResource {
         return firebaseUserDataSource.updateUserDetail(
             userUid = userUid,
             userDetail = userDetail
         )
+    }
+
+    override suspend fun getUserBySearchingUsername(username: String): Resource<UserData> {
+        return firebaseUserDataSource.getUserBySearchingUsername(username = username)
+    }
+
+    override suspend fun getUserDataWithUserUid(userUid: String): Resource<UserData> {
+        return firebaseUserDataSource.getUserDataWithUserUid(userUid)
     }
 }

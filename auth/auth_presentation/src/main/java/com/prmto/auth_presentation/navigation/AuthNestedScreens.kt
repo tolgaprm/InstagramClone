@@ -6,16 +6,16 @@ import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.core_presentation.navigation.ScreenRoot
 
 sealed class AuthNestedScreens(val route: String) : ScreenRoot() {
-    object Register : AuthNestedScreens("register_screen")
-    object VerifyPhoneNumber : AuthNestedScreens("verify_phone_number_screen}") {
+    data object Register : AuthNestedScreens("register_screen")
+    data object VerifyPhoneNumber : AuthNestedScreens("verify_phone_number_screen}") {
         fun passPhoneNumber(phoneNumber: String): String {
             return "verify_phone_number_screen/$phoneNumber"
         }
     }
 
-    object Login : AuthNestedScreens("login_screen")
+    data object Login : AuthNestedScreens("login_screen")
 
-    object UserInformation :
+    data object UserInformation :
         AuthNestedScreens("user_information_screen?$UserInfoEmailArgumentName={$UserInfoEmailArgumentName}") {
 
 

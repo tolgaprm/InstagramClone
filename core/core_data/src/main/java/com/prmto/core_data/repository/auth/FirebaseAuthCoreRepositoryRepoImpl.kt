@@ -2,7 +2,7 @@ package com.prmto.core_data.repository.auth
 
 import com.google.firebase.auth.FirebaseUser
 import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
-import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
+import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import javax.inject.Inject
 
 class FirebaseAuthCoreRepositoryRepoImpl @Inject constructor(

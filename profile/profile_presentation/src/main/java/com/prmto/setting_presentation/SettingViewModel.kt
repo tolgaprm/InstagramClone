@@ -1,7 +1,7 @@
 package com.prmto.setting_presentation
 
 import androidx.lifecycle.ViewModel
-import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
+import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_presentation.util.addNewUiEvent

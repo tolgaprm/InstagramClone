@@ -1,4 +1,4 @@
-package com.prmto.core_domain.repository
+package com.prmto.core_domain.repository.auth
 
 import com.google.firebase.auth.FirebaseUser
 

@@ -19,32 +19,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
 import com.prmto.edit_profile_presentation.navigation.components.EditProfileSection
 import com.prmto.edit_profile_presentation.navigation.components.EditProfileTopBar
 import com.prmto.profile_presentation.R
 
 @Composable
 fun EditProfileScreen(
-    onPopBackStack: () -> Unit
+    uiState: EditProfileUiState,
+    onPopBackStack: () -> Unit,
+    onEvent: (EditProfileUiEvent) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             EditProfileTopBar(
+                isShowSaveButton = uiState.isShowSaveButton,
                 onClickClose = onPopBackStack,
-                onClickSave = {}
+                onClickSave = {
+                    onEvent(EditProfileUiEvent.UpdateProfileInfo)
+                }
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircleProfileImage(
-                imageUrl = ""
+                imageUrl = uiState.updatedUserDetail.profilePictureUrl
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
@@ -57,27 +63,35 @@ fun EditProfileScreen(
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
             )
             EditProfileSection(
-                sectionName = "Name",
-                value = "Jacob",
-                onValueChange = {}
+                sectionName = stringResource(R.string.edit_profile_name_section),
+                value = uiState.updatedUserDetail.name,
+                onValueChange = {
+                    onEvent(EditProfileUiEvent.EnteredName(it))
+                }
             )
 
             EditProfileSection(
-                sectionName = "Username",
-                value = "jacob",
-                onValueChange = {}
+                sectionName = stringResource(R.string.edit_profile_username),
+                value = uiState.updatedUserDetail.username,
+                onValueChange = {
+                    onEvent(EditProfileUiEvent.EnteredUsername(it))
+                }
             )
 
             EditProfileSection(
-                sectionName = "Bio",
-                value = "Android Developer",
-                onValueChange = {}
+                sectionName = stringResource(R.string.edit_profile_bio),
+                value = uiState.updatedUserDetail.bio,
+                onValueChange = {
+                    onEvent(EditProfileUiEvent.EnteredBio(it))
+                }
             )
 
             EditProfileSection(
-                sectionName = "Website",
-                value = "",
-                onValueChange = {}
+                sectionName = stringResource(R.string.edit_profile_website),
+                value = uiState.updatedUserDetail.webSite,
+                onValueChange = {
+                    onEvent(EditProfileUiEvent.EnteredWebsite(it))
+                }
             )
         }
     }

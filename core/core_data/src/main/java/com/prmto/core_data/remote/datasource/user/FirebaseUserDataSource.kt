@@ -10,10 +10,12 @@ interface FirebaseUserDataSource {
 
     suspend fun getUsers(): Resource<List<UserData>>
 
-    suspend fun getUserEmailBySearchingUsername(username: String): Resource<String>
-
     suspend fun updateUserDetail(
         userUid: String,
         userDetail: UserDetail
     ): SimpleResource
+
+    suspend fun getUserBySearchingUsername(username: String): Resource<UserData>
+
+    suspend fun getUserDataWithUserUid(userUid: String): Resource<UserData>
 }

@@ -10,6 +10,8 @@ sealed class UiEvent : Event() {
     data class Navigate(val route: String) : UiEvent()
 
     data class ShowMessage(val uiText: UiText) : UiEvent()
+
+    data object PopBackStack : UiEvent()
 }
 
 fun UiEvent.showMessageWithResID(

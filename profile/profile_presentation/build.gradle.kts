@@ -29,7 +29,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.ui.related)
 
-
+    implementation(libs.firebase.auth.ktx)
     implementation(libs.timber)
 
     // Navigation

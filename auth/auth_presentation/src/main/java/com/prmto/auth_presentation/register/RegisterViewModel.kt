@@ -40,7 +40,7 @@ class RegisterViewModel @Inject constructor(
             }
 
             is RegisterEvent.EnteredEmail -> {
-                updateEmail(email = event.email)
+                updateEmail(email = event.email.trim())
                 isNextButtonEnabled()
             }
 

@@ -8,7 +8,9 @@ import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_presentation.login.event.LoginUiEvent
 import com.prmto.core_domain.constants.onError
 import com.prmto.core_domain.constants.onSuccess
-import com.prmto.core_domain.repository.FirebaseUserCoreRepository
+import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
+import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
@@ -29,7 +31,8 @@ class LoginViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val authRepository: AuthRepository,
-    private val firebaseUserCoreRepository: FirebaseUserCoreRepository
+    private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
+    private val coreUserPreferencesRepository: CoreUserPreferencesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -74,8 +77,7 @@ class LoginViewModel @Inject constructor(
 
         val isEmail = validateEmailUseCase(email = emailOrUsernameText)
 
-        val passwordErrorOrNull =
-            validatePasswordUseCase(uiState.value.passwordTextFieldState.text)
+        val passwordErrorOrNull = validatePasswordUseCase(uiState.value.passwordTextFieldState.text)
 
         if (passwordErrorOrNull != null) {
             updatePassword(error = passwordErrorOrNull)
@@ -93,8 +95,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             authRepository.signInWithEmailAndPassword(
-                email,
-                uiState.value.passwordTextFieldState.text
+                email, uiState.value.passwordTextFieldState.text
             ).onSuccess {
                 _uiState.update {
                     it.copy(
@@ -124,10 +125,11 @@ class LoginViewModel @Inject constructor(
     private fun loginWithUserName() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            firebaseUserCoreRepository.getUserEmailBySearchingUsername(
+            firebaseUserCoreRepository.getUserBySearchingUsername(
                 username = uiState.value.emailOrUserNameTextFieldState.text
-            ).onSuccess { email ->
-                loginWithEmail(email = email)
+            ).onSuccess { userData ->
+                saveUserDetailToPreferences(userData.userDetail)
+                loginWithEmail(email = userData.email)
             }.onError { uiText ->
                 _uiState.update {
                     it.copy(
@@ -143,6 +145,12 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun saveUserDetailToPreferences(userDetail: UserDetail) {
+        viewModelScope.launch {
+            coreUserPreferencesRepository.saveUserDetail(userDetail = userDetail)
+        }
+    }
+
     private fun updateEmailOrUsername(
         emailOrUsername: String = uiState.value.emailOrUserNameTextFieldState.text,
         error: Error? = null
@@ -150,8 +158,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 emailOrUserNameTextFieldState = uiState.value.emailOrUserNameTextFieldState.updateState(
-                    text = emailOrUsername,
-                    error = error
+                    text = emailOrUsername, error = error
                 )
             )
         }

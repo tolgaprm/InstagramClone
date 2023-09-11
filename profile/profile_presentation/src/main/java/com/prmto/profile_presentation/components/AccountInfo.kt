@@ -1,6 +1,5 @@
 package com.prmto.profile_presentation.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,27 +7,26 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.prmto.core_domain.model.Statistics
+import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.profile_presentation.R
 import com.prmto.core_presentation.R as CoreR
 
 @Composable
 fun AccountInfo(
-    modifier: Modifier = Modifier,
-    onClickEditProfile: () -> Unit
+    statistics: Statistics,
+    userDetail: UserDetail,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -40,39 +38,40 @@ fun AccountInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CircleProfileImage(
-                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqHZYyumeGLb9wJKCNqgDtB4q4LYYVTwJYp2cQwcc&s"
+                imageUrl = userDetail.profilePictureUrl,
             )
-            Statistics()
+            Statistics(
+                statistics = statistics
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         AccountNameAndBio(
-            name = "Jacob",
-            bio = "Android Developer"
-        )
-        EditProfileButton(
-            onClick = onClickEditProfile
+            name = userDetail.name,
+            bio = userDetail.bio
         )
     }
 }
 
 @Composable
-fun Statistics() {
+fun Statistics(
+    statistics: Statistics,
+) {
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         StatisticColumn(
-            count = "90",
+            count = "${statistics.postsCount}",
             label = stringResource(R.string.posts)
         )
 
         StatisticColumn(
-            count = "834",
+            count = "${statistics.followersCount}",
             label = stringResource(R.string.followers)
         )
 
         StatisticColumn(
-            count = "162",
+            count = "${statistics.followingCount}",
             label = stringResource(R.string.following)
         )
     }
@@ -120,26 +119,4 @@ fun AccountNameAndBio(
             color = colorResource(id = CoreR.color.secondTextColor)
         )
     )
-}
-
-@Composable
-fun EditProfileButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Button(
-        modifier = modifier
-            .padding(top = 16.dp)
-            .fillMaxWidth()
-            .height(35.dp)
-            .border(
-                width = 1.dp,
-                color = Color.LightGray.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(6.dp)
-            )
-            .clip(RoundedCornerShape(6.dp)),
-        onClick = onClick
-    ) {
-        Text(text = stringResource(id = R.string.edit_profile))
-    }
 }

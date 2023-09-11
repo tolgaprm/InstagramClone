@@ -1,4 +1,4 @@
-package com.prmto.core_domain.repository
+package com.prmto.core_domain.repository.user
 
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
@@ -13,10 +13,14 @@ interface FirebaseUserCoreRepository {
 
     suspend fun getUsers(): Resource<List<UserData>>
 
-    suspend fun getUserEmailBySearchingUsername(username: String): Resource<String>
-
     suspend fun updateUserDetail(
         userDetail: UserDetail,
         userUid: String
     ): SimpleResource
+
+    suspend fun getUserBySearchingUsername(
+        username: String
+    ): Resource<UserData>
+
+    suspend fun getUserDataWithUserUid(userUid: String): Resource<UserData>
 }

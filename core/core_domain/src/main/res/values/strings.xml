@@ -5,4 +5,6 @@
     <string name="error_invalid_field">This is a not valid email.</string>
     <string name="password_invalid_field">Incorrect password provided. The password\'s length have at least 6 characters.</string>
     <string name="username_already_exists">Username already exists</string>
+    <string name="username_not_found">Username not found</string>
+    <string name="user_not_found">User not found</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.prmto.edit_profile_presentation.navigation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -21,6 +22,7 @@ import com.prmto.profile_presentation.R
 @Composable
 fun EditProfileTopBar(
     modifier: Modifier = Modifier,
+    isShowSaveButton: Boolean,
     onClickClose: () -> Unit,
     onClickSave: () -> Unit
 ) {
@@ -40,12 +42,14 @@ fun EditProfileTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onClickSave) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = stringResource(R.string.saved),
-                    tint = Color.InstaBlue
-                )
+            AnimatedVisibility(visible = isShowSaveButton) {
+                IconButton(onClick = onClickSave) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = stringResource(R.string.saved),
+                        tint = Color.InstaBlue
+                    )
+                }
             }
         }
     )

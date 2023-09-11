@@ -1,6 +1,7 @@
 package com.invio.core_testing.fake_repository
 
 import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
 
 class TestConstants {
     companion object {
@@ -21,11 +22,11 @@ class TestConstants {
         val listOfUserData = listOf(
             UserData(
                 email = ENTERED_EMAIL,
-                password = "123456",
-                fullName = "",
-                username = "test_username",
-                emailPhoneNumber = ""
-            )
+                userDetail = UserDetail(
+                    name = "",
+                    username = "test_username",
+                )
+            ),
         )
     }
 }

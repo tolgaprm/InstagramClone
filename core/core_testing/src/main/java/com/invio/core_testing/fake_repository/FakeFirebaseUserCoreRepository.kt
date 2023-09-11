@@ -6,7 +6,7 @@ import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
-import com.prmto.core_domain.repository.FirebaseUserCoreRepository
+import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import kotlinx.coroutines.delay
 
 class FakeFirebaseUserCoreRepository(
@@ -28,17 +28,17 @@ class FakeFirebaseUserCoreRepository(
         }
     }
 
-    override suspend fun getUserEmailBySearchingUsername(username: String): Resource<String> {
+    override suspend fun updateUserDetail(userDetail: UserDetail, userUid: String): SimpleResource {
+        // TODO
+        return Resource.Success(Unit)
+    }
+
+    override suspend fun getUserBySearchingUsername(username: String): Resource<UserData> {
         delay(1000)
         return if (TestConstants.ENTERED_USERNAME != username) {
             Resource.Error(UiText.DynamicString(USERNAME_DOES_NOT_EXIST_ERROR))
         } else {
-            Resource.Success(TestConstants.ENTERED_EMAIL)
+            Resource.Success(UserData())
         }
-    }
-
-    override suspend fun updateUserDetail(userDetail: UserDetail, userUid: String): SimpleResource {
-        // TODO
-        return Resource.Success(Unit)
     }
 }
