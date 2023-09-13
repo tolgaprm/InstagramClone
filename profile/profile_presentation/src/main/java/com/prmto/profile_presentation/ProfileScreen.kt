@@ -23,16 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.prmto.core_domain.model.UserData
 import com.prmto.profile_presentation.components.AccountInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    userData: UserData,
+    uiState: ProfileUiState,
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit
 ) {
+    val userData = uiState.userData
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -44,11 +44,13 @@ fun ProfileScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = onNavigateToSettingScreen) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = stringResource(R.string.menu)
-                        )
+                    if (uiState.isOwnProfile) {
+                        IconButton(onClick = onNavigateToSettingScreen) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = stringResource(R.string.menu)
+                            )
+                        }
                     }
                 }
             )
@@ -60,13 +62,15 @@ fun ProfileScreen(
                 statistics = userData.statistics,
                 modifier = Modifier.padding(it)
             )
-            EditProfileButton(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                onClick = {
-                    onNavigateToEditProfileScreen()
-                }
-            )
+            if (uiState.isOwnProfile) {
+                EditProfileButton(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    onClick = {
+                        onNavigateToEditProfileScreen()
+                    }
+                )
+            }
         }
     }
 }

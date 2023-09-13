@@ -13,19 +13,22 @@ import com.prmto.profile_presentation.ProfileViewModel
 fun NavGraphBuilder.profileNavigation(
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit
-
 ) {
-    composable(ProfileScreen.Profile.route) {
+    composable(
+        route = ProfileScreen.Profile.route,
+        arguments = ProfileScreen.Profile.arguments
+    ) {
         val viewModel: ProfileViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         ProfileScreen(
-            userData = uiState.userData,
+            uiState = uiState,
             onNavigateToSettingScreen = onNavigateToSettingScreen,
             onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
         )
 
         LaunchedEffect(key1 = true) {
-            viewModel.getUserData("prmto")
+            if (uiState.isOwnProfile)
+                viewModel.getUserDataFromPreferences()
         }
     }
 }

@@ -4,11 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.prmto.core_data.common.Constants.USER_DETAIL_BIO_PREFERENCES_KEY
-import com.prmto.core_data.common.Constants.USER_DETAIL_NAME_PREFERENCES_KEY
-import com.prmto.core_data.common.Constants.USER_DETAIL_PROFILE_PICTURE_URL_PREFERENCES_KEY
-import com.prmto.core_data.common.Constants.USER_DETAIL_USERNAME_PREFERENCES_KEY
-import com.prmto.core_data.common.Constants.USER_DETAIL_WEB_SITE_PREFERENCES_KEY
+import com.prmto.core_data.common.Constants.BIO_PREFERENCES_KEY
+import com.prmto.core_data.common.Constants.NAME_PREFERENCES_KEY
+import com.prmto.core_data.common.Constants.PROFILE_PICTURE_URL_PREFERENCES_KEY
+import com.prmto.core_data.common.Constants.USERNAME_PREFERENCES_KEY
+import com.prmto.core_data.common.Constants.WEB_SITE_PREFERENCES_KEY
 import com.prmto.core_data.common.safeCallWithTryCatch
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
@@ -23,12 +23,12 @@ class CoreUserPreferencesLocalDataSourceImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : CoreUserPreferencesLocalDataSource {
     private object PreferencesKey {
-        val USER_NAME = stringPreferencesKey(USER_DETAIL_USERNAME_PREFERENCES_KEY)
-        val NAME = stringPreferencesKey(USER_DETAIL_NAME_PREFERENCES_KEY)
-        val BIO = stringPreferencesKey(USER_DETAIL_BIO_PREFERENCES_KEY)
-        val WEB_SITE = stringPreferencesKey(USER_DETAIL_WEB_SITE_PREFERENCES_KEY)
+        val USER_NAME = stringPreferencesKey(USERNAME_PREFERENCES_KEY)
+        val NAME = stringPreferencesKey(NAME_PREFERENCES_KEY)
+        val BIO = stringPreferencesKey(BIO_PREFERENCES_KEY)
+        val WEB_SITE = stringPreferencesKey(WEB_SITE_PREFERENCES_KEY)
         val PROFILE_PICTURE_URL =
-            stringPreferencesKey(USER_DETAIL_PROFILE_PICTURE_URL_PREFERENCES_KEY)
+            stringPreferencesKey(PROFILE_PICTURE_URL_PREFERENCES_KEY)
     }
 
     override suspend fun saveUserDetail(userDetail: UserDetail): SimpleResource {

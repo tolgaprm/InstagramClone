@@ -183,6 +183,7 @@ class UserInformationViewModel @Inject constructor(
                         name = userData.userDetail.name.trim()
                     )
                 )
+
             }.onError { uiText ->
                 addNewConsumableEvent(
                     UiEvent.ShowMessage(

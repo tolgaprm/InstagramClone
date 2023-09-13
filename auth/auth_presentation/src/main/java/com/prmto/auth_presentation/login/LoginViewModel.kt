@@ -97,16 +97,7 @@ class LoginViewModel @Inject constructor(
             authRepository.signInWithEmailAndPassword(
                 email, uiState.value.passwordTextFieldState.text
             ).onSuccess {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
-                            UiEvent.Navigate(
-                                Screen.Home.route
-                            )
-                        )
-                    )
-                }
+                getUserDetailFromFirebaseAndUpdateToPreferences(email = email)
             }.onError { uiText ->
                 _uiState.update {
                     it.copy(
@@ -128,7 +119,6 @@ class LoginViewModel @Inject constructor(
             firebaseUserCoreRepository.getUserBySearchingUsername(
                 username = uiState.value.emailOrUserNameTextFieldState.text
             ).onSuccess { userData ->
-                saveUserDetailToPreferences(userData.userDetail)
                 loginWithEmail(email = userData.email)
             }.onError { uiText ->
                 _uiState.update {
@@ -142,6 +132,25 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun getUserDetailFromFirebaseAndUpdateToPreferences(email: String) {
+        viewModelScope.launch {
+            firebaseUserCoreRepository.getUserDetailByEmail(email = email)
+                .onSuccess { userDetail ->
+                    saveUserDetailToPreferences(userDetail = userDetail)
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
+                                UiEvent.Navigate(
+                                    Screen.Home.route
+                                )
+                            )
+                        )
+                    }
+                }
         }
     }
 

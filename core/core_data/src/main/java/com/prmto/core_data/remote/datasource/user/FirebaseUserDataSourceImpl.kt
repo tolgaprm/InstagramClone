@@ -83,4 +83,22 @@ class FirebaseUserDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUserDetailByEmail(email: String): Resource<UserDetail> {
+        return safeCallWithTryCatch {
+            val response = firestore.collection(FirebaseCollectionNames.USERS_COLLECTION)
+                .whereEqualTo(
+                    FirebaseFieldName.EMAIL_FIELD,
+                    email
+                )
+                .get()
+                .await()
+
+            val user = response.toObjects(UserData::class.java)
+            if (user.isNotEmpty()) {
+                Resource.Success(user.first().userDetail)
+            } else {
+                Resource.Error(UiText.StringResource(R.string.user_not_found))
+            }
+        }
+    }
 }

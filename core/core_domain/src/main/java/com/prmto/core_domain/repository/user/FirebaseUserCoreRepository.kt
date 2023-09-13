@@ -23,4 +23,6 @@ interface FirebaseUserCoreRepository {
     ): Resource<UserData>
 
     suspend fun getUserDataWithUserUid(userUid: String): Resource<UserData>
+
+    suspend fun getUserDetailByEmail(email: String): Resource<UserDetail>
 }

@@ -36,4 +36,8 @@ class FirebaseUserCoreRepositoryImpl @Inject constructor(
     override suspend fun getUserDataWithUserUid(userUid: String): Resource<UserData> {
         return firebaseUserDataSource.getUserDataWithUserUid(userUid)
     }
+
+    override suspend fun getUserDetailByEmail(email: String): Resource<UserDetail> {
+        return firebaseUserDataSource.getUserDetailByEmail(email)
+    }
 }
