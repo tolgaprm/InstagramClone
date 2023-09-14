@@ -18,13 +18,14 @@ fun NavGraphBuilder.loginNavigation(
     composable(AuthNestedScreens.Login.route) {
         val viewModel: LoginViewModel = hiltViewModel()
         val loginUiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
         LoginScreen(
             loginUiState = loginUiState,
             onEvent = viewModel::onEvent,
             onNavigateToRegisterScreen = onNavigateToRegisterScreen
         )
         HandleConsumableViewEvents(
-            consumableViewEvents = loginUiState.consumableViewEvents,
+            consumableViewEvents = consumableViewEvents,
             onEventNavigate = { route ->
                 when (route) {
                     AuthNestedScreens.Register.route -> onNavigateToRegisterScreen()

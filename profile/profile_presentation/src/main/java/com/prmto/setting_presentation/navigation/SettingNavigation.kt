@@ -19,14 +19,16 @@ fun NavGraphBuilder.settingNavigation(
     composable(ProfileScreen.Settings.route) {
         val viewModel: SettingViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
         SettingScreen(
+            uiState = uiState,
             onNavigateBack = onNavigateBack,
             onNavigateToEditProfile = onNavigateToEditProfile,
             onEvent = viewModel::onEvent
         )
 
         HandleConsumableViewEvents(
-            consumableViewEvents = uiState.consumableViewEvents,
+            consumableViewEvents = consumableViewEvents,
             onEventNavigate = { route ->
                 when (route) {
                     NestedNavigation.Auth.route -> onNavigateToNestedAuth()

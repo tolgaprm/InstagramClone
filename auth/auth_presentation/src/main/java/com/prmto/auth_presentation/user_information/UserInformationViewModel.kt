@@ -1,19 +1,22 @@
 package com.prmto.auth_presentation.user_information
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prmto.auth_domain.register.model.UserData
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
+import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants
-import com.prmto.core_domain.constants.onError
-import com.prmto.core_domain.constants.onSuccess
+import com.prmto.core_domain.model.Statistics
+import com.prmto.core_domain.model.UserData
+import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
+import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
+import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
+import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_presentation.util.isBlank
 import com.prmto.core_presentation.util.isErrorNull
@@ -23,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,9 +33,12 @@ import javax.inject.Inject
 class UserInformationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val validatePasswordUseCase: ValidatePasswordUseCase
-) : ViewModel() {
+    private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
+    private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val validateUsernameUseCase: ValidateUsernameUseCase,
+    private val checkIfExistUserWithTheSameUsernameUseCase: CheckIfExistUserWithTheSameUsernameUseCase
+) : CommonViewModel<UiEvent>() {
     private val _state = MutableStateFlow(UserInfoUiData())
     val state: StateFlow<UserInfoUiData> = _state.asStateFlow()
 
@@ -50,7 +55,7 @@ class UserInformationViewModel @Inject constructor(
             }
 
             is UserInfoEvents.EnterUsername -> {
-                updateUsername(username = event.username)
+                updateUsername(username = event.username.trim())
             }
 
             is UserInfoEvents.EnterPassword -> {
@@ -74,7 +79,7 @@ class UserInformationViewModel @Inject constructor(
                 )
                 updateUsername(
                     username = state.value.usernameTextField.text,
-                    error = state.value.usernameTextField.isBlank()
+                    error = validateUsernameUseCase(state.value.usernameTextField.text)
                 )
 
                 updatePassword(
@@ -89,90 +94,112 @@ class UserInformationViewModel @Inject constructor(
 
 
     private fun registerUser() {
-        if (state.value.fullNameTextField.isErrorNull() && state.value.usernameTextField.isErrorNull() && state.value.passwordTextField.isErrorNull()) {
+        if (state.value.fullNameTextField.isErrorNull() &&
+            state.value.usernameTextField.isErrorNull() &&
+            state.value.passwordTextField.isErrorNull()
+
+        ) {
             _state.update { it.copy(isRegistering = true) }
             val userData = UserData(
-                email = state.value.email,
-                fullName = state.value.fullNameTextField.text,
-                username = state.value.usernameTextField.text,
-                password = state.value.passwordTextField.text
+                email = state.value.email.trim(),
+                userDetail = UserDetail(
+                    name = state.value.fullNameTextField.text.trim(),
+                    username = state.value.usernameTextField.text.trim()
+                ),
+                statistics = Statistics()
             )
 
-            checkIfExistAUserWithTheSameUsername { isUserExist ->
-                if (isUserExist) {
-                    _state.update {
-                        it.copy(
-                            isRegistering = false,
-                            usernameTextField = it.usernameTextField.updateState(
-                                error = TextFieldError.UsernameAlreadyExists
-                            )
-                        )
-                    }
-                } else {
+            checkIfExistAUserWithTheSameUsername(
+                onCreateUser = {
                     createUserWithEmailAndPassword(userData = userData)
                 }
-            }
+            )
         }
     }
 
-    private fun saveUserInfoToDatabase(
-        userData: UserData, userUID: String
+    private fun saveUserInfoToFirebase(
+        userData: UserData,
+        userUID: String
     ) {
         viewModelScope.launch {
-            userRepository.saveUser(
-                userData = userData, userUid = userUID
-            ).onSuccess {
-                addNewConsumableEvent(
-                    UiEvent.Navigate(
-                        route = Screen.Home.route
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    firebaseUserCoreRepository.saveUser(
+                        userData = userData,
+                        userUid = userUID
                     )
-                )
-                _state.update { it.copy(isRegistering = false) }
-            }.onError { uiText ->
-                addNewConsumableEvent(
-                    UiEvent.ShowMessage(
-                        uiText = uiText
-                    )
-                )
-                _state.update { it.copy(isRegistering = false) }
-            }
+                },
+                onSuccessCallback = {
+                    _state.update { it.copy(isRegistering = false) }
+                    addConsumableViewEvent(UiEvent.Navigate(route = Screen.Home.route))
+                },
+                onErrorCallback = { uiText ->
+                    _state.update { it.copy(isRegistering = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
+                }
+            )
         }
     }
 
     private fun checkIfExistAUserWithTheSameUsername(
-        onCompleted: (Boolean) -> Unit
+        onCreateUser: () -> Unit
     ) {
         viewModelScope.launch {
-            userRepository.getUsers().onSuccess { users ->
-                val result = users.map { it.username == state.value.usernameTextField.text }
-                    .find { true }
-                onCompleted(result ?: false)
-            }.onError { uiText ->
-                addNewConsumableEvent(
-                    UiEvent.ShowMessage(
-                        uiText = uiText
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    checkIfExistUserWithTheSameUsernameUseCase(
+                        username = state.value.usernameTextField.text
                     )
-                )
-            }
+                },
+                onSuccessCallback = { isUserExist ->
+                    if (isUserExist) {
+                        _state.update {
+                            it.copy(
+                                isRegistering = false,
+                                usernameTextField = it.usernameTextField.updateState(
+                                    error = TextFieldError.UsernameAlreadyExists
+                                )
+                            )
+                        }
+                    } else {
+                        onCreateUser()
+                    }
+                },
+                onErrorCallback = { uiText ->
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
+                }
+            )
         }
     }
 
     private fun createUserWithEmailAndPassword(userData: UserData) {
         viewModelScope.launch {
-            authRepository.createUserWithEmailAndPassword(
-                email = userData.email, password = userData.password
-            ).onSuccess { userUID ->
-                saveUserInfoToDatabase(
-                    userData = userData, userUID = userUID
-                )
-            }.onError { uiText ->
-                addNewConsumableEvent(
-                    UiEvent.ShowMessage(
-                        uiText = uiText
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    authRepository.createUserWithEmailAndPassword(
+                        email = userData.email,
+                        password = state.value.passwordTextField.text
                     )
-                )
-                _state.update { it.copy(isRegistering = false) }
-            }
+                },
+                onSuccessCallback = { userUid ->
+                    saveUserInfoToFirebase(userData = userData, userUID = userUid)
+                    saveUserDetailToPreferences(userDetail = userData.userDetail)
+                },
+                onErrorCallback = { uiText ->
+                    _state.update { it.copy(isRegistering = false) }
+                    addConsumableViewEvent(
+                        UiEvent.ShowMessage(
+                            uiText = uiText
+                        )
+                    )
+                }
+            )
+        }
+    }
+
+    private fun saveUserDetailToPreferences(userDetail: UserDetail) {
+        viewModelScope.launch {
+            coreUserPreferencesRepository.saveUserDetail(userDetail = userDetail)
         }
     }
 
@@ -204,22 +231,6 @@ class UserInformationViewModel @Inject constructor(
                 passwordTextField = state.value.passwordTextField.updateState(
                     text = password, error = error
                 )
-            )
-        }
-    }
-
-    fun onEventConsumed() {
-        _state.update {
-            it.copy(
-                consumableViewEvents = state.value.consumableViewEvents.drop(1)
-            )
-        }
-    }
-
-    private fun addNewConsumableEvent(event: UiEvent) {
-        _state.updateAndGet {
-            it.copy(
-                consumableViewEvents = state.value.consumableViewEvents + event
             )
         }
     }

@@ -45,8 +45,8 @@ dependencies {
     //Coil
     implementation(libs.coil)
     implementation(libs.coil.svg)
-
     testImplementation(libs.bundles.test)
+    testImplementation(project(":core:core_testing"))
 
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.truth.library)

@@ -27,6 +27,8 @@ dependencies {
 
     implementation(libs.timber)
 
+    implementation(libs.datastore.preferences)
+
     //dagger - hilt
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)

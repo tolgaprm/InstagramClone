@@ -11,7 +11,8 @@ import com.prmto.core_presentation.util.UiEvent
 fun HandleConsumableViewEvents(
     consumableViewEvents: List<UiEvent>,
     onEventNavigate: (String) -> Unit,
-    onEventConsumed: () -> Unit
+    onEventConsumed: () -> Unit,
+    onPopBackStack: () -> Unit = {}
 ) {
     val context = LocalContext.current
     LaunchedEffect(key1 = consumableViewEvents) {
@@ -30,6 +31,10 @@ fun HandleConsumableViewEvents(
                         Toast.LENGTH_SHORT
                     ).show()
                     onEventConsumed()
+                }
+
+                is UiEvent.PopBackStack -> {
+                    onPopBackStack()
                 }
             }
         }

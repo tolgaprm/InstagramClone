@@ -1,7 +1,7 @@
 package com.prmto.auth_presentation.fake_repository
 
+import com.invio.core_testing.util.TestConstants
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_presentation.util.TestConstants
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.constants.UiText
@@ -30,7 +30,7 @@ class FakeAuthRepository : AuthRepository {
         email: String,
         password: String
     ): SimpleResource {
-        delay(1000)
+        delay(TestConstants.DELAY_NETWORK)
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {

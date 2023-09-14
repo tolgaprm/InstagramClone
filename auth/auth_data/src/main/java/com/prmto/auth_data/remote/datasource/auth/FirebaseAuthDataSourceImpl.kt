@@ -1,7 +1,7 @@
 package com.prmto.auth_data.remote.datasource.auth
 
 import com.google.firebase.auth.FirebaseAuth
-import com.prmto.auth_data.remote.util.safeCallWithTryCatch
+import com.prmto.core_data.common.safeCallWithTryCatch
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import kotlinx.coroutines.tasks.await

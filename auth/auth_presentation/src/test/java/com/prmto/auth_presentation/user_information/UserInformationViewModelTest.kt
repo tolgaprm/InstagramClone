@@ -3,16 +3,18 @@ package com.prmto.auth_presentation.user_information
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.invio.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
+import com.invio.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
+import com.invio.core_testing.util.MainDispatcherRule
+import com.invio.core_testing.util.TestConstants
 import com.prmto.auth_domain.repository.AuthRepository
-import com.prmto.auth_domain.repository.UserRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
+import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
-import com.prmto.auth_presentation.fake_repository.FakeUserRepository
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
-import com.prmto.auth_presentation.util.MainDispatcherRule
-import com.prmto.auth_presentation.util.TestConstants
 import com.prmto.core_domain.constants.UiText
+import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.PasswordTextFieldState
@@ -31,7 +33,8 @@ class UserInformationViewModelTest {
     private lateinit var viewModel: UserInformationViewModel
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var authRepository: AuthRepository
-    private lateinit var userRepository: UserRepository
+    private lateinit var firebaseUserCoreRepository: FakeFirebaseUserCoreRepository
+    private lateinit var coreUserPreferencesRepository: CoreUserPreferencesRepositoryFake
 
     @get:Rule
     var mainCoroutineRule = MainDispatcherRule()
@@ -44,14 +47,20 @@ class UserInformationViewModelTest {
         } returns TestConstants.ENTERED_EMAIL
 
         authRepository = FakeAuthRepository()
+        coreUserPreferencesRepository = CoreUserPreferencesRepositoryFake()
 
-        userRepository = FakeUserRepository()
+        firebaseUserCoreRepository = FakeFirebaseUserCoreRepository()
 
         viewModel = UserInformationViewModel(
             savedStateHandle = savedStateHandle,
-            userRepository = userRepository,
+            firebaseUserCoreRepository = firebaseUserCoreRepository,
             authRepository = authRepository,
-            validatePasswordUseCase = ValidatePasswordUseCase()
+            validatePasswordUseCase = ValidatePasswordUseCase(),
+            checkIfExistUserWithTheSameUsernameUseCase = CheckIfExistUserWithTheSameUsernameUseCase(
+                firebaseUserCoreRepository
+            ),
+            coreUserPreferencesRepository = coreUserPreferencesRepository,
+            validateUsernameUseCase = ValidateUsernameUseCase()
         )
     }
 
@@ -171,7 +180,7 @@ class UserInformationViewModelTest {
     fun `when entered valid all field and username has exists in the database, then usernameTextField update UsernameAlreadyExists`() =
         runTest {
             val fullName = "John Doe"
-            val username = TestConstants.USER_EXISTS_USERNAME
+            val username = TestConstants.ENTERED_USERNAME
             val password = "123456"
 
             viewModel.onEvent(UserInfoEvents.EnterFullName(fullName))
@@ -199,7 +208,7 @@ class UserInformationViewModelTest {
 
             viewModel.state.test {
                 val state = awaitItem()
-                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
                     UiEvent.ShowMessage(
                         UiText.DynamicString(TestConstants.USER_EXISTS)
                     )
@@ -228,7 +237,7 @@ class UserInformationViewModelTest {
 
             viewModel.state.test {
                 val state = awaitItem()
-                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
                     UiEvent.Navigate(
                         Screen.Home.route
                     )
@@ -241,9 +250,14 @@ class UserInformationViewModelTest {
     ) {
         viewModel = UserInformationViewModel(
             savedStateHandle = newSavedStateHandle,
-            userRepository = userRepository,
+            firebaseUserCoreRepository = firebaseUserCoreRepository,
             authRepository = authRepository,
-            validatePasswordUseCase = ValidatePasswordUseCase()
+            validatePasswordUseCase = ValidatePasswordUseCase(),
+            checkIfExistUserWithTheSameUsernameUseCase = CheckIfExistUserWithTheSameUsernameUseCase(
+                firebaseUserCoreRepository
+            ),
+            coreUserPreferencesRepository = coreUserPreferencesRepository,
+            validateUsernameUseCase = ValidateUsernameUseCase()
         )
     }
 }

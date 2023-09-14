@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
-import com.prmto.auth_presentation.login.event.LoginUiEvent
+import com.prmto.auth_presentation.login.event.LoginEvent
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.colorBlur
 import com.prmto.core_presentation.util.toDp
@@ -50,7 +50,7 @@ import com.prmto.core_presentation.R as coreR
 @Composable
 fun LoginScreen(
     loginUiState: LoginUiState,
-    onEvent: (LoginUiEvent) -> Unit,
+    onEvent: (LoginEvent) -> Unit,
     onNavigateToRegisterScreen: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -84,7 +84,7 @@ fun LoginScreen(
                 ),
                 textFieldState = loginUiState.emailOrUserNameTextFieldState,
                 onValueChange = {
-                    onEvent(LoginUiEvent.EnteredEmailOrUsername(it))
+                    onEvent(LoginEvent.EnteredEmailOrUsername(it))
                 }
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -99,15 +99,15 @@ fun LoginScreen(
                     onDone = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        onEvent(LoginUiEvent.OnLoginClicked)
+                        onEvent(LoginEvent.OnLoginClicked)
                     }
                 ),
                 passwordTextFieldState = loginUiState.passwordTextFieldState,
                 onValueChange = {
-                    onEvent(LoginUiEvent.EnteredPassword(it))
+                    onEvent(LoginEvent.EnteredPassword(it))
                 },
                 onTogglePasswordVisibility = {
-                    onEvent(LoginUiEvent.TogglePasswordVisibility)
+                    onEvent(LoginEvent.TogglePasswordVisibility)
                 }
             )
 
@@ -116,7 +116,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
-                        onEvent(LoginUiEvent.OnForgotPasswordClicked)
+                        onEvent(LoginEvent.OnForgotPasswordClicked)
                     }
                     .padding(4.dp)
                     .align(Alignment.End),
@@ -130,7 +130,7 @@ fun LoginScreen(
                 buttonText = stringResource(id = R.string.login),
                 onClick = {
                     keyboardController?.hide()
-                    onEvent(LoginUiEvent.OnLoginClicked)
+                    onEvent(LoginEvent.OnLoginClicked)
                 },
                 enabled = !loginUiState.isLoading
             )

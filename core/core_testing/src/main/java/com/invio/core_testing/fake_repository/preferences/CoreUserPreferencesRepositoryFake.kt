@@ -1,0 +1,34 @@
+package com.invio.core_testing.fake_repository.preferences
+
+import com.prmto.core_domain.constants.Resource
+import com.prmto.core_domain.constants.SimpleResource
+import com.prmto.core_domain.constants.UiText
+import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
+
+class CoreUserPreferencesRepositoryFake : CoreUserPreferencesRepository {
+    var isReturnError = false
+    private val userDetailMutableList = mutableListOf<UserDetail>()
+    val userDetailList = userDetailMutableList.toList()
+
+    override suspend fun saveUserDetail(userDetail: UserDetail): SimpleResource {
+        return if (isReturnError) {
+            Resource.Error(UiText.unknownError())
+        } else {
+            userDetailMutableList.add(userDetail)
+            Resource.Success(Unit)
+        }
+    }
+
+    override suspend fun getUserDetail(): Resource<UserDetail> {
+        return if (isReturnError) {
+            Resource.Error(UiText.unknownError())
+        } else {
+            Resource.Success(userDetailMutableList.first())
+        }
+    }
+
+    override suspend fun getProfilePictureUrl(): String? {
+        return userDetailList.first().profilePictureUrl
+    }
+}

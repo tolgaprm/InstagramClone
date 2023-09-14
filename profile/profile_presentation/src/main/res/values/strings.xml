@@ -20,4 +20,8 @@
     <string name="logout_message">Are you sure you want to logout?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="edit_profile_name_section">Name</string>
+    <string name="edit_profile_username">Username</string>
+    <string name="edit_profile_bio">Bio</string>
+    <string name="edit_profile_website">Website</string>
 </resources>

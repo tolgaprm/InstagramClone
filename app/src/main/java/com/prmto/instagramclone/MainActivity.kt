@@ -13,10 +13,11 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.prmto.core_domain.repository.FirebaseAuthCoreRepository
+import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContent {
             val navController = rememberNavController()
             val currentBackStackEntry = navController.currentBackStackEntryAsState()

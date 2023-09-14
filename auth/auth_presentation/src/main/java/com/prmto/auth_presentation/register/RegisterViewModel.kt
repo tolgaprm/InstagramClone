@@ -1,15 +1,13 @@
 package com.prmto.auth_presentation.register
 
-import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_presentation.navigation.AuthNestedScreens
 import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.core_domain.util.TextFieldError
+import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.TextFieldState
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.core_presentation.util.addNewUiEvent
 import com.prmto.core_presentation.util.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase
-) : ViewModel() {
+) : CommonViewModel<UiEvent>() {
     private val _uiState = MutableStateFlow(RegisterUiStateData())
     val uiState: StateFlow<RegisterUiStateData> = _uiState.asStateFlow()
 
@@ -40,7 +38,7 @@ class RegisterViewModel @Inject constructor(
             }
 
             is RegisterEvent.EnteredEmail -> {
-                updateEmail(email = event.email)
+                updateEmail(email = event.email.trim())
                 isNextButtonEnabled()
             }
 
@@ -55,15 +53,11 @@ class RegisterViewModel @Inject constructor(
                         return@launch
                     } else {
                         if (validateEmailUseCase(uiState.value.emailTextField.text)) {
-                            _uiState.update {
-                                it.copy(
-                                    consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
-                                        UiEvent.Navigate(
-                                            AuthNestedScreens.UserInformation.passEmail(uiState.value.emailTextField.text)
-                                        )
-                                    )
+                            addConsumableViewEvent(
+                                UiEvent.Navigate(
+                                    AuthNestedScreens.UserInformation.passEmail(uiState.value.emailTextField.text)
                                 )
-                            }
+                            )
                         } else {
                             updateEmail(
                                 email = uiState.value.emailTextField.text,
@@ -102,21 +96,12 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    @VisibleForTesting
-    fun isNextButtonEnabled() {
+    private fun isNextButtonEnabled() {
         val isEnabled = if (uiState.value.isPhoneNumberSelected()) {
             uiState.value.phoneNumberTextField.text.isNotBlank() && uiState.value.phoneNumberTextField.text.length == 10
         } else {
             uiState.value.emailTextField.text.isNotBlank()
         }
         _uiState.update { it.copy(isNextButtonEnabled = isEnabled) }
-    }
-
-    fun onEventConsumed() {
-        _uiState.update {
-            it.copy(
-                consumableViewEvents = uiState.value.consumableViewEvents.drop(1)
-            )
-        }
     }
 }

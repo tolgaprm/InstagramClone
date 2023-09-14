@@ -24,6 +24,7 @@ fun NavGraphBuilder.registerNestedNavigation(
         composable(AuthNestedScreens.Register.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
             val registerUiData by viewModel.uiState.collectAsStateWithLifecycle()
+            val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
             RegisterScreen(
                 registerUiStateData = registerUiData,
                 onNavigateToLogin = {
@@ -37,7 +38,7 @@ fun NavGraphBuilder.registerNestedNavigation(
             )
 
             HandleConsumableViewEvents(
-                consumableViewEvents = registerUiData.consumableViewEvents,
+                consumableViewEvents = consumableViewEvents,
                 onEventNavigate = navController::navigate,
                 onEventConsumed = viewModel::onEventConsumed
             )
