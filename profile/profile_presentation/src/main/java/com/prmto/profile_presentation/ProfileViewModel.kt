@@ -1,13 +1,13 @@
 package com.prmto.profile_presentation
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.common.NavArguments
-import com.prmto.core_domain.constants.onSuccess
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
+import com.prmto.core_presentation.util.CommonViewModel
+import com.prmto.core_presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ class ProfileViewModel @Inject constructor(
     private val userCoreRepository: FirebaseUserCoreRepository,
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : CommonViewModel<UiEvent>() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
@@ -37,22 +37,40 @@ class ProfileViewModel @Inject constructor(
 
     fun getUserDataFromPreferences() {
         viewModelScope.launch {
-            coreUserPreferencesRepository.getUserDetail().onSuccess { userDetail ->
-                _uiState.update {
-                    it.copy(
-                        userData = UserData(
-                            userDetail = userDetail
+            _uiState.update { it.copy(isLoading = true) }
+            handleResourceWithCallbacks(
+                resourceSupplier = { coreUserPreferencesRepository.getUserDetail() },
+                onSuccessCallback = { userDetail ->
+                    _uiState.update {
+                        it.copy(
+                            userData = UserData(userDetail = userDetail),
+                            isLoading = false
                         )
-                    )
+                    }
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText))
                 }
-            }
+            )
         }
     }
 
     private fun getUserDataFromFirebase(username: String) {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            userCoreRepository.getUserBySearchingUsername(username)
-                .onSuccess { userData -> _uiState.update { it.copy(userData = userData) } }
+            handleResourceWithCallbacks(
+                resourceSupplier = { userCoreRepository.getUserBySearchingUsername(username) },
+                onSuccessCallback = { userData ->
+                    _uiState.update {
+                        it.copy(userData = userData, isLoading = false)
+                    }
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
+                }
+            )
         }
     }
 }

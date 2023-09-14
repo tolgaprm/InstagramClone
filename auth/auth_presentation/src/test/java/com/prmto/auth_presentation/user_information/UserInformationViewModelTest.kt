@@ -9,6 +9,7 @@ import com.invio.core_testing.util.MainDispatcherRule
 import com.invio.core_testing.util.TestConstants
 import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
+import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
 import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
@@ -58,7 +59,8 @@ class UserInformationViewModelTest {
             checkIfExistUserWithTheSameUsernameUseCase = CheckIfExistUserWithTheSameUsernameUseCase(
                 firebaseUserCoreRepository
             ),
-            coreUserPreferencesRepository = coreUserPreferencesRepository
+            coreUserPreferencesRepository = coreUserPreferencesRepository,
+            validateUsernameUseCase = ValidateUsernameUseCase()
         )
     }
 
@@ -206,7 +208,7 @@ class UserInformationViewModelTest {
 
             viewModel.state.test {
                 val state = awaitItem()
-                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
                     UiEvent.ShowMessage(
                         UiText.DynamicString(TestConstants.USER_EXISTS)
                     )
@@ -235,7 +237,7 @@ class UserInformationViewModelTest {
 
             viewModel.state.test {
                 val state = awaitItem()
-                assertThat(state.consumableViewEvents.first()).isEqualTo(
+                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
                     UiEvent.Navigate(
                         Screen.Home.route
                     )
@@ -254,7 +256,8 @@ class UserInformationViewModelTest {
             checkIfExistUserWithTheSameUsernameUseCase = CheckIfExistUserWithTheSameUsernameUseCase(
                 firebaseUserCoreRepository
             ),
-            coreUserPreferencesRepository = coreUserPreferencesRepository
+            coreUserPreferencesRepository = coreUserPreferencesRepository,
+            validateUsernameUseCase = ValidateUsernameUseCase()
         )
     }
 }

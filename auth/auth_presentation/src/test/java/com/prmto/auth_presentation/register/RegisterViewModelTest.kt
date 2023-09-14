@@ -104,8 +104,8 @@ class RegisterViewModelTest {
         viewModel.onEvent(RegisterEvent.OnClickTab(position = SelectedTab.EMAIL))
         viewModel.onEvent(RegisterEvent.EnteredEmail(email = email))
         viewModel.onEvent(RegisterEvent.OnClickNext)
-        val state = viewModel.uiState.value
-        assertThat(state.consumableViewEvents.first()).isEqualTo(
+        viewModel.uiState.value
+        assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
             UiEvent.Navigate(
                 AuthNestedScreens.UserInformation.passEmail(email)
             )

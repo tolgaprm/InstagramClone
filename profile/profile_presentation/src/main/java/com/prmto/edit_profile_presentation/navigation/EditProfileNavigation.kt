@@ -16,6 +16,7 @@ fun NavGraphBuilder.editProfileNavigation(
     composable(ProfileScreen.EditProfile.route) {
         val viewModel: EditProfileViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
         EditProfileScreen(
             uiState = uiState,
             onPopBackStack = onPopBackStack,
@@ -23,7 +24,7 @@ fun NavGraphBuilder.editProfileNavigation(
         )
 
         HandleConsumableViewEvents(
-            consumableViewEvents = uiState.consumableViewEvents,
+            consumableViewEvents = consumableViewEvents,
             onEventNavigate = {
 
             },

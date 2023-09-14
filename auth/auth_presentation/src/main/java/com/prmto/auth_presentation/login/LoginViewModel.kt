@@ -1,21 +1,18 @@
 package com.prmto.auth_presentation.login
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
-import com.prmto.auth_presentation.login.event.LoginUiEvent
-import com.prmto.core_domain.constants.onError
-import com.prmto.core_domain.constants.onSuccess
+import com.prmto.auth_presentation.login.event.LoginEvent
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.Error
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
+import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.core_presentation.util.addNewUiEvent
 import com.prmto.core_presentation.util.updatePasswordVisibility
 import com.prmto.core_presentation.util.updateState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,30 +30,30 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository
-) : ViewModel() {
+) : CommonViewModel<UiEvent>() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun onEvent(event: LoginUiEvent) {
+    fun onEvent(event: LoginEvent) {
         when (event) {
-            is LoginUiEvent.EnteredEmailOrUsername -> {
+            is LoginEvent.EnteredEmailOrUsername -> {
                 updateEmailOrUsername(event.text)
             }
 
-            is LoginUiEvent.EnteredPassword -> {
+            is LoginEvent.EnteredPassword -> {
                 updatePassword(event.password)
             }
 
-            LoginUiEvent.OnForgotPasswordClicked -> {
+            LoginEvent.OnForgotPasswordClicked -> {
 
             }
 
-            LoginUiEvent.OnLoginClicked -> {
+            LoginEvent.OnLoginClicked -> {
                 login()
             }
 
-            LoginUiEvent.TogglePasswordVisibility -> {
+            LoginEvent.TogglePasswordVisibility -> {
                 _uiState.update {
                     it.copy(
                         passwordTextFieldState = uiState.value.passwordTextFieldState.updatePasswordVisibility()
@@ -94,63 +91,60 @@ class LoginViewModel @Inject constructor(
     private fun loginWithEmail(email: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            authRepository.signInWithEmailAndPassword(
-                email, uiState.value.passwordTextFieldState.text
-            ).onSuccess {
-                getUserDetailFromFirebaseAndUpdateToPreferences(email = email)
-            }.onError { uiText ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
-                            UiEvent.ShowMessage(
-                                uiText = uiText
-                            )
-                        )
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    authRepository.signInWithEmailAndPassword(
+                        email = email,
+                        password = uiState.value.passwordTextFieldState.text
                     )
+                },
+                onSuccessCallback = {
+                    getUserDetailFromFirebaseAndUpdateToPreferences(email = email)
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
-            }
+            )
         }
     }
 
     private fun loginWithUserName() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            firebaseUserCoreRepository.getUserBySearchingUsername(
-                username = uiState.value.emailOrUserNameTextFieldState.text
-            ).onSuccess { userData ->
-                loginWithEmail(email = userData.email)
-            }.onError { uiText ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
-                            UiEvent.ShowMessage(
-                                uiText = uiText
-                            )
-                        )
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    firebaseUserCoreRepository.getUserBySearchingUsername(
+                        username = uiState.value.emailOrUserNameTextFieldState.text
                     )
+                },
+                onSuccessCallback = {
+                    loginWithEmail(email = it.email)
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
-            }
+            )
         }
     }
 
     private fun getUserDetailFromFirebaseAndUpdateToPreferences(email: String) {
         viewModelScope.launch {
-            firebaseUserCoreRepository.getUserDetailByEmail(email = email)
-                .onSuccess { userDetail ->
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    firebaseUserCoreRepository.getUserDetailByEmail(email = email)
+                },
+                onSuccessCallback = { userDetail ->
                     saveUserDetailToPreferences(userDetail = userDetail)
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            consumableViewEvents = uiState.value.consumableViewEvents.addNewUiEvent(
-                                UiEvent.Navigate(
-                                    Screen.Home.route
-                                )
-                            )
-                        )
-                    }
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.Navigate(route = Screen.Home.route))
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
+            )
         }
     }
 
@@ -181,14 +175,6 @@ class LoginViewModel @Inject constructor(
                 passwordTextFieldState = uiState.value.passwordTextFieldState.updateState(
                     text = password, error = error
                 )
-            )
-        }
-    }
-
-    fun onEventConsumed() {
-        _uiState.update {
-            it.copy(
-                consumableViewEvents = uiState.value.consumableViewEvents.drop(1)
             )
         }
     }

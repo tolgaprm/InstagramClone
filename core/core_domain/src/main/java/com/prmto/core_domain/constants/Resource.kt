@@ -7,14 +7,14 @@ sealed interface Resource<T> {
 
 typealias SimpleResource = Resource<Unit>
 
-fun <T> Resource<T>.onSuccess(action: (T) -> Unit): Resource<T> {
+inline fun <T> Resource<T>.onSuccess(crossinline action: (T) -> Unit): Resource<T> {
     if (this is Resource.Success) {
         action(data)
     }
     return this
 }
 
-fun <T> Resource<T>.onError(action: (UiText) -> Unit): Resource<T> {
+inline fun <T> Resource<T>.onError(crossinline action: (UiText) -> Unit): Resource<T> {
     if (this is Resource.Error) {
         action(uiText)
     }

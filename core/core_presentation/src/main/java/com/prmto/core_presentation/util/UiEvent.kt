@@ -1,6 +1,5 @@
 package com.prmto.core_presentation.util
 
-import androidx.annotation.StringRes
 import com.prmto.core_domain.constants.UiText
 
 abstract class Event
@@ -13,9 +12,5 @@ sealed class UiEvent : Event() {
 
     data object PopBackStack : UiEvent()
 }
-
-fun UiEvent.showMessageWithResID(
-    @StringRes resourceId: Int
-) = UiEvent.ShowMessage(UiText.StringResource(resourceId))
 
 fun List<UiEvent>.addNewUiEvent(uiEvent: UiEvent) = this + uiEvent

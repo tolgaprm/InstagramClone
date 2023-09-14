@@ -20,12 +20,13 @@ fun NavGraphBuilder.userInformationNavigation(
     ) {
         val viewModel = hiltViewModel<UserInformationViewModel>()
         val userInfoUiData by viewModel.state.collectAsStateWithLifecycle()
+        val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
         UserInformationScreen(
             userInfoUiData = userInfoUiData,
             onEvent = viewModel::onEvent
         )
         HandleConsumableViewEvents(
-            consumableViewEvents = userInfoUiData.consumableViewEvents,
+            consumableViewEvents = consumableViewEvents,
             onEventNavigate = { route ->
                 if (route == Screen.Home.route) {
                     onNavigateToHomeScreen()

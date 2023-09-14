@@ -1,13 +1,11 @@
 package com.prmto.edit_profile_presentation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prmto.core_domain.constants.onError
-import com.prmto.core_domain.constants.onSuccess
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.usecase.GetCurrentUserUseCase
+import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +21,7 @@ class EditProfileViewModel @Inject constructor(
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
-) : ViewModel() {
+) : CommonViewModel<UiEvent>() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
     val uiState: StateFlow<EditProfileUiState> = _uiState.asStateFlow()
@@ -42,32 +40,32 @@ class EditProfileViewModel @Inject constructor(
 
             is EditProfileUiEvent.EnteredWebsite -> handleEnteredWebsite(event.website)
 
-            EditProfileUiEvent.UpdateProfileInfo -> handleUpdateProfileInfo()
+            EditProfileUiEvent.UpdateProfileInfo -> {
+                _uiState.update { it.copy(isLoading = true) }
+                handleUpdateProfileInfo()
+            }
         }
     }
 
     private fun getUserDetail() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val response = coreUserPreferencesRepository.getUserDetail()
-            response.onSuccess { userDetail ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        userDetail = userDetail,
-                        updatedUserDetail = userDetail,
-                    )
-                }
-            }.onError { uiText ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        consumableViewEvents = _uiState.value.consumableViewEvents + UiEvent.ShowMessage(
-                            uiText = uiText
+            handleResourceWithCallbacks(
+                resourceSupplier = { coreUserPreferencesRepository.getUserDetail() },
+                onSuccessCallback = { userDetail ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            userDetail = userDetail,
+                            updatedUserDetail = userDetail
                         )
-                    )
+                    }
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
-            }
+            )
         }
     }
 
@@ -75,51 +73,45 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             getCurrentUserUseCase()?.let { currentUser ->
                 updateProfileInfoToFirebase(userUid = currentUser.uid)
-            }
+            } ?: _uiState.update { it.copy(isLoading = false) }
         }
     }
 
     private fun updateProfileInfoToPreferences() {
         viewModelScope.launch {
-            coreUserPreferencesRepository.saveUserDetail(uiState.value.updatedUserDetail)
-                .onSuccess {
-                    _uiState.update {
-                        it.copy(
-                            consumableViewEvents = _uiState.value.consumableViewEvents + UiEvent.PopBackStack,
-                            isLoading = false
-                        )
-                    }
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    coreUserPreferencesRepository.saveUserDetail(uiState.value.updatedUserDetail)
+                },
+                onSuccessCallback = {
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.PopBackStack)
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
-                .onError { uiText ->
-                    _uiState.update {
-                        it.copy(
-                            consumableViewEvents = _uiState.value.consumableViewEvents + UiEvent.ShowMessage(
-                                uiText = uiText
-                            ),
-                            isLoading = false
-                        )
-                    }
-                }
+            )
         }
     }
 
     private fun updateProfileInfoToFirebase(userUid: String) {
         viewModelScope.launch {
-            firebaseUserCoreRepository.updateUserDetail(
-                userDetail = uiState.value.updatedUserDetail,
-                userUid = userUid
-            ).onSuccess {
-                updateProfileInfoToPreferences()
-            }.onError { uiText ->
-                _uiState.update {
-                    it.copy(
-                        consumableViewEvents = _uiState.value.consumableViewEvents + UiEvent.ShowMessage(
-                            uiText = uiText
-                        ),
-                        isLoading = false
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    firebaseUserCoreRepository.updateUserDetail(
+                        userDetail = uiState.value.updatedUserDetail,
+                        userUid = userUid
                     )
+                },
+                onSuccessCallback = {
+                    updateProfileInfoToPreferences()
+                },
+                onErrorCallback = { uiText ->
+                    _uiState.update { it.copy(isLoading = false) }
+                    addConsumableViewEvent(UiEvent.ShowMessage(uiText = uiText))
                 }
-            }
+            )
         }
     }
 
@@ -164,20 +156,11 @@ class EditProfileViewModel @Inject constructor(
             )
         }
     }
-
-    fun onEventConsumed() {
-        _uiState.update {
-            it.copy(
-                consumableViewEvents = uiState.value.consumableViewEvents.drop(1)
-            )
-        }
-    }
 }
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userDetail: UserDetail = UserDetail(),
     val updatedUserDetail: UserDetail = UserDetail(),
-    val isShowSaveButton: Boolean = userDetail != updatedUserDetail,
-    val consumableViewEvents: List<UiEvent> = listOf()
+    val isShowSaveButton: Boolean = userDetail != updatedUserDetail
 )
