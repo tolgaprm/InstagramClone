@@ -21,7 +21,7 @@ class FirebaseUserDataSourceImpl @Inject constructor(
     override suspend fun saveUser(userData: UserData, userUid: String): SimpleResource {
         return safeCallWithTryCatch {
             firestore.collection(FirebaseCollectionNames.USERS_COLLECTION).document(userUid)
-                .set(userData).await()
+                .set(userData.copy(userUid = userUid)).await()
             Resource.Success(Unit)
         }
     }

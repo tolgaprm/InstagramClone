@@ -24,4 +24,5 @@
     <string name="edit_profile_username">Username</string>
     <string name="edit_profile_bio">Bio</string>
     <string name="edit_profile_website">Website</string>
+    <string name="you_are_not_logged_in">You are not logged in</string>
 </resources>

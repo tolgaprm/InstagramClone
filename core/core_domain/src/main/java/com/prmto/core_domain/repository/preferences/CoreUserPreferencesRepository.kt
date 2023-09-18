@@ -10,4 +10,6 @@ interface CoreUserPreferencesRepository {
     suspend fun getUserDetail(): Resource<UserDetail>
 
     suspend fun getProfilePictureUrl(): String?
+
+    suspend fun deleteUserDetail(): SimpleResource
 }
