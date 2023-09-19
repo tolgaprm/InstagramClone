@@ -24,7 +24,7 @@ fun InstagramBottomNavigation(
     modifier: Modifier = Modifier,
     currentBackStackEntry: NavBackStackEntry?,
     bottomNavigationItems: List<NavigationBottomItem>,
-    onNavigate: (NavigationBottomItem) -> Unit
+    instaNavigationActions: InstaNavigationActions
 ) {
     ShowBottomNavigation(
         currentBackStackEntry = currentBackStackEntry,
@@ -43,7 +43,7 @@ fun InstagramBottomNavigation(
                 NavigationBarItem(
                     selected = navigationItem.selected,
                     onClick = {
-                        onNavigate(navigationItem)
+                        instaNavigationActions.navigateToTopLevelDestination(navigationItem.route)
                     },
                     icon = {
                         if (navigationItem.route == NestedNavigation.Profile.route) {
