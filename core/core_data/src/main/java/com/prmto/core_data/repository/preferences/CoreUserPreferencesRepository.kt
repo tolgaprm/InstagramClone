@@ -21,4 +21,8 @@ class CoreUserPreferencesRepositoryImpl @Inject constructor(
     override suspend fun getProfilePictureUrl(): String? {
         return coreUserPreferencesLocalDataSource.getProfilePictureUrl()
     }
+
+    override suspend fun deleteUserDetail(): SimpleResource {
+        return coreUserPreferencesLocalDataSource.deleteUserDetail()
+    }
 }

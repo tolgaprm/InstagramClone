@@ -2,6 +2,7 @@ package com.prmto.core_domain.model
 
 data class UserData(
     val email: String = "",
+    val userUid: String = "",
     val statistics: Statistics = Statistics(),
     val userDetail: UserDetail = UserDetail(),
 )

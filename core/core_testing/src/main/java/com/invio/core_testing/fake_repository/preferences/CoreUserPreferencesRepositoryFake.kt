@@ -8,14 +8,13 @@ import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepositor
 
 class CoreUserPreferencesRepositoryFake : CoreUserPreferencesRepository {
     var isReturnError = false
-    private val userDetailMutableList = mutableListOf<UserDetail>()
-    val userDetailList = userDetailMutableList.toList()
+    var userDetailList = listOf<UserDetail>()
 
     override suspend fun saveUserDetail(userDetail: UserDetail): SimpleResource {
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {
-            userDetailMutableList.add(userDetail)
+            userDetailList = listOf(userDetail)
             Resource.Success(Unit)
         }
     }
@@ -24,11 +23,20 @@ class CoreUserPreferencesRepositoryFake : CoreUserPreferencesRepository {
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {
-            Resource.Success(userDetailMutableList.first())
+            Resource.Success(userDetailList.first())
         }
     }
 
     override suspend fun getProfilePictureUrl(): String? {
         return userDetailList.first().profilePictureUrl
+    }
+
+    override suspend fun deleteUserDetail(): SimpleResource {
+        return if (isReturnError) {
+            Resource.Error(UiText.unknownError())
+        } else {
+            userDetailList = listOf()
+            Resource.Success(Unit)
+        }
     }
 }

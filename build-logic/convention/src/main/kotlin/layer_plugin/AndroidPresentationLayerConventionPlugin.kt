@@ -22,7 +22,7 @@ class AndroidPresentationLayerConventionPlugin : Plugin<Project> {
                 commonDependenciesForEachModule(this)
                 dependencies {
                     addModule(":core:core_domain")
-                    addModule(":core:core_testing")
+                    "testImplementation"(project(":core:core_testing"))
                 }
             }
         }

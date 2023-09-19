@@ -70,4 +70,17 @@ class CoreUserPreferencesLocalDataSourceImpl @Inject constructor(
             it[PreferencesKey.PROFILE_PICTURE_URL]
         }.first()
     }
+
+    override suspend fun deleteUserDetail(): SimpleResource {
+        return safeCallWithTryCatch {
+            dataStore.edit {
+                it.remove(PreferencesKey.USER_NAME)
+                it.remove(PreferencesKey.NAME)
+                it.remove(PreferencesKey.BIO)
+                it.remove(PreferencesKey.WEB_SITE)
+                it.remove(PreferencesKey.PROFILE_PICTURE_URL)
+            }
+            Resource.Success(Unit)
+        }
+    }
 }

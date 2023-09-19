@@ -10,4 +10,6 @@ interface CoreUserPreferencesLocalDataSource {
     suspend fun getUserDetail(): Resource<UserDetail>
 
     suspend fun getProfilePictureUrl(): String?
+
+    suspend fun deleteUserDetail(): SimpleResource
 }
