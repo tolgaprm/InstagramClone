@@ -3,13 +3,13 @@ package com.prmto.setting_presentation
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
-import com.invio.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
-import com.invio.core_testing.userDetail
-import com.invio.core_testing.util.MainDispatcherRule
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
+import com.prmto.core_testing.userDetail
+import com.prmto.core_testing.util.MainDispatcherRule
 import com.prmto.profile_presentation.R
 import com.prmto.setting_presentation.event.SettingScreenEvent
 import io.mockk.every

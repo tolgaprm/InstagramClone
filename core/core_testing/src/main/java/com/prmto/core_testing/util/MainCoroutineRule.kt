@@ -1,4 +1,4 @@
-package com.invio.core_testing.util
+package com.prmto.core_testing.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -3,10 +3,6 @@ package com.prmto.auth_presentation.user_information
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import com.invio.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
-import com.invio.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
-import com.invio.core_testing.util.MainDispatcherRule
-import com.invio.core_testing.util.TestConstants
 import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
@@ -20,6 +16,10 @@ import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.PasswordTextFieldState
 import com.prmto.core_presentation.util.TextFieldState
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
+import com.prmto.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
+import com.prmto.core_testing.util.MainDispatcherRule
+import com.prmto.core_testing.util.TestConstants
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

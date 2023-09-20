@@ -12,7 +12,6 @@ android {
         applicationId = "com.prmto.instagramclone"
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -35,6 +34,14 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    testOptions {
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging = true
+            }
         }
     }
 }
@@ -71,12 +78,13 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.svg)
 
-    testImplementation(libs.bundles.test)
-    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.truth.library)
-    androidTestImplementation(libs.mockk)
-    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(project(":core:core_testing"))
+    kspAndroidTest(libs.hilt.compiler)
 }

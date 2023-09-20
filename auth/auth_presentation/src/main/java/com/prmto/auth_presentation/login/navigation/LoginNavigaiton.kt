@@ -1,6 +1,7 @@
 package com.prmto.auth_presentation.login.navigation
 
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -12,6 +13,7 @@ import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 
 fun NavGraphBuilder.loginNavigation(
+    modifier: Modifier = Modifier,
     onNavigateToRegisterScreen: () -> Unit,
     onNavigateToHomeScreen: () -> Unit
 ) {
@@ -20,6 +22,7 @@ fun NavGraphBuilder.loginNavigation(
         val loginUiState by viewModel.uiState.collectAsStateWithLifecycle()
         val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
         LoginScreen(
+            modifier = modifier,
             loginUiState = loginUiState,
             onEvent = viewModel::onEvent,
             onNavigateToRegisterScreen = onNavigateToRegisterScreen

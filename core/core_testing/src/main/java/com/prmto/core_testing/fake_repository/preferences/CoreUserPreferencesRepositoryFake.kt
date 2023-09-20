@@ -1,4 +1,4 @@
-package com.invio.core_testing.fake_repository.preferences
+package com.prmto.core_testing.fake_repository.preferences
 
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource

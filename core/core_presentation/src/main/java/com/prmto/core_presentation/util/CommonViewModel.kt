@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class CommonViewModel<Event : UiEvent> : ViewModel() {
+abstract class CommonViewModel<Event> : ViewModel() {
     private val _consumableViewEvents = MutableStateFlow<List<Event>>(emptyList())
     val consumableViewEvents: StateFlow<List<Event>> = _consumableViewEvents.asStateFlow()
 

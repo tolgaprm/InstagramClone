@@ -1,9 +1,9 @@
 package specific_library_plugin
 
-import com.invio.convention.dependencyHandler.addAndroidTestImplementation
-import com.invio.convention.dependencyHandler.addImplementation
-import com.invio.convention.dependencyHandler.addKsp
-import com.invio.convention.libs
+import com.prmto.convention.dependencyHandler.addAndroidTestImplementation
+import com.prmto.convention.dependencyHandler.addImplementation
+import com.prmto.convention.dependencyHandler.addKsp
+import com.prmto.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

@@ -1,9 +1,9 @@
 package layer_plugin
 
 import com.android.build.gradle.LibraryExtension
-import com.invio.convention.commonDependenciesForEachModule
-import com.invio.convention.dependencyHandler.addImplementation
-import com.invio.convention.libs
+import com.prmto.convention.commonDependenciesForEachModule
+import com.prmto.convention.dependencyHandler.addImplementation
+import com.prmto.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

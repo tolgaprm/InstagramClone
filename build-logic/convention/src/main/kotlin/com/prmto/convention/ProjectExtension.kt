@@ -1,4 +1,4 @@
-package com.invio.convention
+package com.prmto.convention
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog

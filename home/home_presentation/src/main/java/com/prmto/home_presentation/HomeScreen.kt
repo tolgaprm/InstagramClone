@@ -10,10 +10,11 @@ import com.prmto.home_presentation.components.HomeTopBar
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     onNavigateToMessageScreen: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             HomeTopBar(
                 onNavigateToMessageScreen = onNavigateToMessageScreen,

@@ -1,9 +1,9 @@
-package com.invio.core_testing.util
+package com.prmto.core_testing.util
 
-import com.invio.core_testing.userData
-import com.invio.core_testing.userDetail
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_testing.userData
+import com.prmto.core_testing.userDetail
 
 class TestConstants {
     companion object {

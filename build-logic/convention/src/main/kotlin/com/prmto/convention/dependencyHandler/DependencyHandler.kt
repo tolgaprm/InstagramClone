@@ -1,4 +1,4 @@
-package com.invio.convention.dependencyHandler
+package com.prmto.convention.dependencyHandler
 
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.provider.Provider

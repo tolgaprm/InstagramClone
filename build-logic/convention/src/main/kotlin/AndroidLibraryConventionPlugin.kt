@@ -13,6 +13,11 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 apply("kotlin-parcelize")
 
                 extensions.configure<LibraryExtension> {
+                    defaultConfig {
+                        testInstrumentationRunner = "com.prmto.core_testing.runner.HiltTestRunner"
+                        minSdk = 26
+                    }
+
                     defaultConfig.targetSdk = 33
                     compileSdk = 33
 

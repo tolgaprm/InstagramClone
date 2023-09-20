@@ -1,8 +1,8 @@
-package com.invio.core_testing
+package com.prmto.core_testing
 
-import com.invio.core_testing.util.TestConstants
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
+import com.prmto.core_testing.util.TestConstants
 
 fun userData() = UserData(
     email = TestConstants.ENTERED_EMAIL,

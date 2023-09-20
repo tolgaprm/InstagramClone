@@ -1,9 +1,9 @@
-package com.invio.convention
+package com.prmto.convention
 
 import com.android.build.api.dsl.CommonExtension
-import com.invio.convention.dependencyHandler.addAndroidTestImplementation
-import com.invio.convention.dependencyHandler.addImplementation
-import com.invio.convention.dependencyHandler.addTestImplementation
+import com.prmto.convention.dependencyHandler.addAndroidTestImplementation
+import com.prmto.convention.dependencyHandler.addImplementation
+import com.prmto.convention.dependencyHandler.addTestImplementation
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
@@ -24,7 +24,7 @@ internal fun Project.commonDependenciesForEachModule(
             addAndroidTestImplementation(libs.findLibrary("coroutines-test").get())
             addAndroidTestImplementation(libs.findLibrary("truth-library").get())
             addAndroidTestImplementation(libs.findLibrary("mockk").get())
-            addAndroidTestImplementation(libs.findLibrary("turbine").get())
+            //addAndroidTestImplementation(libs.findLibrary("turbine").get())
             addAndroidTestImplementation(libs.findLibrary("androidx-test-ext-junit").get())
         }
     }

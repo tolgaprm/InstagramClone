@@ -1,14 +1,14 @@
-package com.invio.core_testing.fake_repository.user
+package com.prmto.core_testing.fake_repository.user
 
-import com.invio.core_testing.userData
-import com.invio.core_testing.util.TestConstants
-import com.invio.core_testing.util.TestConstants.Companion.USERNAME_DOES_NOT_EXIST_ERROR
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
+import com.prmto.core_testing.userData
+import com.prmto.core_testing.util.TestConstants
+import com.prmto.core_testing.util.TestConstants.Companion.USERNAME_DOES_NOT_EXIST_ERROR
 import kotlinx.coroutines.delay
 
 class FakeFirebaseUserCoreRepository(

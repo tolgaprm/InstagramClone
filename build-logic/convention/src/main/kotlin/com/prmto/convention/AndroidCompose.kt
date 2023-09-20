@@ -1,9 +1,9 @@
-package com.invio.convention
+package com.prmto.convention
 
 import com.android.build.api.dsl.CommonExtension
-import com.invio.convention.dependencyHandler.addAndroidTestImplementation
-import com.invio.convention.dependencyHandler.addDebugImplementation
-import com.invio.convention.dependencyHandler.addImplementation
+import com.prmto.convention.dependencyHandler.addAndroidTestImplementation
+import com.prmto.convention.dependencyHandler.addDebugImplementation
+import com.prmto.convention.dependencyHandler.addImplementation
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 

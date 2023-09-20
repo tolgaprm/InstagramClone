@@ -1,9 +1,9 @@
 package layer_plugin
 
 import com.android.build.api.dsl.LibraryExtension
-import com.invio.convention.commonDependenciesForEachModule
-import com.invio.convention.commonPresentationLayerDependencies
-import com.invio.convention.dependencyHandler.addModule
+import com.prmto.convention.commonDependenciesForEachModule
+import com.prmto.convention.commonPresentationLayerDependencies
+import com.prmto.convention.dependencyHandler.addModule
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -23,6 +23,7 @@ class AndroidPresentationLayerConventionPlugin : Plugin<Project> {
                 dependencies {
                     addModule(":core:core_domain")
                     "testImplementation"(project(":core:core_testing"))
+                    "androidTestImplementation"(project(":core:core_testing"))
                 }
             }
         }

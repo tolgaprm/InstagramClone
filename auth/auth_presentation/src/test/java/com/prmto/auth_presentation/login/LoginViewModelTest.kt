@@ -2,10 +2,6 @@ package com.prmto.auth_presentation.login
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import com.invio.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
-import com.invio.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
-import com.invio.core_testing.util.MainDispatcherRule
-import com.invio.core_testing.util.TestConstants
 import com.prmto.auth_domain.usecase.ValidateEmailUseCase
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
@@ -15,6 +11,10 @@ import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
+import com.prmto.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
+import com.prmto.core_testing.util.MainDispatcherRule
+import com.prmto.core_testing.util.TestConstants
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle

@@ -51,14 +51,15 @@ import com.prmto.core_presentation.R as coreR
 fun LoginScreen(
     loginUiState: LoginUiState,
     onEvent: (LoginEvent) -> Unit,
-    onNavigateToRegisterScreen: () -> Unit
+    onNavigateToRegisterScreen: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
     Scaffold { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
