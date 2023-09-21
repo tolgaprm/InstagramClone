@@ -33,6 +33,7 @@ appcompat = "1.6.1"
 material = "1.9.0"
 splashVersion = "1.0.1"
 androidxComposeCompiler = "1.5.2"
+cameraXVersion = "1.2.3"
 
 [libraries]
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
@@ -53,6 +54,13 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+
+# CameraX
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraXVersion" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraXVersion" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraXVersion" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraXVersion" }
+camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "cameraXVersion" }
 
 #splash api
 splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashVersion" }
@@ -143,4 +151,12 @@ test = [
     "truth-library",
     "mockk",
     "turbine"
+]
+
+cameraX = [
+    "camera-core",
+    "camera-camera2",
+    "camera-lifecycle",
+    "camera-view",
+    "camera-extensions"
 ]

@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.LibraryExtension
+import com.prmto.convention.commonPresentationLayerDependencies
 import com.prmto.convention.configureAndroidCompose
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -11,6 +12,7 @@ class AndroidLibraryComposeConventionPlugin : Plugin<Project> {
 
             val extension = extensions.getByType<LibraryExtension>()
             configureAndroidCompose(extension)
+            commonPresentationLayerDependencies(extension)
         }
     }
 }
