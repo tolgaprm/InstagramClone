@@ -2,6 +2,7 @@ package com.prmto.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import com.prmto.camera.navigation.profileCameraNavigation
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.edit_profile_presentation.navigation.editProfileNavigation
 import com.prmto.profile_presentation.navigation.profileNavigation
@@ -29,6 +30,9 @@ fun NavGraphBuilder.profileNestedNavigation(
             onNavigateBack = onNavigateBack,
             onNavigateToEditProfile = onNavigateToEditProfileScreen,
             onNavigateToNestedAuth = onNavigateToNestedAuth
+        )
+        profileCameraNavigation(
+            onPopBacStack = onPopBackStack
         )
     }
 }

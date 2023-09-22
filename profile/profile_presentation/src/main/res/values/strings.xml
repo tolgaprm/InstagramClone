@@ -25,4 +25,8 @@
     <string name="edit_profile_bio">Bio</string>
     <string name="edit_profile_website">Website</string>
     <string name="you_are_not_logged_in">You are not logged in</string>
+    <string name="photo">Photo</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="take_a_photo_from_camera">Take a Photo From Camera</string>
+    <string name="choose_a_photo_from_gallery">Choose a Photo From Gallery</string>
 </resources>
