@@ -11,7 +11,9 @@ import com.prmto.edit_profile_presentation.EditProfileViewModel
 import com.prmto.navigation.ProfileScreen
 
 fun NavGraphBuilder.editProfileNavigation(
-    onPopBackStack: () -> Unit
+    onPopBackStack: () -> Unit,
+    onNavigateToProfileCamera: () -> Unit,
+    onNavigateToGallery: () -> Unit,
 ) {
     composable(ProfileScreen.EditProfile.route) {
         val viewModel: EditProfileViewModel = hiltViewModel()
@@ -20,7 +22,9 @@ fun NavGraphBuilder.editProfileNavigation(
         EditProfileScreen(
             uiState = uiState,
             onPopBackStack = onPopBackStack,
-            onEvent = viewModel::onEvent
+            onEvent = viewModel::onEvent,
+            onNavigateToProfileCamera = onNavigateToProfileCamera,
+            onNavigateToGallery = onNavigateToGallery
         )
 
         HandleConsumableViewEvents(

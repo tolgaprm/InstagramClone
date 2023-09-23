@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.ui.theme.InstaBlue
@@ -48,7 +49,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
-    uiState: EditProfileUiState, onPopBackStack: () -> Unit, onEvent: (EditProfileUiEvent) -> Unit
+    uiState: EditProfileUiState,
+    onPopBackStack: () -> Unit,
+    onNavigateToProfileCamera: () -> Unit,
+    onNavigateToGallery: () -> Unit,
+    onEvent: (EditProfileUiEvent) -> Unit
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState()
@@ -67,7 +72,10 @@ fun EditProfileScreen(
                 })
         },
         sheetContent = {
-            BottomSheetContent()
+            BottomSheetContent(
+                onClickCamera = { onNavigateToProfileCamera() },
+                onClickGallery = { onNavigateToGallery() }
+            )
         },
     ) {
         Box(
@@ -142,7 +150,10 @@ private fun EditProfileContent(
 }
 
 @Composable
-private fun BottomSheetContent() {
+private fun BottomSheetContent(
+    onClickCamera: () -> Unit,
+    onClickGallery: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -151,11 +162,13 @@ private fun BottomSheetContent() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         BottomSheetItem(
+            modifier = Modifier.clickable { onClickCamera() },
             icon = Icons.Default.PhotoCamera,
             text = stringResource(R.string.take_a_photo_from_camera)
         )
 
         BottomSheetItem(
+            modifier = Modifier.clickable { onClickGallery() },
             icon = Icons.Default.Image,
             text = stringResource(R.string.choose_a_photo_from_gallery)
         )
@@ -164,13 +177,16 @@ private fun BottomSheetContent() {
 
 @Composable
 private fun BottomSheetItem(
-    icon: ImageVector, text: String
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    text: String
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(30.dp),
             imageVector = icon,
             contentDescription = text,
             tint = Color.White
@@ -179,6 +195,7 @@ private fun BottomSheetItem(
             text = text,
             textAlign = TextAlign.Center,
             color = Color.White,
+            fontSize = 16.sp
         )
     }
 }
@@ -190,6 +207,9 @@ fun EditProfilePreview() {
         EditProfileScreen(
             uiState = EditProfileUiState(),
             onPopBackStack = {},
-            onEvent = {})
+            onEvent = {},
+            onNavigateToProfileCamera = {},
+            onNavigateToGallery = {}
+        )
     }
 }

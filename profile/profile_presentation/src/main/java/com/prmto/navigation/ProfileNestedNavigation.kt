@@ -12,6 +12,8 @@ fun NavGraphBuilder.profileNestedNavigation(
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit,
     onNavigateToNestedAuth: () -> Unit,
+    onNavigateToProfileCamera: () -> Unit,
+    onNavigateToGallery: () -> Unit,
     onPopBackStack: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -24,7 +26,9 @@ fun NavGraphBuilder.profileNestedNavigation(
             onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
         )
         editProfileNavigation(
-            onPopBackStack = onPopBackStack
+            onPopBackStack = onPopBackStack,
+            onNavigateToProfileCamera = onNavigateToProfileCamera,
+            onNavigateToGallery = onNavigateToGallery
         )
         settingNavigation(
             onNavigateBack = onNavigateBack,

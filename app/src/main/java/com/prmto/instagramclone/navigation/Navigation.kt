@@ -42,7 +42,9 @@ fun SetupNavigation(
                 }
             },
             onPopBackStack = { navController.popBackStack() },
-            onNavigateBack = { navController.navigateUp() }
+            onNavigateBack = { navController.navigateUp() },
+            onNavigateToProfileCamera = { navController.navigate(ProfileScreen.CameraForProfileImage.route) },
+            onNavigateToGallery = { } // TODO navigate to gallery
         )
 
         authNestedNavigation(

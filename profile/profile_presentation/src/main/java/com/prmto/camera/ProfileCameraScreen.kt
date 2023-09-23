@@ -1,5 +1,6 @@
 package com.prmto.camera
 
+import android.Manifest
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlipCameraAndroid
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +38,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.prmto.core_presentation.components.ShowPermissionPermanentlyDeclinedScreen
+import com.prmto.core_presentation.components.ShowRationaleMessageForPermission
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
+import com.prmto.core_presentation.util.HandlePermissionStatus
 import com.prmto.profile_presentation.R
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ProfileCameraScreen(
     modifier: Modifier = Modifier,
@@ -46,27 +56,47 @@ fun ProfileCameraScreen(
     onTakePhoto: () -> Unit,
     onPopBackStack: () -> Unit
 ) {
+    val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
+    LaunchedEffect(key1 = Unit) {
+        if (!permissionState.status.isGranted) {
+            permissionState.launchPermissionRequest()
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-            ProfileImageTopBar(onPopBackStack = onPopBackStack)
-        }
+        topBar = { ProfileImageTopBar(onPopBackStack = onPopBackStack) }
     ) { paddingValues ->
-        ProfileImageCameraContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            onStartCamera = onStartCamera,
-            onChangeCamera = onChangeCamera,
-            onTakePhoto = onTakePhoto
+        HandlePermissionStatus(
+            permissionStatus = permissionState.status,
+            onPermissionGranted = {
+                ProfileImageCameraContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    onStartCamera = onStartCamera,
+                    onChangeCamera = onChangeCamera,
+                    onTakePhoto = onTakePhoto
+                )
+            },
+            onShowRationaleMessage = {
+                ShowRationaleMessageForPermission(
+                    title = stringResource(R.string.camera_permission_rationale_title),
+                    message = stringResource(R.string.camera_permission_rationale_message),
+                    launchPermissionAgain = {
+                        permissionState.launchPermissionRequest()
+                    },
+                    icon = Icons.Default.PhotoCamera
+                )
+            },
+            onPermissionDeniedPermanently = {
+                ShowPermissionPermanentlyDeclinedScreen(
+                    permissionName = stringResource(R.string.camera),
+                    imageVector = Icons.Default.PhotoCamera
+                )
+            }
         )
-
-        Text(
-            text = "Gallery",
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
     }
 }
 
@@ -78,6 +108,7 @@ fun ProfileImageCameraContent(
     onTakePhoto: () -> Unit
 ) {
     var halfHeightOfTheParent by remember { mutableStateOf(0.dp) }
+
     BoxWithConstraints(
         modifier = modifier
     ) {
@@ -104,15 +135,12 @@ private fun ProfileImageTopBar(
     onPopBackStack: () -> Unit
 ) {
     TopAppBar(
-        title = {
-            Text(text = stringResource(R.string.photo))
-        },
+        title = { Text(text = stringResource(R.string.photo)) },
         navigationIcon = {
-            IconButton(onClick = { onPopBackStack() })
-            {
+            IconButton(onClick = { onPopBackStack() }) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close"
+                    contentDescription = stringResource(id = R.string.close)
                 )
             }
         },
@@ -131,13 +159,9 @@ private fun InstaCameraSection(
             .fillMaxWidth()
             .height(halfHeightOfTheParent)
     ) {
-        InstaCamera(
-            onStartCamera = onStartCamera
-        )
+        InstaCamera(onStartCamera = onStartCamera)
         IconButton(
-            onClick = {
-                onChangeCamera()
-            },
+            onClick = { onChangeCamera() },
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
@@ -168,15 +192,9 @@ fun ScreenBottomSection(
                 .align(Alignment.Center)
                 .size(100.dp)
                 .padding(8.dp)
-                .border(
-                    2.dp,
-                    MaterialTheme.colorScheme.onBackground,
-                    CircleShape
-                )
+                .border(2.dp, MaterialTheme.colorScheme.onBackground, CircleShape)
                 .clip(CircleShape)
-                .background(
-                    MaterialTheme.colorScheme.onBackground.copy(0.8f)
-                )
+                .background(MaterialTheme.colorScheme.onBackground.copy(0.8f))
         ) {
             Icon(
                 modifier = Modifier.size(50.dp),
