@@ -32,4 +32,7 @@
     <string name="camera_permission_rationale_title">We need the permission to use the camera.</string>
     <string name="camera_permission_rationale_message">This app relies on camera to take photos.</string>
     <string name="camera">Camera</string>
+    <string name="flash_off">Camera flash is off</string>
+    <string name="flash_on">Camera flash is on\n</string>
+    <string name="flash_auto">Camera flash is auto</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.prmto.camera.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.prmto.camera.ProfileCameraScreen
+import com.prmto.camera.ProfileCameraScreenEvent
 import com.prmto.camera.ProfileImageViewModel
 import com.prmto.camera.rememberCameraControllerWithImageCapture
 import com.prmto.navigation.ProfileScreen
@@ -13,8 +16,10 @@ fun NavGraphBuilder.profileCameraNavigation(
 ) {
     composable(ProfileScreen.CameraForProfileImage.route) {
         val viewModel: ProfileImageViewModel = hiltViewModel()
+        val profileCameraUiState = viewModel.uiState.collectAsStateWithLifecycle()
         val cameraController = rememberCameraControllerWithImageCapture()
         ProfileCameraScreen(
+            profileCameraUiState = profileCameraUiState.value,
             onChangeCamera = {
                 cameraController.changeCamera()
             },
@@ -24,11 +29,19 @@ fun NavGraphBuilder.profileCameraNavigation(
             onTakePhoto = {
                 cameraController.takePhoto(
                     onPhotoCaptured = {
-                        viewModel.setCaptureUri(it)
+                        viewModel.onEvent(ProfileCameraScreenEvent.PhotoTaken(it))
                     }
                 )
             },
-            onPopBackStack = onPopBacStack
+            onPopBackStack = onPopBacStack,
+            onEvent = viewModel::onEvent
+        )
+
+        LaunchedEffect(
+            key1 = profileCameraUiState.value.cameraFlashMode,
+            block = {
+                cameraController.setFlashMode(profileCameraUiState.value.getFlashMode())
+            }
         )
     }
 }

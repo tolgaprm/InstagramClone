@@ -1,6 +1,7 @@
 package com.prmto.camera
 
 import android.net.Uri
+import android.util.Rational
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.view.PreviewView
@@ -20,4 +21,9 @@ interface CameraController {
     fun takePhoto(onPhotoCaptured: (Uri) -> Unit)
 
     fun changeCamera()
+
+    fun setAspectRatio(rational: Rational)
+
+    fun setFlashMode(flashMode: Int)
+
 }

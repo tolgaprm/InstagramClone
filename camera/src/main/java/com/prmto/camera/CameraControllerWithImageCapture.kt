@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Rational
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -90,6 +91,14 @@ class CameraControllerWithImageCapture(
         previewView?.let {
             startCamera(previewView = previewView ?: return)
         }
+    }
+
+    override fun setAspectRatio(rational: Rational) {
+        imageCaptureUseCase?.setCropAspectRatio(rational)
+    }
+
+    override fun setFlashMode(flashMode: Int) {
+        imageCaptureUseCase?.flashMode = flashMode
     }
 
     private fun createPreviewUseCase(previewView: PreviewView): Preview {

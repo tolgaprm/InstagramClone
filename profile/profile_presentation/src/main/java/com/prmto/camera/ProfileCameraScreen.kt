@@ -15,16 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FlashAuto
+import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FlipCameraAndroid
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.prmto.common.components.ProfileTopBar
 import com.prmto.core_presentation.components.ShowPermissionPermanentlyDeclinedScreen
 import com.prmto.core_presentation.components.ShowRationaleMessageForPermission
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
@@ -50,11 +50,13 @@ import com.prmto.profile_presentation.R
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ProfileCameraScreen(
+    profileCameraUiState: ProfileImageUiState,
     modifier: Modifier = Modifier,
     onChangeCamera: () -> Unit,
     onStartCamera: (PreviewView) -> Unit,
     onTakePhoto: () -> Unit,
-    onPopBackStack: () -> Unit
+    onPopBackStack: () -> Unit,
+    onEvent: (ProfileCameraScreenEvent) -> Unit
 ) {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
@@ -66,7 +68,12 @@ fun ProfileCameraScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = { ProfileImageTopBar(onPopBackStack = onPopBackStack) }
+        topBar = {
+            ProfileTopBar(
+                titleText = stringResource(R.string.photo),
+                onPopBackStack = onPopBackStack
+            )
+        }
     ) { paddingValues ->
         HandlePermissionStatus(
             permissionStatus = permissionState.status,
@@ -77,7 +84,11 @@ fun ProfileCameraScreen(
                         .padding(paddingValues),
                     onStartCamera = onStartCamera,
                     onChangeCamera = onChangeCamera,
-                    onTakePhoto = onTakePhoto
+                    onTakePhoto = onTakePhoto,
+                    cameraFlashMode = profileCameraUiState.cameraFlashMode,
+                    onClickFlashMode = {
+                        onEvent(ProfileCameraScreenEvent.ClickedFlashMode)
+                    }
                 )
             },
             onShowRationaleMessage = {
@@ -103,9 +114,11 @@ fun ProfileCameraScreen(
 @Composable
 fun ProfileImageCameraContent(
     modifier: Modifier = Modifier,
+    cameraFlashMode: CameraFlashMode,
     onStartCamera: (PreviewView) -> Unit,
     onChangeCamera: () -> Unit,
-    onTakePhoto: () -> Unit
+    onTakePhoto: () -> Unit,
+    onClickFlashMode: () -> Unit
 ) {
     var halfHeightOfTheParent by remember { mutableStateOf(0.dp) }
 
@@ -119,7 +132,9 @@ fun ProfileImageCameraContent(
             InstaCameraSection(
                 halfHeightOfTheParent = halfHeightOfTheParent,
                 onStartCamera = onStartCamera,
-                onChangeCamera = onChangeCamera
+                onChangeCamera = onChangeCamera,
+                cameraFlashMode = cameraFlashMode,
+                onClickFlashMode = onClickFlashMode
             )
             ScreenBottomSection(
                 halfHeightOfTheParent = halfHeightOfTheParent,
@@ -130,29 +145,13 @@ fun ProfileImageCameraContent(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun ProfileImageTopBar(
-    onPopBackStack: () -> Unit
-) {
-    TopAppBar(
-        title = { Text(text = stringResource(R.string.photo)) },
-        navigationIcon = {
-            IconButton(onClick = { onPopBackStack() }) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(id = R.string.close)
-                )
-            }
-        },
-    )
-}
-
-@Composable
 private fun InstaCameraSection(
     modifier: Modifier = Modifier,
     halfHeightOfTheParent: Dp,
-    onStartCamera: (PreviewView) -> Unit = {},
-    onChangeCamera: () -> Unit = {},
+    cameraFlashMode: CameraFlashMode,
+    onStartCamera: (PreviewView) -> Unit,
+    onChangeCamera: () -> Unit,
+    onClickFlashMode: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -161,7 +160,7 @@ private fun InstaCameraSection(
     ) {
         InstaCamera(onStartCamera = onStartCamera)
         IconButton(
-            onClick = { onChangeCamera() },
+            onClick = onChangeCamera,
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
@@ -169,6 +168,31 @@ private fun InstaCameraSection(
             Icon(
                 imageVector = Icons.Default.FlipCameraAndroid,
                 contentDescription = stringResource(R.string.flip_camera)
+            )
+        }
+
+        val newFlashIcon = when (cameraFlashMode) {
+            CameraFlashMode.OFF -> Icons.Default.FlashOff
+            CameraFlashMode.ON -> Icons.Default.FlashOn
+            CameraFlashMode.AUTO -> Icons.Default.FlashAuto
+        }
+
+        val newFlashContentDescription = when (cameraFlashMode) {
+            CameraFlashMode.OFF -> stringResource(R.string.flash_off)
+            CameraFlashMode.ON -> stringResource(R.string.flash_on)
+            CameraFlashMode.AUTO -> stringResource(R.string.flash_auto)
+        }
+
+        IconButton(
+            onClick = onClickFlashMode,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+
+        ) {
+            Icon(
+                imageVector = newFlashIcon,
+                contentDescription = newFlashContentDescription
             )
         }
     }
@@ -214,7 +238,12 @@ fun ProfileCameraScreenPreview() {
             onChangeCamera = {},
             onStartCamera = {},
             onTakePhoto = {},
-            onPopBackStack = {}
+            onPopBackStack = {},
+            onEvent = {},
+            profileCameraUiState = ProfileImageUiState(
+                captureUri = null,
+                cameraFlashMode = CameraFlashMode.OFF
+            )
         )
     }
 }

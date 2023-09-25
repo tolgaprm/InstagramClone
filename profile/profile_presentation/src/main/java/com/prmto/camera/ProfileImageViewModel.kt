@@ -26,11 +26,29 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setCaptureUri(uri: Uri) {
-        _uiState.value = _uiState.value.copy(captureUri = uri)
+    fun onEvent(event: ProfileCameraScreenEvent) {
+        when (event) {
+            is ProfileCameraScreenEvent.PhotoTaken -> {
+                _uiState.value = _uiState.value.copy(captureUri = event.photoUri)
+            }
+
+            is ProfileCameraScreenEvent.ClickedFlashMode -> setNewFlashMode()
+        }
+    }
+
+    private fun setNewFlashMode() {
+        val newFlashMode = when (uiState.value.cameraFlashMode) {
+            CameraFlashMode.OFF -> CameraFlashMode.ON
+            CameraFlashMode.ON -> CameraFlashMode.AUTO
+            CameraFlashMode.AUTO -> CameraFlashMode.OFF
+        }
+        _uiState.value = _uiState.value.copy(cameraFlashMode = newFlashMode)
     }
 }
 
 data class ProfileImageUiState(
     val captureUri: Uri? = null,
-)
+    val cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF
+) {
+    fun getFlashMode(): Int = cameraFlashMode.mode
+}
