@@ -82,6 +82,7 @@ fun ProfileCameraScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
+                    isVisibleCameraFlashMode = profileCameraUiState.isVisibleCameraFlashMode,
                     onStartCamera = onStartCamera,
                     onChangeCamera = onChangeCamera,
                     onTakePhoto = onTakePhoto,
@@ -115,6 +116,7 @@ fun ProfileCameraScreen(
 fun ProfileImageCameraContent(
     modifier: Modifier = Modifier,
     cameraFlashMode: CameraFlashMode,
+    isVisibleCameraFlashMode: Boolean,
     onStartCamera: (PreviewView) -> Unit,
     onChangeCamera: () -> Unit,
     onTakePhoto: () -> Unit,
@@ -131,6 +133,7 @@ fun ProfileImageCameraContent(
         ) {
             InstaCameraSection(
                 halfHeightOfTheParent = halfHeightOfTheParent,
+                isVisibleCameraFlashMode = isVisibleCameraFlashMode,
                 onStartCamera = onStartCamera,
                 onChangeCamera = onChangeCamera,
                 cameraFlashMode = cameraFlashMode,
@@ -148,6 +151,7 @@ fun ProfileImageCameraContent(
 private fun InstaCameraSection(
     modifier: Modifier = Modifier,
     halfHeightOfTheParent: Dp,
+    isVisibleCameraFlashMode: Boolean,
     cameraFlashMode: CameraFlashMode,
     onStartCamera: (PreviewView) -> Unit,
     onChangeCamera: () -> Unit,
@@ -171,29 +175,31 @@ private fun InstaCameraSection(
             )
         }
 
-        val newFlashIcon = when (cameraFlashMode) {
-            CameraFlashMode.OFF -> Icons.Default.FlashOff
-            CameraFlashMode.ON -> Icons.Default.FlashOn
-            CameraFlashMode.AUTO -> Icons.Default.FlashAuto
-        }
+        if (isVisibleCameraFlashMode) {
+            val newFlashIcon = when (cameraFlashMode) {
+                CameraFlashMode.OFF -> Icons.Default.FlashOff
+                CameraFlashMode.ON -> Icons.Default.FlashOn
+                CameraFlashMode.AUTO -> Icons.Default.FlashAuto
+            }
 
-        val newFlashContentDescription = when (cameraFlashMode) {
-            CameraFlashMode.OFF -> stringResource(R.string.flash_off)
-            CameraFlashMode.ON -> stringResource(R.string.flash_on)
-            CameraFlashMode.AUTO -> stringResource(R.string.flash_auto)
-        }
+            val newFlashContentDescription = when (cameraFlashMode) {
+                CameraFlashMode.OFF -> stringResource(R.string.flash_off)
+                CameraFlashMode.ON -> stringResource(R.string.flash_on)
+                CameraFlashMode.AUTO -> stringResource(R.string.flash_auto)
+            }
 
-        IconButton(
-            onClick = onClickFlashMode,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+            IconButton(
+                onClick = onClickFlashMode,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
 
-        ) {
-            Icon(
-                imageVector = newFlashIcon,
-                contentDescription = newFlashContentDescription
-            )
+            ) {
+                Icon(
+                    imageVector = newFlashIcon,
+                    contentDescription = newFlashContentDescription
+                )
+            }
         }
     }
 }

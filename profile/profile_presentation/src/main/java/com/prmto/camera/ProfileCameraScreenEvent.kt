@@ -7,6 +7,10 @@ sealed interface ProfileCameraScreenEvent {
     data class PhotoTaken(val photoUri: Uri) : ProfileCameraScreenEvent
 
     data object ClickedFlashMode : ProfileCameraScreenEvent
+
+    data class ChangeCameraSelector(
+        val isFrontCamera: Boolean
+    ) : ProfileCameraScreenEvent
 }
 
 enum class CameraFlashMode(val mode: Int) {

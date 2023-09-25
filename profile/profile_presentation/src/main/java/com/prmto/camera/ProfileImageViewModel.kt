@@ -33,6 +33,12 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
             }
 
             is ProfileCameraScreenEvent.ClickedFlashMode -> setNewFlashMode()
+            is ProfileCameraScreenEvent.ChangeCameraSelector -> {
+                _uiState.value = _uiState.value.copy(
+                    isVisibleCameraFlashMode = !event.isFrontCamera,
+                    cameraFlashMode = CameraFlashMode.OFF
+                )
+            }
         }
     }
 
@@ -48,7 +54,8 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
 
 data class ProfileImageUiState(
     val captureUri: Uri? = null,
-    val cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF
+    val cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF,
+    val isVisibleCameraFlashMode: Boolean = true
 ) {
     fun getFlashMode(): Int = cameraFlashMode.mode
 }

@@ -1,5 +1,6 @@
 package com.prmto.camera.navigation
 
+import androidx.camera.core.CameraSelector
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +23,9 @@ fun NavGraphBuilder.profileCameraNavigation(
             profileCameraUiState = profileCameraUiState.value,
             onChangeCamera = {
                 cameraController.changeCamera()
+                val isFrontCamera =
+                    cameraController.cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA
+                viewModel.onEvent(ProfileCameraScreenEvent.ChangeCameraSelector(isFrontCamera))
             },
             onStartCamera = {
                 cameraController.startCamera(it)
