@@ -9,5 +9,7 @@ android {
 
 dependencies {
     implementation(project(":core:core_presentation"))
+    implementation(project(":camera"))
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.bundles.cameraX)
 }

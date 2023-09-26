@@ -59,10 +59,13 @@ dependencies {
     implementation(project(":auth:auth_presentation"))
     implementation(project(":auth:auth_data"))
     implementation(project(":auth:auth_domain"))
+    implementation(project(":camera"))
 
     implementation(libs.bundles.ui.related)
     implementation(libs.splash)
     implementation(libs.timber)
+
+    implementation(libs.bundles.cameraX)
 
     // Navigation
     implementation(libs.navigation.compose)

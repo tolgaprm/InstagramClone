@@ -24,4 +24,7 @@ sealed class ProfileScreen(val route: String) : ScreenRoot() {
     data object EditProfile : ProfileScreen("edit_profile_screen")
 
     data object Settings : ProfileScreen("settings_screen")
+
+    data object CameraForProfileImage : ProfileScreen("camera_for_profile_screen")
+    data object GalleryForProfileImage : ProfileScreen("gallery_for_profile_screen")
 }

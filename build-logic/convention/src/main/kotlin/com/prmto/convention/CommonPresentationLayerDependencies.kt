@@ -23,6 +23,7 @@ internal fun Project.commonPresentationLayerDependencies(
             addImplementation(libs.findLibrary("material").get())
             addImplementation(libs.findLibrary("accompanist-systemuicontroller").get())
             addImplementation(libs.findLibrary("icons-extended").get())
+            addImplementation(libs.findLibrary("accompanist-permissions").get())
 
             addImplementation(libs.findLibrary("coil").get())
             addImplementation(libs.findLibrary("coil.svg").get())

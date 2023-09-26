@@ -13,6 +13,10 @@ val Color.Companion.White40: Color
 val Color.Companion.Black60: Color
     get() = Color(0x99000000)
 
+val Nero = Color(0xFF262626)
+
+val DriedLavenderFlowers = Color(0xFF767680)
+
 
 @Composable
 fun colorBlur(): Color {
