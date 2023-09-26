@@ -35,4 +35,6 @@
     <string name="flash_off">Camera flash is off</string>
     <string name="flash_on">Camera flash is on\n</string>
     <string name="flash_auto">Camera flash is auto</string>
+    <string name="next">Next</string>
+    <string name="no_albums_found">" There is no photos on the device, navigate to the camera screen to take a photo"</string>
 </resources>
