@@ -21,19 +21,13 @@ jobs:
         distribution: 'zulu'
 
     - name: Access FIREBASE_API_KEY
-      env:
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-      run: echo FIREBASE_API_KEY=\"$FIREBASE_API_KEY\" > ./local.properties
+      run: echo "FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}" > ./local.properties
 
     - name: Access FIREBASE_APPLICATION_ID
-      env:
-          FIREBASE_APPLICATION_ID: ${{ secrets.FIREBASE_APPLICATION_ID }}
-      run: echo FIREBASE_APPLICATION_ID=\"$FIREBASE_APPLICATION_ID\" > ./local.properties
+      run: echo "FIREBASE_APPLICATION_ID=${{ secrets.FIREBASE_APPLICATION_ID }}" > ./local.properties
 
     - name: Access FIREBASE_PROJECT_ID
-      env:
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-      run: echo FIREBASE_PROJECT_ID=\"$FIREBASE_PROJECT_ID\" > ./local.properties
+      run: echo "FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" > ./local.properties
 
     - name: Add Google Services Json File
       env: 
