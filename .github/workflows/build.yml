@@ -35,6 +35,11 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       run: echo FIREBASE_PROJECT_ID=\"$FIREBASE_PROJECT_ID\" > ./local.properties
 
+    - name: Add Google Services Json File
+      env: 
+          DATA: ${{ secrets.GOOGLESERVICESJSON }}
+      run: echo $DATA > /home/runner/work/InstagramClone/InstagramClone/app/src/google-services.json
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
