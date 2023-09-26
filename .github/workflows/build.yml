@@ -4,7 +4,8 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-  
+    branches: [ "main" ]
+
 
 jobs:
   build:
@@ -19,6 +20,21 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
+    - name: Access FIREBASE_API_KEY
+      env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+      run: echo FIREBASE_API_KEY=\"$FIREBASE_API_KEY\" > ./local.properties
+
+    - name: Access FIREBASE_APPLICATION_ID
+      env:
+          FIREBASE_APPLICATION_ID: ${{ secrets.FIREBASE_APPLICATION_ID }}
+      run: echo FIREBASE_APPLICATION_ID=\"$FIREBASE_APPLICATION_ID\" > ./local.properties
+
+    - name: Access FIREBASE_PROJECT_ID
+      env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      run: echo FIREBASE_PROJECT_ID=\"$FIREBASE_PROJECT_ID\" > ./local.properties
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
@@ -26,11 +42,4 @@ jobs:
       
     - name: Run local tests
       run: ./gradlew testDebugUnitTest
-
-    - name: Upload test results (XML)
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: '**/build/test-results/test*UnitTest/**.xml'
   
