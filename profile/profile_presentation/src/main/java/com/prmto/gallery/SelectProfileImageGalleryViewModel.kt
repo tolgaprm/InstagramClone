@@ -25,7 +25,19 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SelectProfileImageGalleryUiState())
     val uiState: StateFlow<SelectProfileImageGalleryUiState> = _uiState.asStateFlow()
 
-    init {
+    fun onEvent(event: SelectProfileImageGalleryEvent) {
+        when (event) {
+            is SelectProfileImageGalleryEvent.SelectAlbum -> handleSelectAlbumEvent(event.albumName)
+
+            is SelectProfileImageGalleryEvent.SelectImage -> {
+                _uiState.update { it.copy(selectedImageUri = event.uri) }
+            }
+
+            is SelectProfileImageGalleryEvent.AllPermissionsGranted -> handleAllPermissionGranted()
+        }
+    }
+
+    private fun handleAllPermissionGranted() {
         viewModelScope.launch(dispatcherProvider.IO) {
             val mediaAlbums = getAllAlbumNames().await()
             if (mediaAlbums.isEmpty()) {
@@ -44,16 +56,6 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
                     urisInSelectedAlbum = urisInAlbum,
                     selectedAlbumName = mediaAlbums.first()
                 )
-            }
-        }
-    }
-
-    fun onEvent(event: SelectProfileImageGalleryEvent) {
-        when (event) {
-            is SelectProfileImageGalleryEvent.SelectAlbum -> handleSelectAlbumEvent(event.albumName)
-
-            is SelectProfileImageGalleryEvent.SelectImage -> {
-                _uiState.update { it.copy(selectedImageUri = event.uri) }
             }
         }
     }

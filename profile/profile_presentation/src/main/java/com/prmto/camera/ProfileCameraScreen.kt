@@ -1,6 +1,7 @@
 package com.prmto.camera
 
 import android.Manifest
+import android.os.Build
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +20,6 @@ import androidx.compose.material.icons.filled.FlashAuto
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FlipCameraAndroid
-import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,19 +38,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.prmto.common.components.ProfileTopBar
-import com.prmto.core_presentation.components.ShowPermissionPermanentlyDeclinedScreen
-import com.prmto.core_presentation.components.ShowRationaleMessageForPermission
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
-import com.prmto.core_presentation.util.HandlePermissionStatus
+import com.prmto.permission.provider.getPermissionInfoProvider
+import com.prmto.permission.util.HandleMultiplePermissionStatus
 import com.prmto.profile_presentation.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ProfileCameraScreen(
     profileCameraUiState: ProfileImageUiState,
+    dialogQueue: List<String>,
     modifier: Modifier = Modifier,
     onChangeCamera: () -> Unit,
     onStartCamera: (PreviewView) -> Unit,
@@ -58,57 +59,63 @@ fun ProfileCameraScreen(
     onPopBackStack: () -> Unit,
     onEvent: (ProfileCameraScreenEvent) -> Unit
 ) {
-    val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    val permissionsToRequest = mutableListOf<String>().apply {
+        add(Manifest.permission.CAMERA)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+    }
+    val permissionState =
+        rememberMultiplePermissionsState(permissions = permissionsToRequest) { permissionsResult ->
+            permissionsToRequest.forEach { permission ->
+                onEvent(
+                    ProfileCameraScreenEvent.PermissionResult(
+                        permission = permission,
+                        isGranted = permissionsResult[permission] == true,
+                    )
+                )
+            }
+        }
 
     LaunchedEffect(key1 = Unit) {
-        if (!permissionState.status.isGranted) {
-            permissionState.launchPermissionRequest()
+        if (!permissionState.allPermissionsGranted) {
+            permissionState.launchMultiplePermissionRequest()
         }
     }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        topBar = {
-            ProfileTopBar(
-                titleText = stringResource(R.string.photo),
-                onPopBackStack = onPopBackStack
+    Scaffold(modifier = modifier.fillMaxSize(), topBar = {
+        ProfileTopBar(
+            titleText = stringResource(R.string.photo), onPopBackStack = onPopBackStack
+        )
+    }) { paddingValues ->
+        if (permissionState.allPermissionsGranted) {
+            ProfileImageCameraContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                isVisibleCameraFlashMode = profileCameraUiState.isVisibleCameraFlashMode,
+                onStartCamera = onStartCamera,
+                onChangeCamera = onChangeCamera,
+                onTakePhoto = onTakePhoto,
+                cameraFlashMode = profileCameraUiState.cameraFlashMode,
+                onClickFlashMode = {
+                    onEvent(ProfileCameraScreenEvent.ClickedFlashMode)
+                }
             )
-        }
-    ) { paddingValues ->
-        HandlePermissionStatus(
-            permissionStatus = permissionState.status,
-            onPermissionGranted = {
-                ProfileImageCameraContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    isVisibleCameraFlashMode = profileCameraUiState.isVisibleCameraFlashMode,
-                    onStartCamera = onStartCamera,
-                    onChangeCamera = onChangeCamera,
-                    onTakePhoto = onTakePhoto,
-                    cameraFlashMode = profileCameraUiState.cameraFlashMode,
-                    onClickFlashMode = {
-                        onEvent(ProfileCameraScreenEvent.ClickedFlashMode)
+        } else {
+            dialogQueue.reversed().forEach { permission ->
+                HandleDialogQueue(
+                    permission = permission,
+                    permissionStates = permissionState.permissions,
+                    onDismiss = { onEvent(ProfileCameraScreenEvent.DismissDialog) },
+                    onOkClick = {
+                        onEvent(ProfileCameraScreenEvent.DismissDialog)
+                        permissionState.permissions.find { it.permission == permission }
+                            ?.launchPermissionRequest()
                     }
                 )
-            },
-            onShowRationaleMessage = {
-                ShowRationaleMessageForPermission(
-                    title = stringResource(R.string.camera_permission_rationale_title),
-                    message = stringResource(R.string.camera_permission_rationale_message),
-                    launchPermissionAgain = {
-                        permissionState.launchPermissionRequest()
-                    },
-                    icon = Icons.Default.PhotoCamera
-                )
-            },
-            onPermissionDeniedPermanently = {
-                ShowPermissionPermanentlyDeclinedScreen(
-                    permissionName = stringResource(R.string.camera),
-                    imageVector = Icons.Default.PhotoCamera
-                )
             }
-        )
+        }
     }
 }
 
@@ -140,8 +147,7 @@ fun ProfileImageCameraContent(
                 onClickFlashMode = onClickFlashMode
             )
             ScreenBottomSection(
-                halfHeightOfTheParent = halfHeightOfTheParent,
-                onTakePhoto = onTakePhoto
+                halfHeightOfTheParent = halfHeightOfTheParent, onTakePhoto = onTakePhoto
             )
         }
     }
@@ -196,8 +202,7 @@ private fun InstaCameraSection(
 
             ) {
                 Icon(
-                    imageVector = newFlashIcon,
-                    contentDescription = newFlashContentDescription
+                    imageVector = newFlashIcon, contentDescription = newFlashContentDescription
                 )
             }
         }
@@ -206,9 +211,7 @@ private fun InstaCameraSection(
 
 @Composable
 fun ScreenBottomSection(
-    modifier: Modifier = Modifier,
-    halfHeightOfTheParent: Dp,
-    onTakePhoto: () -> Unit = {}
+    modifier: Modifier = Modifier, halfHeightOfTheParent: Dp, onTakePhoto: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -236,20 +239,36 @@ fun ScreenBottomSection(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun HandleDialogQueue(
+    permission: String,
+    permissionStates: List<PermissionState>,
+    onDismiss: () -> Unit,
+    onOkClick: () -> Unit
+) {
+    val permissionInfoProvider = getPermissionInfoProvider(permission)
+    val permissionStatus = permissionStates.find { it.permission == permission }?.status ?: return
+    HandleMultiplePermissionStatus(
+        permissionProvider = permissionInfoProvider,
+        onDismiss = onDismiss,
+        onOkClick = onOkClick,
+        shouldShowRationale = permissionStatus.shouldShowRationale,
+    )
+}
+
 @Preview
 @Composable
 fun ProfileCameraScreenPreview() {
     InstagramCloneTheme {
-        ProfileCameraScreen(
+        ProfileCameraScreen(profileCameraUiState = ProfileImageUiState(
+            captureUri = null, cameraFlashMode = CameraFlashMode.OFF
+        ),
+            dialogQueue = listOf(),
             onChangeCamera = {},
             onStartCamera = {},
             onTakePhoto = {},
             onPopBackStack = {},
-            onEvent = {},
-            profileCameraUiState = ProfileImageUiState(
-                captureUri = null,
-                cameraFlashMode = CameraFlashMode.OFF
-            )
-        )
+            onEvent = {})
     }
 }

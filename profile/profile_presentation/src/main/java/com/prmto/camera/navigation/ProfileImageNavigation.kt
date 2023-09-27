@@ -19,8 +19,10 @@ fun NavGraphBuilder.profileCameraNavigation(
         val viewModel: ProfileImageViewModel = hiltViewModel()
         val profileCameraUiState = viewModel.uiState.collectAsStateWithLifecycle()
         val cameraController = rememberCameraControllerWithImageCapture()
+
         ProfileCameraScreen(
             profileCameraUiState = profileCameraUiState.value,
+            dialogQueue = viewModel.visiblePermissionDialogQueue,
             onChangeCamera = {
                 cameraController.changeCamera()
                 val isFrontCamera =

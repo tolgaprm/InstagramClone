@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="go_to_settings">Go to settings</string>
+    <string name="permission_permanently_declined_message">%s permission is permanently declined, please go to settings and enable it</string>
+    <string name="ok">OK</string>
+    <string name="camera_permission_rationale_title">We need the permission to use the camera.</string>
+    <string name="camera_permission_rationale_message">This app relies on camera to take photos.</string>
+    <string name="camera">Camera</string>
+    <string name="write_external_storage">Write External Storage</string>
+    <string name="write_external_storage_permission_rationale_title">We need to write external storage to save your images and videos.</string>
+    <string name="write_external_storage_permission_rationale_message">This app needs to write to external storage to save photos and videos.</string>
+    <string name="read_media_images">Read Media Images</string>
+    <string name="read_media_images_permission_rationale_title">Read Media Images</string>
+    <string name="read_media_images_permission_rationale_message">We need to this permission reach all images in your app </string>
+    <string name="read_external_storage">Read External Message</string>
+    <string name="read_external_storage_permission_rationale_title">We need to read external storage to save your images and videos.</string>
+    <string name="read_external_storage_permission_rationale_message">This app needs to read to external storage to reach photos and videos.</string>
+</resources>
