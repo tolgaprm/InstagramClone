@@ -32,13 +32,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -64,46 +69,51 @@ fun ProfileImageGalleryScreen(
     onPopBackStack: () -> Unit,
     onEvent: (SelectProfileImageGalleryEvent) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            skipHiddenState = false
-        )
-    )
-    val permissionsToRequest = mutableListOf<String>().apply {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(Manifest.permission.READ_MEDIA_IMAGES)
-        }
-    }
-
-    val permissionState = rememberPermissionState(permission = permissionsToRequest.first()) {
+    val permissionsToRequest = getPermissionToRequest()
+    val permissionState = rememberPermissionState(permission = permissionsToRequest) {
         if (it) {
             onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
         }
     }
-    val permissionProvider = getPermissionInfoProvider(permissionsToRequest.first())
+    val coroutineScope = rememberCoroutineScope()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
+    )
+    val permissionProvider = getPermissionInfoProvider(permissionsToRequest)
+
+    LaunchedEffect(key1 = Unit) {
+        if (!permissionState.status.isGranted) {
+            permissionState.launchPermissionRequest()
+        }
+    }
+    ObservePermissionStatusAndTriggerEvent(
+        permissionIsGranted = permissionState.status.isGranted,
+        onEvent = onEvent
+    )
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         modifier = modifier.fillMaxSize(),
         topBar = {
-            ProfileTopBar(onPopBackStack = onPopBackStack, titleComposable = {
-                ProfileImageTopBarTitleSection(selectedDirectoryName = uiState.selectedAlbumName,
-                    onClicked = {
-                        coroutineScope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
+            ProfileTopBar(
+                onPopBackStack = onPopBackStack,
+                titleComposable = {
+                    ProfileImageTopBarTitleSection(
+                        selectedDirectoryName = uiState.selectedAlbumName,
+                        onClicked = {
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
                         }
-                    })
-            }, actions = {
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(
-                        text = stringResource(R.string.next), color = Color.InstaBlue
                     )
+                },
+                actions = {
+                    TextButton(onClick = { /*TODO*/ }) {
+                        Text(
+                            text = stringResource(R.string.next), color = Color.InstaBlue
+                        )
+                    }
                 }
-            })
+            )
         },
         sheetContent = {
             SheetContent(
@@ -118,14 +128,14 @@ fun ProfileImageGalleryScreen(
                     }
                 }
             )
-        })
+        }
+    )
     {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize()
         ) {
             val heightOfHalf = maxHeight / 2
             if (permissionState.status.isGranted) {
-                onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -215,6 +225,43 @@ fun AlbumNameItem(
             .padding(8.dp),
         style = MaterialTheme.typography.bodyLarge
     )
+}
+
+@Composable
+fun ObservePermissionStatusAndTriggerEvent(
+    permissionIsGranted: Boolean,
+    onEvent: (SelectProfileImageGalleryEvent) -> Unit
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(
+        key1 = lifecycleOwner
+    ) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_CREATE -> {
+                    if (permissionIsGranted) {
+                        onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
+                    }
+                }
+
+                else -> Unit
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+private fun getPermissionToRequest(): String {
+    return if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    } else {
+        Manifest.permission.READ_MEDIA_IMAGES
+    }
 }
 
 @UiModePreview
