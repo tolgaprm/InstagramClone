@@ -11,6 +11,13 @@ sealed interface ProfileCameraScreenEvent {
     data class ChangeCameraSelector(
         val isFrontCamera: Boolean
     ) : ProfileCameraScreenEvent
+
+    data object DismissDialog : ProfileCameraScreenEvent
+
+    data class PermissionResult(
+        val permission: String,
+        val isGranted: Boolean
+    ) : ProfileCameraScreenEvent
 }
 
 enum class CameraFlashMode(val mode: Int) {

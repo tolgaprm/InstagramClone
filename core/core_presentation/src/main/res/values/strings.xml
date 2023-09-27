@@ -4,8 +4,6 @@
 
     <string name="notifications">Notifications</string>
     <string name="ok">OK</string>
-    <string name="permission_permanently_declined_message">%s permission is permanently declined, please go to settings and enable it</string>
-    <string name="go_to_settings">Go to settings</string>
     <string name="reset_image_to_original">Reset Image to original</string>
 
 </resources>

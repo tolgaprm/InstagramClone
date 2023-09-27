@@ -1,5 +1,7 @@
 package com.prmto.gallery
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,15 +40,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.prmto.common.components.ProfileTopBar
 import com.prmto.core_presentation.components.TransformableAsyncImage
 import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
+import com.prmto.permission.provider.getPermissionInfoProvider
+import com.prmto.permission.util.HandlePermissionStatus
 import com.prmto.profile_presentation.R
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalPermissionsApi::class
+)
 @Composable
 fun ProfileImageGalleryScreen(
     modifier: Modifier = Modifier,
@@ -60,7 +70,24 @@ fun ProfileImageGalleryScreen(
             skipHiddenState = false
         )
     )
-    BottomSheetScaffold(scaffoldState = bottomSheetScaffoldState,
+    val permissionsToRequest = mutableListOf<String>().apply {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            add(Manifest.permission.READ_MEDIA_IMAGES)
+        }
+    }
+
+    val permissionState = rememberPermissionState(permission = permissionsToRequest.first()) {
+        if (it) {
+            onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
+        }
+    }
+    val permissionProvider = getPermissionInfoProvider(permissionsToRequest.first())
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
         modifier = modifier.fillMaxSize(),
         topBar = {
             ProfileTopBar(onPopBackStack = onPopBackStack, titleComposable = {
@@ -97,31 +124,45 @@ fun ProfileImageGalleryScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             val heightOfHalf = maxHeight / 2
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                TransformableAsyncImage(
-                    modifier = Modifier.height(heightOfHalf),
-                    model = uiState.selectedImageUri
-                )
-
-                LazyVerticalGrid(
-                    modifier = Modifier.height(heightOfHalf),
-                    columns = GridCells.Adaptive(100.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+            if (permissionState.status.isGranted) {
+                onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
+                Column(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    items(uiState.urisInSelectedAlbum, key = { it }) { uri ->
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clickable { onEvent(SelectProfileImageGalleryEvent.SelectImage(uri = uri)) },
-                            model = uri,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
+                    TransformableAsyncImage(
+                        modifier = Modifier.height(heightOfHalf),
+                        model = uiState.selectedImageUri
+                    )
+
+                    LazyVerticalGrid(
+                        modifier = Modifier.height(heightOfHalf),
+                        columns = GridCells.Adaptive(100.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(uiState.urisInSelectedAlbum, key = { it }) { uri ->
+                            AsyncImage(
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clickable {
+                                        onEvent(
+                                            SelectProfileImageGalleryEvent.SelectImage(
+                                                uri = uri
+                                            )
+                                        )
+                                    },
+                                model = uri,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
                 }
+            } else {
+                HandlePermissionStatus(
+                    permissionState = permissionState,
+                    permissionProvider = permissionProvider
+                )
             }
         }
     }
