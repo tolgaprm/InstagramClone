@@ -21,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,13 +35,16 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.login.event.LoginEvent
+import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.ui.theme.colorBlur
 import com.prmto.core_presentation.util.toDp
 import com.prmto.core_presentation.R as coreR
@@ -199,5 +203,21 @@ private fun SignUpSection(
                 }
                 .padding(4.dp)
         )
+    }
+}
+
+@UiModePreview
+@Composable
+fun LoginScreenPreview(
+    @PreviewParameter(LoginUiStatePreviewParameterProvider::class) loginUiState: LoginUiState
+) {
+    InstagramCloneTheme {
+        Surface {
+            LoginScreen(
+                loginUiState = loginUiState,
+                onEvent = {},
+                onNavigateToRegisterScreen = {}
+            )
+        }
     }
 }

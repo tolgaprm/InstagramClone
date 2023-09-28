@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,12 +23,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
+import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -125,6 +129,21 @@ fun UserInformationScreen(
                     color = Color.InstaBlue
                 )
             }
+        }
+    }
+}
+
+@UiModePreview
+@Composable
+fun UserInformationScreenPreview(
+    @PreviewParameter(UserInfoUiDataPreviewProvider::class) UserInfoUiData: UserInfoUiData
+) {
+    InstagramCloneTheme {
+        Surface {
+            UserInformationScreen(
+                userInfoUiData = UserInfoUiData,
+                onEvent = {}
+            )
         }
     }
 }

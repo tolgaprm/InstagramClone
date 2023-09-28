@@ -39,7 +39,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.profile_presentation.R
 import com.prmto.setting_presentation.components.SettingItem
 import com.prmto.setting_presentation.components.SettingSection
@@ -185,5 +187,18 @@ fun SettingScreen(
                 )
             })
         }
+    }
+}
+
+@UiModePreview
+@Composable
+fun SettingsScreenPreview() {
+    InstagramCloneTheme {
+        SettingScreen(
+            uiState = SettingScreenUiState(),
+            onNavigateBack = { },
+            onNavigateToEditProfile = { },
+            onEvent = {}
+        )
     }
 }

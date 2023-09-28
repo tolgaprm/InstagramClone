@@ -6,10 +6,13 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.profile_presentation.R
 
 @Composable
@@ -36,4 +39,17 @@ fun ProfileTopBar(
         },
         actions = actions
     )
+}
+
+@UiModePreview
+@Composable
+fun ProfileTopBarPreview() {
+    InstagramCloneTheme {
+        Surface {
+            ProfileTopBar(
+                titleText = "Title",
+                onPopBackStack = {}
+            )
+        }
+    }
 }
