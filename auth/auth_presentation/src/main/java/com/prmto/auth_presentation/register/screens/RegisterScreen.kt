@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -26,15 +27,19 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.register.RegisterUiStateData
+import com.prmto.auth_presentation.register.RegisterUiStateDataPreviewProvider
 import com.prmto.auth_presentation.register.SelectedTab
 import com.prmto.auth_presentation.register.components.RegisterScreenBottomSection
 import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.auth_presentation.register.isPhoneNumberSelected
+import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.R as CoreRes
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -166,5 +171,21 @@ private fun InstaRegisterTab(
             text = tabName,
             style = MaterialTheme.typography.titleSmall,
         )
+    }
+}
+
+@UiModePreview
+@Composable
+fun RegisterScreenPreview(
+    @PreviewParameter(RegisterUiStateDataPreviewProvider::class) registerUiStateData: RegisterUiStateData
+) {
+    InstagramCloneTheme {
+        Surface {
+            RegisterScreen(
+                registerUiStateData = registerUiStateData,
+                onNavigateToLogin = {},
+                onEvent = {}
+            )
+        }
     }
 }

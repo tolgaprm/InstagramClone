@@ -3,6 +3,7 @@ package com.prmto.core_presentation.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -14,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.prmto.core_presentation.R
+import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
 @Composable
 fun CircleProfileImage(
@@ -39,4 +42,14 @@ fun CircleProfileImage(
             ),
         contentScale = ContentScale.Crop
     )
+}
+
+@UiModePreview
+@Composable
+fun CircleProfileImagePreview() {
+    InstagramCloneTheme {
+        Surface {
+            CircleProfileImage(imageUrl = "")
+        }
+    }
 }

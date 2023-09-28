@@ -32,17 +32,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_presentation.components.CircleProfileImage
+import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.ui.theme.colorBlur
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
 import com.prmto.edit_profile_presentation.navigation.components.EditProfileSection
 import com.prmto.edit_profile_presentation.navigation.components.EditProfileTopBar
+import com.prmto.edit_profile_presentation.previewDataProvider.EditProfileUiStatePreviewProvider
 import com.prmto.profile_presentation.R
 import kotlinx.coroutines.launch
 
@@ -200,12 +202,14 @@ private fun BottomSheetItem(
     }
 }
 
-@Preview
+@UiModePreview
 @Composable
-fun EditProfilePreview() {
+fun EditProfilePreview(
+    @PreviewParameter(EditProfileUiStatePreviewProvider::class) uiState: EditProfileUiState
+) {
     InstagramCloneTheme {
         EditProfileScreen(
-            uiState = EditProfileUiState(),
+            uiState = uiState,
             onPopBackStack = {},
             onEvent = {},
             onNavigateToProfileCamera = {},
