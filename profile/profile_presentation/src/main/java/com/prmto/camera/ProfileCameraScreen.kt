@@ -1,7 +1,5 @@
 package com.prmto.camera
 
-import android.Manifest
-import android.os.Build
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,7 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +36,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.prmto.common.components.ProfileTopBar
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
@@ -49,46 +45,27 @@ import com.prmto.profile_presentation.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ProfileCameraScreen(
-    profileCameraUiState: ProfileImageUiState,
-    dialogQueue: List<String>,
+internal fun ProfileCameraScreen(
+    profileCameraUiState: ProfileCameraUiState,
     modifier: Modifier = Modifier,
+    allPermissionsGranted: Boolean = false,
+    permissionStates: List<PermissionState>,
+    dialogQueue: List<String>,
     onChangeCamera: () -> Unit,
     onStartCamera: (PreviewView) -> Unit,
     onTakePhoto: () -> Unit,
     onPopBackStack: () -> Unit,
     onEvent: (ProfileCameraScreenEvent) -> Unit
 ) {
-    val permissionsToRequest = mutableListOf<String>().apply {
-        add(Manifest.permission.CAMERA)
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    Scaffold(modifier = modifier.fillMaxSize(),
+        topBar = {
+            ProfileTopBar(
+                titleText = stringResource(R.string.photo),
+                onPopBackStack = onPopBackStack
+            )
         }
-    }
-    val permissionState =
-        rememberMultiplePermissionsState(permissions = permissionsToRequest) { permissionsResult ->
-            permissionsToRequest.forEach { permission ->
-                onEvent(
-                    ProfileCameraScreenEvent.PermissionResult(
-                        permission = permission,
-                        isGranted = permissionsResult[permission] == true,
-                    )
-                )
-            }
-        }
-
-    LaunchedEffect(key1 = Unit) {
-        if (!permissionState.allPermissionsGranted) {
-            permissionState.launchMultiplePermissionRequest()
-        }
-    }
-
-    Scaffold(modifier = modifier.fillMaxSize(), topBar = {
-        ProfileTopBar(
-            titleText = stringResource(R.string.photo), onPopBackStack = onPopBackStack
-        )
-    }) { paddingValues ->
-        if (permissionState.allPermissionsGranted) {
+    ) { paddingValues ->
+        if (allPermissionsGranted) {
             ProfileImageCameraContent(
                 modifier = Modifier
                     .fillMaxSize()
@@ -106,11 +83,11 @@ fun ProfileCameraScreen(
             dialogQueue.reversed().forEach { permission ->
                 HandleDialogQueue(
                     permission = permission,
-                    permissionStates = permissionState.permissions,
+                    permissionStates = permissionStates,
                     onDismiss = { onEvent(ProfileCameraScreenEvent.DismissDialog) },
                     onOkClick = {
                         onEvent(ProfileCameraScreenEvent.DismissDialog)
-                        permissionState.permissions.find { it.permission == permission }
+                        permissionStates.find { it.permission == permission }
                             ?.launchPermissionRequest()
                     }
                 )
@@ -257,18 +234,25 @@ fun HandleDialogQueue(
     )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 fun ProfileCameraScreenPreview() {
     InstagramCloneTheme {
-        ProfileCameraScreen(profileCameraUiState = ProfileImageUiState(
-            captureUri = null, cameraFlashMode = CameraFlashMode.OFF
-        ),
+        ProfileCameraScreen(
+            profileCameraUiState =
+            ProfileCameraUiState(
+                captureUri = null,
+                cameraFlashMode = CameraFlashMode.OFF
+            ),
+            allPermissionsGranted = true,
+            permissionStates = listOf(),
             dialogQueue = listOf(),
             onChangeCamera = {},
             onStartCamera = {},
             onTakePhoto = {},
             onPopBackStack = {},
-            onEvent = {})
+            onEvent = {}
+        )
     }
 }

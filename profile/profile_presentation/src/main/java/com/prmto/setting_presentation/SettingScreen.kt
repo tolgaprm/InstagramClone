@@ -39,7 +39,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.profile_presentation.R
@@ -47,26 +51,60 @@ import com.prmto.setting_presentation.components.SettingItem
 import com.prmto.setting_presentation.components.SettingSection
 import com.prmto.setting_presentation.event.SettingScreenEvent
 
+@Composable
+internal fun SettingScreenRoute(
+    modifier: Modifier = Modifier,
+    viewModel: SettingViewModel = hiltViewModel(),
+    onNavigateToEditProfile: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToNestedAuth: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
+    SettingScreen(
+        modifier = modifier,
+        uiState = uiState,
+        onNavigateBack = onNavigateBack,
+        onNavigateToEditProfile = onNavigateToEditProfile,
+        onEvent = viewModel::onEvent
+    )
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = { route ->
+            when (route) {
+                NestedNavigation.Auth.route -> onNavigateToNestedAuth()
+            }
+        },
+        onEventConsumed = viewModel::onEventConsumed
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen(
+internal fun SettingScreen(
+    modifier: Modifier = Modifier,
     uiState: SettingScreenUiState,
     onNavigateBack: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
     onEvent: (SettingScreenEvent) -> Unit
 ) {
     var isShowAlertDialog by remember { mutableStateOf(false) }
-    Scaffold(topBar = {
-        TopAppBar(modifier = Modifier.shadow(elevation = 8.dp), title = {
-            Text(text = stringResource(R.string.settings))
-        }, navigationIcon = {
-            IconButton(onClick = onNavigateBack) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack, contentDescription = null
-                )
-            }
-        })
-    }) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = modifier.shadow(elevation = 8.dp),
+                title = { Text(text = stringResource(R.string.settings)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack, contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
+    ) {
         Box(
             modifier = Modifier
                 .padding(it)
@@ -155,37 +193,46 @@ fun SettingScreen(
         }
 
         if (isShowAlertDialog) {
-            AlertDialog(onDismissRequest = {
-                isShowAlertDialog = false
-            }, confirmButton = {
-                Button(onClick = {
-                    onEvent(SettingScreenEvent.Logout)
+            AlertDialog(
+                onDismissRequest = {
                     isShowAlertDialog = false
-                }) {
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            onEvent(SettingScreenEvent.Logout)
+                            isShowAlertDialog = false
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.yes),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.InstaBlue
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { isShowAlertDialog = false }) {
+                        Text(
+                            text = stringResource(id = R.string.cancel),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                },
+                title = {
                     Text(
-                        text = stringResource(id = R.string.yes),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.InstaBlue
+                        text = stringResource(R.string.logout),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        text = stringResource(R.string.logout_message),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
-            }, dismissButton = {
-                Button(onClick = { isShowAlertDialog = false }) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }, title = {
-                Text(
-                    text = stringResource(R.string.logout),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }, text = {
-                Text(
-                    text = stringResource(R.string.logout_message),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            })
+            )
         }
     }
 }

@@ -2,30 +2,22 @@ package com.prmto.auth_presentation.navigation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.core_presentation.navigation.ScreenRoot
 
-sealed class AuthNestedScreens(val route: String) : ScreenRoot() {
-    data object Register : AuthNestedScreens("register_screen")
-    data object VerifyPhoneNumber : AuthNestedScreens("verify_phone_number_screen}") {
-        fun passPhoneNumber(phoneNumber: String): String {
-            return "verify_phone_number_screen/$phoneNumber"
-        }
-    }
+const val userInformationEmailArgumentName = "user_information_email_argument_name"
 
+sealed class AuthNestedScreens(val route: String) : ScreenRoot() {
     data object Login : AuthNestedScreens("login_screen")
 
     data object UserInformation :
-        AuthNestedScreens("user_information_screen?$UserInfoEmailArgumentName={$UserInfoEmailArgumentName}") {
-
+        AuthNestedScreens("user_information_screen?$userInformationEmailArgumentName={$userInformationEmailArgumentName}") {
 
         fun passEmail(email: String): String {
-            return "user_information_screen?$UserInfoEmailArgumentName=$email"
+            return "user_information_screen?$userInformationEmailArgumentName=$email"
         }
 
         val arguments = listOf(
-
-            navArgument(UserInfoEmailArgumentName) {
+            navArgument(userInformationEmailArgumentName) {
                 type = NavType.StringType
                 defaultValue = ""
             }

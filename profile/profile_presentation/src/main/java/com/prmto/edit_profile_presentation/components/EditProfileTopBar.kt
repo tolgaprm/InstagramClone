@@ -1,4 +1,4 @@
-package com.prmto.edit_profile_presentation.navigation.components
+package com.prmto.edit_profile_presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons

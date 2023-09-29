@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,17 +39,47 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.login.event.LoginEvent
+import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.ui.theme.colorBlur
 import com.prmto.core_presentation.util.toDp
 import com.prmto.core_presentation.R as coreR
 
+@Composable
+internal fun LoginRoute(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel(),
+    onNavigateToNestedRegisterScreen: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit
+) {
+    val loginUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
+    LoginScreen(
+        modifier = modifier,
+        loginUiState = loginUiState,
+        onEvent = viewModel::onEvent,
+        onNavigateToRegisterScreen = onNavigateToNestedRegisterScreen
+    )
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = { route ->
+            when (route) {
+                NestedNavigation.Register.route -> onNavigateToNestedRegisterScreen()
+                else -> onNavigateToHomeScreen()
+            }
+        },
+        onEventConsumed = viewModel::onEventConsumed
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

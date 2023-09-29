@@ -1,57 +1,44 @@
 package com.prmto.auth_presentation.register.navigation
 
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.prmto.auth_presentation.navigation.AuthNestedScreens
+import com.prmto.auth_presentation.login.navigation.navigateToLogin
+import com.prmto.auth_presentation.navigation.RegisterNestedScreens
 import com.prmto.auth_presentation.register.RegisterViewModel
-import com.prmto.auth_presentation.register.screens.RegisterScreen
-import com.prmto.auth_presentation.register.screens.VerifyPhoneNumberScreen
 import com.prmto.core_presentation.navigation.NestedNavigation
-import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.util.sharedViewModel
 
 fun NavGraphBuilder.registerNestedNavigation(
     navController: NavController
 ) {
     navigation(
-        startDestination = AuthNestedScreens.Register.route,
+        startDestination = RegisterNestedScreens.Register.route,
         route = NestedNavigation.Register.route
     ) {
-        composable(AuthNestedScreens.Register.route) {
+        composable(RegisterNestedScreens.Register.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
-            val registerUiData by viewModel.uiState.collectAsStateWithLifecycle()
-            val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
-            RegisterScreen(
-                registerUiStateData = registerUiData,
-                onNavigateToLogin = {
-                    navController.navigate(AuthNestedScreens.Login.route) {
-                        popUpTo(AuthNestedScreens.Register.route) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onEvent = viewModel::onEvent
-            )
-
-            HandleConsumableViewEvents(
-                consumableViewEvents = consumableViewEvents,
-                onEventNavigate = navController::navigate,
-                onEventConsumed = viewModel::onEventConsumed
+            RegisterRoute(
+                viewModel = viewModel,
+                onNavigateToLogin = { navController.navigateToLogin() },
+                onNavigate = navController::navigate
             )
         }
 
-        composable(AuthNestedScreens.VerifyPhoneNumber.route) {
+        composable(RegisterNestedScreens.VerifyPhoneNumber.route) {
             val viewModel = it.sharedViewModel<RegisterViewModel>(navController = navController)
             val registerUiData = viewModel.uiState.collectAsStateWithLifecycle().value
-            VerifyPhoneNumberScreen(
+            VerifyPhoneNumberRoute(
                 phoneNumber = registerUiData.phoneNumberTextField.text,
                 verificationCodeValue = registerUiData.verificationCodeTextField,
                 onEvent = viewModel::onEvent
             )
         }
     }
+}
+
+fun NavController.navigateToRegisterNested() {
+    navigate(NestedNavigation.Register.route)
 }

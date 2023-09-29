@@ -4,8 +4,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.navigation
 import com.prmto.auth_presentation.login.navigation.loginNavigation
+import com.prmto.auth_presentation.register.navigation.navigateToRegisterNested
 import com.prmto.auth_presentation.register.navigation.registerNestedNavigation
 import com.prmto.auth_presentation.user_information.navigation.userInformationNavigation
 import com.prmto.auth_presentation.util.AuthTestTags
@@ -17,7 +19,7 @@ fun NavGraphBuilder.authNestedNavigation(
 ) {
     navigation(
         route = NestedNavigation.Auth.route,
-        startDestination = AuthNestedScreens.Login.route  //NestedNavigation.Register.route
+        startDestination = AuthNestedScreens.Login.route
     ) {
         registerNestedNavigation(
             navController = navController
@@ -30,11 +32,15 @@ fun NavGraphBuilder.authNestedNavigation(
         loginNavigation(
             modifier = Modifier.testTag(AuthTestTags.LOGIN_SCREEN),
             onNavigateToRegisterScreen = {
-                navController.navigate(NestedNavigation.Register.route)
+                navController.navigateToRegisterNested()
             },
-            onNavigateToHomeScreen = {
-                onNavigateToHomeScreen()
-            }
+            onNavigateToHomeScreen = { onNavigateToHomeScreen() }
         )
+    }
+}
+
+fun NavController.navigateToAuthNested(builder: NavOptionsBuilder.() -> Unit) {
+    navigate(NestedNavigation.Auth.route) {
+        builder()
     }
 }

@@ -7,8 +7,8 @@ import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
+import com.prmto.auth_presentation.navigation.userInformationEmailArgumentName
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
-import com.prmto.auth_presentation.util.Constants.UserInfoEmailArgumentName
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.util.TextFieldError
@@ -43,7 +43,7 @@ class UserInformationViewModelTest {
     fun setUp() {
         savedStateHandle = mockk(relaxed = true)
         every {
-            savedStateHandle.get<String>(UserInfoEmailArgumentName)
+            savedStateHandle.get<String>(userInformationEmailArgumentName)
         } returns TestConstants.ENTERED_EMAIL
 
         authRepository = FakeAuthRepository()
@@ -221,7 +221,7 @@ class UserInformationViewModelTest {
         runTest {
             val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
             every {
-                savedStateHandle.get<String>(UserInfoEmailArgumentName)
+                savedStateHandle.get<String>(userInformationEmailArgumentName)
             } returns "john@gmail.com"
 
             passNewSavedStateHandleWithNewEmail(savedStateHandle)

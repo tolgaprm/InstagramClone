@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ProfileImageViewModel @Inject constructor() : ViewModel() {
-    private val _uiState = MutableStateFlow(ProfileImageUiState())
-    val uiState: StateFlow<ProfileImageUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ProfileCameraUiState())
+    val uiState: StateFlow<ProfileCameraUiState> = _uiState.asStateFlow()
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
@@ -53,7 +52,7 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
     }
 }
 
-data class ProfileImageUiState(
+data class ProfileCameraUiState(
     val captureUri: Uri? = null,
     val cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF,
     val isVisibleCameraFlashMode: Boolean = true

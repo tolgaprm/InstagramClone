@@ -18,7 +18,7 @@ import androidx.navigation.NavBackStackEntry
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.navigation.Screen
-import com.prmto.navigation.ProfileScreen
+import com.prmto.navigation.ProfileNestedScreens
 
 @Composable
 fun InstagramBottomNavigation(
@@ -95,8 +95,8 @@ private fun ShowBottomNavigation(
 
     if (bottomNavigationItems.any { it.route == currentRoute } &&
         currentRoute != Screen.Share.route
-        || currentRoute == ProfileScreen.Settings.route
-        || (currentBackStackEntry?.destination?.parent?.route == NestedNavigation.Profile.route && currentRoute != ProfileScreen.EditProfile.route)
+        || currentRoute == ProfileNestedScreens.Setting.route
+        || (currentBackStackEntry?.destination?.parent?.route == NestedNavigation.Profile.route && currentRoute != ProfileNestedScreens.EditProfile.route)
     ) {
         content()
     } else {

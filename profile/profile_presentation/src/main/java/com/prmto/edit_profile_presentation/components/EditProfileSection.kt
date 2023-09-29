@@ -1,4 +1,4 @@
-package com.prmto.edit_profile_presentation.navigation.components
+package com.prmto.edit_profile_presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import androidx.compose.foundation.background

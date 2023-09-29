@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,22 +36,55 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.ui.theme.colorBlur
+import com.prmto.edit_profile_presentation.components.EditProfileSection
+import com.prmto.edit_profile_presentation.components.EditProfileTopBar
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
-import com.prmto.edit_profile_presentation.navigation.components.EditProfileSection
-import com.prmto.edit_profile_presentation.navigation.components.EditProfileTopBar
 import com.prmto.edit_profile_presentation.previewDataProvider.EditProfileUiStatePreviewProvider
 import com.prmto.profile_presentation.R
 import kotlinx.coroutines.launch
 
+@Composable
+internal fun EditProfileRoute(
+    modifier: Modifier = Modifier,
+    viewModel: EditProfileViewModel = hiltViewModel(),
+    onPopBackStack: () -> Unit,
+    onNavigateToProfileCamera: () -> Unit,
+    onNavigateToGallery: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
+    EditProfileScreen(
+        modifier = modifier,
+        uiState = uiState,
+        onPopBackStack = onPopBackStack,
+        onEvent = viewModel::onEvent,
+        onNavigateToProfileCamera = onNavigateToProfileCamera,
+        onNavigateToGallery = onNavigateToGallery
+    )
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = {
+
+        },
+        onEventConsumed = viewModel::onEventConsumed,
+        onPopBackStack = onPopBackStack
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(
+internal fun EditProfileScreen(
+    modifier: Modifier = Modifier,
     uiState: EditProfileUiState,
     onPopBackStack: () -> Unit,
     onNavigateToProfileCamera: () -> Unit,
@@ -62,16 +96,18 @@ fun EditProfileScreen(
     )
     val coroutineScope = rememberCoroutineScope()
     BottomSheetScaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContainerColor = colorBlur(),
         topBar = {
-            EditProfileTopBar(isShowSaveButton = uiState.isShowSaveButton,
+            EditProfileTopBar(
+                isShowSaveButton = uiState.isShowSaveButton,
                 onClickClose = onPopBackStack,
                 onClickSave = {
                     onEvent(EditProfileUiEvent.UpdateProfileInfo)
-                })
+                }
+            )
         },
         sheetContent = {
             BottomSheetContent(
