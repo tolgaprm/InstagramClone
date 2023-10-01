@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -45,6 +44,7 @@ import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.login.event.LoginEvent
+import com.prmto.core_presentation.components.InstaProgressIndicator
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.HandleConsumableViewEvents
@@ -182,11 +182,7 @@ fun LoginScreen(
             )
 
             if (loginUiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    color = Color.InstaBlue
-                )
+                InstaProgressIndicator()
             }
         }
     }

@@ -8,27 +8,19 @@ import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoActivityResumedException
 import com.prmto.auth_presentation.util.AuthTestTags
+import com.prmto.core_android_testing.InstaAndroidTest
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.home_presentation.util.HomeTestTags
 import com.prmto.instagramclone.navigation.InstaApp
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-class NavigationTest {
+class NavigationTest : InstaAndroidTest() {
+
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
-
-    @get:Rule(order = 0)
-    val hiltAndroidRule = HiltAndroidRule(this)
-
-    @Before
-    fun setUp() {
-        hiltAndroidRule.inject()
-    }
 
     @Test
     fun whenUserIsNotLoggedInFirstScreenIsLogin() {

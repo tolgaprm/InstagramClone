@@ -15,7 +15,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
                 extensions.configure<LibraryExtension> {
                     defaultConfig {
-                        testInstrumentationRunner = "com.prmto.core_testing.runner.HiltTestRunner"
+                        testInstrumentationRunner =
+                            "com.prmto.core_android_testing.runner.HiltTestRunner"
                         minSdk = 26
                     }
 

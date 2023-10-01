@@ -32,6 +32,7 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/camera" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/core_android_testing" />
             <option value="$PROJECT_DIR$/core/core_data" />
             <option value="$PROJECT_DIR$/core/core_domain" />
             <option value="$PROJECT_DIR$/core/core_presentation" />

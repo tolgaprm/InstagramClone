@@ -89,5 +89,10 @@ dependencies {
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.ui.test.junit4)
     androidTestImplementation(project(":core:core_testing"))
+    androidTestImplementation(project(":core:core_android_testing"))
+    androidTestImplementation(libs.navigation.testing)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.ui.automator)
     kspAndroidTest(libs.hilt.compiler)
 }

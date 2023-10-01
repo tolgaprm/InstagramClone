@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -32,10 +30,10 @@ import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
+import com.prmto.core_presentation.components.InstaProgressIndicator
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.HandleConsumableViewEvents
-import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
 @Composable
@@ -155,9 +153,7 @@ internal fun UserInformationScreen(
             )
 
             if (userInfoUiData.isRegistering) {
-                CircularProgressIndicator(
-                    color = Color.InstaBlue
-                )
+                InstaProgressIndicator()
             }
         }
     }

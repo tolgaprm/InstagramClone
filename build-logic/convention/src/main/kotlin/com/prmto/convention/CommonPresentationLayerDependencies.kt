@@ -33,6 +33,9 @@ internal fun Project.commonPresentationLayerDependencies(
 
             addAndroidTestImplementation(libs.findLibrary("ui-test-junit4").get())
             addAndroidTestImplementation(libs.findLibrary("espresso-core").get())
+            addAndroidTestImplementation(libs.findLibrary("androidx-rules").get())
+            addAndroidTestImplementation(libs.findLibrary("navigation-testing").get())
+            addAndroidTestImplementation(libs.findLibrary("ui-automator").get())
         }
     }
 }

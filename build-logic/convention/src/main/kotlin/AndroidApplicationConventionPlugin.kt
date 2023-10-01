@@ -23,7 +23,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 compileSdk = 33
                 defaultConfig {
                     targetSdk = 33
-                    testInstrumentationRunner = "com.prmto.core_testing.runner.HiltTestRunner"
+                    testInstrumentationRunner =
+                        "com.prmto.core_android_testing.runner.HiltTestRunner"
                     addFirebaseProjectIdToBuildConfig(properties)
                     addFirebaseApplicationIdToBuildConfig(properties)
                     addFirebaseApiKeyToBuildConfig(properties)
