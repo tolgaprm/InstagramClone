@@ -55,7 +55,8 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
 data class ProfileCameraUiState(
     val captureUri: Uri? = null,
     val cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF,
-    val isVisibleCameraFlashMode: Boolean = true
+    val isVisibleCameraFlashMode: Boolean = true // The camera flash mode is not visible
+    // camera Mode is Front.
 ) {
     fun getFlashMode(): Int = cameraFlashMode.mode
 }
