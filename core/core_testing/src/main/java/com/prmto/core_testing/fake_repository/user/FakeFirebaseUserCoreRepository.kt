@@ -15,12 +15,13 @@ class FakeFirebaseUserCoreRepository(
     private val isReturnError: Boolean = false
 ) : FirebaseUserCoreRepository {
 
-    val userList = TestConstants.listOfUserDataInFirebase
+    var userListInFirebase = TestConstants.listOfUserDataInFirebase
 
     override suspend fun saveUser(userData: UserData, userUid: String): SimpleResource {
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {
+            userListInFirebase.add(userData)
             Resource.Success(Unit)
         }
     }
@@ -29,12 +30,17 @@ class FakeFirebaseUserCoreRepository(
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {
-            Resource.Success(userList)
+            Resource.Success(userListInFirebase)
         }
     }
 
     override suspend fun updateUserDetail(userDetail: UserDetail, userUid: String): SimpleResource {
-        return Resource.Success(Unit)
+        delay(TestConstants.DELAY_NETWORK)
+        return userListInFirebase.find { it.userUid == userUid }?.let {
+            val index = userListInFirebase.indexOf(it)
+            userListInFirebase[index] = it.copy(userDetail = userDetail)
+            Resource.Success(Unit)
+        } ?: Resource.Error(UiText.StringResource(com.prmto.core_domain.R.string.user_not_found))
     }
 
     override suspend fun getUserBySearchingUsername(username: String): Resource<UserData> {
@@ -42,7 +48,7 @@ class FakeFirebaseUserCoreRepository(
             return Resource.Error(UiText.unknownError())
         }
         delay(TestConstants.DELAY_NETWORK)
-        val userData = userList.find { it.userDetail.username == username }
+        val userData = userListInFirebase.find { it.userDetail.username == username }
         return if (userData == null) {
             Resource.Error(UiText.DynamicString(USERNAME_DOES_NOT_EXIST_ERROR))
         } else {
@@ -65,7 +71,7 @@ class FakeFirebaseUserCoreRepository(
         if (isReturnError) {
             return Resource.Error(UiText.unknownError())
         }
-        val userData = userList.find { it.email == email }
+        val userData = userListInFirebase.find { it.email == email }
         return if (userData != null) {
             Resource.Success(userData.userDetail)
         } else {

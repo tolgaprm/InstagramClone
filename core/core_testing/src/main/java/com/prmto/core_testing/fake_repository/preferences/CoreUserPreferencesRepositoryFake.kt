@@ -5,6 +5,8 @@ import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
+import com.prmto.core_testing.util.TestConstants
+import kotlinx.coroutines.delay
 
 class CoreUserPreferencesRepositoryFake : CoreUserPreferencesRepository {
     var isReturnError = false
@@ -20,6 +22,7 @@ class CoreUserPreferencesRepositoryFake : CoreUserPreferencesRepository {
     }
 
     override suspend fun getUserDetail(): Resource<UserDetail> {
+        delay(TestConstants.DELAY_NETWORK)
         return if (isReturnError) {
             Resource.Error(UiText.unknownError())
         } else {
