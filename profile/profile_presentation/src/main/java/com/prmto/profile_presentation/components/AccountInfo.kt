@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.prmto.core_domain.model.Statistics
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_presentation.components.CircleProfileImage
+import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.profile_presentation.R
 import com.prmto.core_presentation.R as CoreR
 
@@ -47,7 +49,8 @@ fun AccountInfo(
         Spacer(modifier = Modifier.height(8.dp))
         AccountNameAndBio(
             name = userDetail.name,
-            bio = userDetail.bio
+            bio = userDetail.bio,
+            webSite = userDetail.webSite
         )
     }
 }
@@ -102,7 +105,8 @@ fun StatisticColumn(
 @Composable
 fun AccountNameAndBio(
     name: String,
-    bio: String
+    bio: String,
+    webSite: String
 ) {
     Text(
         modifier = Modifier.padding(start = 8.dp),
@@ -117,6 +121,13 @@ fun AccountNameAndBio(
         text = bio,
         style = MaterialTheme.typography.bodySmall.copy(
             color = colorResource(id = CoreR.color.secondTextColor)
+        )
+    )
+    Text(
+        modifier = Modifier.padding(start = 8.dp),
+        text = webSite,
+        style = MaterialTheme.typography.bodySmall.copy(
+            color = Color.InstaBlue
         )
     )
 }

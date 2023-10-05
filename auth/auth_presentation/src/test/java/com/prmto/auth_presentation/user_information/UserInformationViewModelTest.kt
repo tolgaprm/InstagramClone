@@ -9,7 +9,6 @@ import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.fake_repository.FakeAuthRepository
 import com.prmto.auth_presentation.navigation.userInformationEmailArgumentName
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
-import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.util.TextFieldError
 import com.prmto.core_presentation.navigation.Screen
@@ -195,7 +194,7 @@ class UserInformationViewModelTest {
         }
 
     @Test
-    fun `when entered valid all field, email is already exists, uiEvent is ShowMessage `() =
+    fun `when entered valid all field, email is already exists, usernameTextFieldError Is UsernameAlreadyExists`() =
         runTest {
             val fullName = "John Doe"
             val username = "john"
@@ -206,14 +205,7 @@ class UserInformationViewModelTest {
             viewModel.onEvent(UserInfoEvents.EnterPassword(password))
             viewModel.onEvent(UserInfoEvents.Register)
 
-            viewModel.state.test {
-                val state = awaitItem()
-                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
-                    UiEvent.ShowMessage(
-                        UiText.DynamicString(TestConstants.USER_EXISTS)
-                    )
-                )
-            }
+            assertThat(viewModel.state.value.usernameTextField.error).isEqualTo(TextFieldError.UsernameAlreadyExists)
         }
 
     @Test
