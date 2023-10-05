@@ -189,11 +189,12 @@ private fun EditProfileContent(
 
 @Composable
 private fun BottomSheetContent(
+    modifier: Modifier = Modifier,
     onClickCamera: () -> Unit,
     onClickGallery: () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
