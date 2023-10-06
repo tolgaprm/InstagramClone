@@ -21,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,22 +30,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.profile_presentation.components.AccountInfo
 import com.prmto.profile_presentation.previewDataProvider.ProfileUiStatePreviewProvider
 
+@Composable
+internal fun ProfileRoute(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onNavigateToSettingScreen: () -> Unit,
+    onNavigateToEditProfileScreen: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
+    ProfileScreen(
+        modifier = modifier,
+        uiState = uiState,
+        onNavigateToSettingScreen = onNavigateToSettingScreen,
+        onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
+    )
+
+    LaunchedEffect(key1 = true) {
+        if (uiState.isOwnProfile)
+            viewModel.getUserDataFromPreferences()
+    }
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = { },
+        onEventConsumed = viewModel::onEventConsumed
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
+internal fun ProfileScreen(
+    modifier: Modifier = Modifier,
     uiState: ProfileUiState,
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit
 ) {
     val userData = uiState.userData
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -124,9 +158,8 @@ fun ProfileScreenPreview(
         Surface {
             ProfileScreen(
                 uiState = uiState,
-                onNavigateToSettingScreen = { },
-                onNavigateToEditProfileScreen = { }
-            )
+                onNavigateToSettingScreen = { }
+            ) { }
         }
     }
 }

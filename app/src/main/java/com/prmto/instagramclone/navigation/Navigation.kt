@@ -8,11 +8,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.prmto.auth_presentation.navigation.authNestedNavigation
+import com.prmto.auth_presentation.navigation.navigateToAuthNested
 import com.prmto.core_presentation.navigation.NestedNavigation
-import com.prmto.core_presentation.navigation.Screen
 import com.prmto.home_presentation.navigation.homeNavigation
+import com.prmto.home_presentation.navigation.navigateToHome
 import com.prmto.home_presentation.util.HomeTestTags
-import com.prmto.navigation.ProfileScreen
 import com.prmto.navigation.profileNestedNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
@@ -27,30 +27,25 @@ fun SetupNavigation(
     NavHost(navController = navController, startDestination = startDestination) {
         homeNavigation(
             modifier = Modifier.testTag(HomeTestTags.HOME_SCREEN),
-            onNavigateToMessageScreen = { navController.navigate(Screen.Message.route) },
+            onNavigateToMessageScreen = { }, // TODO
         )
         shareNavigation()
 
         profileNestedNavigation(
-            onNavigateToSettingScreen = { navController.navigate(ProfileScreen.Settings.route) },
-            onNavigateToEditProfileScreen = { navController.navigate(ProfileScreen.EditProfile.route) },
+            navController = navController,
             onNavigateToNestedAuth = {
-                navController.navigate(NestedNavigation.Auth.route) {
+                navController.navigateToAuthNested {
                     popUpTo(NestedNavigation.Profile.route) {
                         inclusive = true
                     }
                 }
-            },
-            onPopBackStack = { navController.popBackStack() },
-            onNavigateBack = { navController.navigateUp() },
-            onNavigateToProfileCamera = { navController.navigate(ProfileScreen.CameraForProfileImage.route) },
-            onNavigateToGallery = { navController.navigate(ProfileScreen.GalleryForProfileImage.route) }
+            }
         )
 
         authNestedNavigation(
             navController = navController,
             onNavigateToHomeScreen = {
-                navController.navigate(Screen.Home.route) {
+                navController.navigateToHome {
                     popUpTo(NestedNavigation.Auth.route) {
                         inclusive = true
                     }
@@ -62,7 +57,6 @@ fun SetupNavigation(
 
         reelsNavigation()
 
-        composable(Screen.Message.route) {
-        }
+        composable("messageRoute") {}
     }
 }

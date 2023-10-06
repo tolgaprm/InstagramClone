@@ -1,44 +1,48 @@
 package com.prmto.navigation
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import com.prmto.camera.navigation.navigateToProfileCamera
 import com.prmto.camera.navigation.profileCameraNavigation
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.edit_profile_presentation.navigation.editProfileNavigation
+import com.prmto.edit_profile_presentation.navigation.navigateToEditProfile
+import com.prmto.gallery.navigation.navigateToProfileImageGallery
 import com.prmto.gallery.navigation.selectProfileImageGalleryNavigation
 import com.prmto.profile_presentation.navigation.profileNavigation
+import com.prmto.setting_presentation.navigation.navigateToSetting
 import com.prmto.setting_presentation.navigation.settingNavigation
 
 fun NavGraphBuilder.profileNestedNavigation(
-    onNavigateToSettingScreen: () -> Unit,
-    onNavigateToEditProfileScreen: () -> Unit,
-    onNavigateToNestedAuth: () -> Unit,
-    onNavigateToProfileCamera: () -> Unit,
-    onNavigateToGallery: () -> Unit,
-    onPopBackStack: () -> Unit,
-    onNavigateBack: () -> Unit,
+    navController: NavController,
+    onNavigateToNestedAuth: () -> Unit
 ) {
     navigation(
-        startDestination = ProfileScreen.Profile.route,
+        startDestination = ProfileNestedScreens.Profile.route,
         route = NestedNavigation.Profile.route
     ) {
         profileNavigation(
-            onNavigateToSettingScreen = onNavigateToSettingScreen,
-            onNavigateToEditProfileScreen = onNavigateToEditProfileScreen
+            onNavigateToSettingScreen = { navController.navigateToSetting() },
+            onNavigateToEditProfileScreen = { navController.navigateToEditProfile() }
         )
         editProfileNavigation(
-            onPopBackStack = onPopBackStack,
-            onNavigateToProfileCamera = onNavigateToProfileCamera,
-            onNavigateToGallery = onNavigateToGallery
+            onPopBackStack = { navController.popBackStack() },
+            onNavigateToProfileCamera = { navController.navigateToProfileCamera() },
+            onNavigateToGallery = { navController.navigateToProfileImageGallery() }
         )
         settingNavigation(
-            onNavigateBack = onNavigateBack,
-            onNavigateToEditProfile = onNavigateToEditProfileScreen,
+            onNavigateBack = { navController.navigateUp() },
+            onNavigateToEditProfile = { navController.navigateToEditProfile() },
             onNavigateToNestedAuth = onNavigateToNestedAuth
         )
         profileCameraNavigation(
-            onPopBacStack = onPopBackStack
+            onPopBacStack = { navController.popBackStack() }
         )
-        selectProfileImageGalleryNavigation(onPopBacStack = onPopBackStack)
+        selectProfileImageGalleryNavigation(onPopBacStack = { navController.popBackStack() })
     }
+}
+
+fun NavController.navigateToProfileNested() {
+    navigate(NestedNavigation.Profile.route)
 }

@@ -9,40 +9,68 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.auth_presentation.R
 import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
+import com.prmto.core_presentation.components.InstaProgressIndicator
+import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.previews.UiModePreview
-import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
+
+@Composable
+fun UserInformationRoute(
+    modifier: Modifier = Modifier,
+    viewModel: UserInformationViewModel = hiltViewModel(),
+    onNavigateToHomeScreen: () -> Unit
+) {
+    val userInfoUiData by viewModel.state.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
+    UserInformationScreen(
+        modifier = modifier,
+        userInfoUiData = userInfoUiData,
+        onEvent = viewModel::onEvent
+    )
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = { route ->
+            if (route == Screen.Home.route) {
+                onNavigateToHomeScreen()
+            }
+        },
+        onEventConsumed = viewModel::onEventConsumed
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun UserInformationScreen(
+internal fun UserInformationScreen(
+    modifier: Modifier = Modifier,
     userInfoUiData: UserInfoUiData,
     onEvent: (UserInfoEvents) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = 68.dp)
             .padding(horizontal = 16.dp)
@@ -125,9 +153,7 @@ fun UserInformationScreen(
             )
 
             if (userInfoUiData.isRegistering) {
-                CircularProgressIndicator(
-                    color = Color.InstaBlue
-                )
+                InstaProgressIndicator()
             }
         }
     }

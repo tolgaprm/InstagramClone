@@ -24,6 +24,7 @@ class AndroidPresentationLayerConventionPlugin : Plugin<Project> {
                     addModule(":core:core_domain")
                     "testImplementation"(project(":core:core_testing"))
                     "androidTestImplementation"(project(":core:core_testing"))
+                    "androidTestImplementation"(project(":core:core_android_testing"))
                 }
             }
         }

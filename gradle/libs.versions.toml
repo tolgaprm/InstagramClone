@@ -28,11 +28,13 @@ org-jetbrains-kotlin-android = "1.9.0"
 org-jetbrains-kotlin-jvm = "1.8.21"
 play_services_auth_version = "20.5.0"
 room_version = "2.5.1"
+rules = "1.5.0"
 runner = "1.5.2"
 splashVersion = "1.0.1"
 timber_version = "5.0.1"
 truthVersion = "1.1.3"
 turbineVersion = "0.13.0"
+uiautomator = "2.3.0-alpha03"
 work_version = "2.8.1"
 
 [libraries]
@@ -40,6 +42,7 @@ accompanist-permissions = { group = "com.google.accompanist", name = "accompanis
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompoints_version" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "com-android-application" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -81,6 +84,7 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 mockk-agent-android = { group = "io.mockk", name = "mockk-agent-android", version.ref = "mockkVersion" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationVersion" }
+navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationVersion" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play_services_auth_version" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_version" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_version" }
@@ -90,6 +94,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 truth-library = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 ui = { group = "androidx.compose.ui", name = "ui" }
+ui-automator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }

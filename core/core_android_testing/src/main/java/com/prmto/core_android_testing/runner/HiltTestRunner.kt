@@ -1,4 +1,4 @@
-package com.prmto.core_testing.runner
+package com.prmto.core_android_testing.runner
 
 import android.app.Application
 import android.content.Context

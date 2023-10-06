@@ -42,6 +42,7 @@ class EditProfileViewModel @Inject constructor(
 
             EditProfileUiEvent.UpdateProfileInfo -> {
                 _uiState.update { it.copy(isLoading = true) }
+                trimUpdatedUserDetail()
                 handleUpdateProfileInfo()
             }
         }
@@ -119,7 +120,7 @@ class EditProfileViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 updatedUserDetail = it.updatedUserDetail.copy(name = name),
-                isShowSaveButton = it.updatedUserDetail.copy(name = name.trim()) != it.userDetail
+                isShowSaveButton = name != it.userDetail.name
             )
         }
     }
@@ -127,10 +128,8 @@ class EditProfileViewModel @Inject constructor(
     private fun handleEnteredUsername(username: String) {
         _uiState.update {
             it.copy(
-                updatedUserDetail = it.updatedUserDetail.copy(username = username),
-                isShowSaveButton = it.updatedUserDetail.copy(
-                    username = username.trim()
-                ) != it.userDetail
+                updatedUserDetail = it.updatedUserDetail.copy(username = username.trim()),
+                isShowSaveButton = username != it.userDetail.username
             )
         }
     }
@@ -139,9 +138,7 @@ class EditProfileViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 updatedUserDetail = it.updatedUserDetail.copy(bio = bio),
-                isShowSaveButton = it.updatedUserDetail.copy(
-                    bio = bio.trim()
-                ) != it.userDetail
+                isShowSaveButton = bio != it.userDetail.bio
             )
         }
     }
@@ -150,9 +147,19 @@ class EditProfileViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 updatedUserDetail = it.updatedUserDetail.copy(webSite = website),
-                isShowSaveButton = it.updatedUserDetail.copy(
-                    webSite = website.trim()
-                ) != it.userDetail
+                isShowSaveButton = website != it.userDetail.webSite
+            )
+        }
+    }
+
+    private fun trimUpdatedUserDetail() {
+        _uiState.update {
+            it.copy(
+                updatedUserDetail = uiState.value.updatedUserDetail.copy(
+                    name = uiState.value.updatedUserDetail.name.trim(),
+                    bio = uiState.value.updatedUserDetail.bio.trim(),
+                    webSite = uiState.value.updatedUserDetail.webSite.trim()
+                )
             )
         }
     }

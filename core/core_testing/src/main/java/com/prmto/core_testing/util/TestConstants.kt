@@ -31,7 +31,7 @@ class TestConstants {
             )
         )
 
-        val listOfUserDataInFirebase = listOf(
+        val listOfUserDataInFirebase = mutableListOf(
             userData(),
             userData().copy(
                 email = "test2@gmail.com",

@@ -24,7 +24,7 @@ import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.core_presentation.util.TextFieldState
 
 @Composable
-fun VerifyPhoneNumberScreen(
+internal fun VerifyPhoneNumberScreen(
     phoneNumber: String,
     verificationCodeValue: String,
     onEvent: (RegisterEvent) -> Unit

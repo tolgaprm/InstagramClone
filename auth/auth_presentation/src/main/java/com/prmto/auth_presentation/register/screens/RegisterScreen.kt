@@ -44,7 +44,8 @@ import com.prmto.core_presentation.R as CoreRes
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterScreen(
+internal fun RegisterScreen(
+    modifier: Modifier = Modifier,
     registerUiStateData: RegisterUiStateData,
     onNavigateToLogin: () -> Unit,
     onEvent: (RegisterEvent) -> Unit
@@ -52,6 +53,7 @@ fun RegisterScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
+        modifier = modifier,
         bottomBar = {
             RegisterScreenBottomSection(
                 onNavigateToLogin = onNavigateToLogin

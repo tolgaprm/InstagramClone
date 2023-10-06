@@ -6,7 +6,7 @@ import com.prmto.auth_domain.repository.AuthRepository
 import com.prmto.auth_domain.usecase.ValidatePasswordUseCase
 import com.prmto.auth_domain.usecase.ValidateUsernameUseCase
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
-import com.prmto.auth_presentation.util.Constants
+import com.prmto.auth_presentation.user_information.navigation.UserInformationArgs
 import com.prmto.core_domain.model.Statistics
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
@@ -43,7 +43,7 @@ class UserInformationViewModel @Inject constructor(
     val state: StateFlow<UserInfoUiData> = _state.asStateFlow()
 
     init {
-        savedStateHandle.get<String>(Constants.UserInfoEmailArgumentName)?.let { email ->
+        UserInformationArgs(savedStateHandle = savedStateHandle).email?.let { email ->
             _state.update { it.copy(email = email) }
         }
     }

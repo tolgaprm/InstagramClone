@@ -2,12 +2,12 @@ package com.prmto.profile_presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.prmto.common.NavArguments
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.profile_presentation.navigation.ProfileArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +26,7 @@ class ProfileViewModel @Inject constructor(
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
-        val username = savedStateHandle.get<String>(NavArguments.USERNAME)
+        val username = ProfileArgs(savedStateHandle).username
         if (username == null) {
             _uiState.update { it.copy(isOwnProfile = true) }
             getUserDataFromPreferences()

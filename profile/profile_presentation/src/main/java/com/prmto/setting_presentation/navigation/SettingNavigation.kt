@@ -1,40 +1,25 @@
 package com.prmto.setting_presentation.navigation
 
-import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.prmto.core_presentation.navigation.NestedNavigation
-import com.prmto.core_presentation.ui.HandleConsumableViewEvents
-import com.prmto.navigation.ProfileScreen
-import com.prmto.setting_presentation.SettingScreen
-import com.prmto.setting_presentation.SettingViewModel
+import com.prmto.navigation.ProfileNestedScreens
+import com.prmto.setting_presentation.SettingScreenRoute
 
 fun NavGraphBuilder.settingNavigation(
     onNavigateToEditProfile: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToNestedAuth: () -> Unit
 ) {
-    composable(ProfileScreen.Settings.route) {
-        val viewModel: SettingViewModel = hiltViewModel()
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
-        SettingScreen(
-            uiState = uiState,
-            onNavigateBack = onNavigateBack,
+    composable(ProfileNestedScreens.Setting.route) {
+        SettingScreenRoute(
             onNavigateToEditProfile = onNavigateToEditProfile,
-            onEvent = viewModel::onEvent
-        )
-
-        HandleConsumableViewEvents(
-            consumableViewEvents = consumableViewEvents,
-            onEventNavigate = { route ->
-                when (route) {
-                    NestedNavigation.Auth.route -> onNavigateToNestedAuth()
-                }
-            },
-            onEventConsumed = viewModel::onEventConsumed
+            onNavigateBack = onNavigateBack,
+            onNavigateToNestedAuth = onNavigateToNestedAuth
         )
     }
+}
+
+fun NavController.navigateToSetting() {
+    navigate(ProfileNestedScreens.Setting.route)
 }
