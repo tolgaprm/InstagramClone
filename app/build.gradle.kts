@@ -67,6 +67,8 @@ dependencies {
 
     implementation(libs.bundles.cameraX)
 
+    implementation(libs.ucrop)
+
     // Navigation
     implementation(libs.navigation.compose)
 

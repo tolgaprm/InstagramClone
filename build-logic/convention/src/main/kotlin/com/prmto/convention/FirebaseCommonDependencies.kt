@@ -15,6 +15,7 @@ internal fun Project.firebaseCommonDependencies(
             addImplementation(libs.findLibrary("firebase.auth.ktx").get())
             addImplementation(libs.findLibrary("play.services.auth").get())
             addImplementation(libs.findLibrary("firebase.firestore.ktx").get())
+            addImplementation(libs.findLibrary("firebase-storage-ktx").get())
         }
     }
 }
