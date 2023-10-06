@@ -1,5 +1,6 @@
 package com.prmto.edit_profile_presentation
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
@@ -39,6 +40,16 @@ class EditProfileViewModel @Inject constructor(
             is EditProfileUiEvent.EnteredBio -> handleEnteredBio(event.bio)
 
             is EditProfileUiEvent.EnteredWebsite -> handleEnteredWebsite(event.website)
+
+            is EditProfileUiEvent.SelectNewProfileImage -> {
+                val selectedPhotoUri = Uri.parse(event.selectNewProfileUriString)
+                _uiState.update {
+                    it.copy(
+                        selectedNewProfileImage = selectedPhotoUri,
+                        isShowSaveButton = true
+                    )
+                }
+            }
 
             EditProfileUiEvent.UpdateProfileInfo -> {
                 _uiState.update { it.copy(isLoading = true) }
@@ -169,5 +180,6 @@ data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userDetail: UserDetail = UserDetail(),
     val updatedUserDetail: UserDetail = UserDetail(),
-    val isShowSaveButton: Boolean = userDetail != updatedUserDetail
+    val isShowSaveButton: Boolean = userDetail != updatedUserDetail,
+    val selectedNewProfileImage: Uri? = null
 )

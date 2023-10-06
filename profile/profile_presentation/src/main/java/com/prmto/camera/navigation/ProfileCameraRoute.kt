@@ -1,7 +1,9 @@
 package com.prmto.camera.navigation
 
 import android.Manifest
+import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.camera.core.CameraSelector
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +15,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.prmto.camera.ProfileCameraScreen
 import com.prmto.camera.ProfileCameraScreenEvent
 import com.prmto.camera.ProfileImageViewModel
+import com.prmto.camera.crop.CropActivityResultContract
 import com.prmto.camera.rememberCameraControllerWithImageCapture
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -20,7 +23,8 @@ import com.prmto.camera.rememberCameraControllerWithImageCapture
 internal fun ProfileCameraRoute(
     modifier: Modifier = Modifier,
     viewModel: ProfileImageViewModel = hiltViewModel(),
-    onPopBackStack: () -> Unit
+    onPopBackStack: () -> Unit,
+    onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit
 ) {
     val profileCameraUiState = viewModel.uiState.collectAsStateWithLifecycle()
     val cameraController = rememberCameraControllerWithImageCapture()
@@ -30,6 +34,7 @@ internal fun ProfileCameraRoute(
             add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
     }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val permissionState =
         rememberMultiplePermissionsState(permissions = permissionsToRequest) { permissionsResult ->
             permissionsToRequest.forEach { permission ->
@@ -77,6 +82,23 @@ internal fun ProfileCameraRoute(
     LaunchedEffect(key1 = Unit) {
         if (!permissionState.allPermissionsGranted) {
             permissionState.launchMultiplePermissionRequest()
+        }
+    }
+
+    val cropActivityLauncher = rememberLauncherForActivityResult(
+        contract = CropActivityResultContract(isCircle = true)
+    ) { croppedUri ->
+        croppedUri?.let {
+            viewModel.onEvent(ProfileCameraScreenEvent.PhotoCropped(croppedUri))
+            onPopBackStackWithSelectedUri(croppedUri)
+        }
+    }
+
+    LaunchedEffect(
+        key1 = uiState.value.captureUri
+    ) {
+        uiState.value.captureUri?.let {
+            cropActivityLauncher.launch(it)
         }
     }
 }

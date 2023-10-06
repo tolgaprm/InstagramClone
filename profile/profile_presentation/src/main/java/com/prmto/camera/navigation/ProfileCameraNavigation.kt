@@ -1,16 +1,20 @@
 package com.prmto.camera.navigation
 
+import android.net.Uri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.prmto.navigation.ProfileNestedScreens
 
 fun NavGraphBuilder.profileCameraNavigation(
-    onPopBacStack: () -> Unit
+    onPopBacStack: () -> Unit,
+    onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit
+
 ) {
     composable(ProfileNestedScreens.ProfileCamera.route) {
         ProfileCameraRoute(
-            onPopBackStack = onPopBacStack
+            onPopBackStack = onPopBacStack,
+            onPopBackStackWithSelectedUri = onPopBackStackWithSelectedUri
         )
     }
 }

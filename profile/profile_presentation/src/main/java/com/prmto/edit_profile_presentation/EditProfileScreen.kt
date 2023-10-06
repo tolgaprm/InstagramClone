@@ -1,5 +1,6 @@
 package com.prmto.edit_profile_presentation
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,10 +57,15 @@ import kotlinx.coroutines.launch
 internal fun EditProfileRoute(
     modifier: Modifier = Modifier,
     viewModel: EditProfileViewModel = hiltViewModel(),
+    selectedNewProfileImage: String?,
     onPopBackStack: () -> Unit,
     onNavigateToProfileCamera: () -> Unit,
     onNavigateToGallery: () -> Unit
 ) {
+    selectedNewProfileImage?.let {
+        viewModel.onEvent(EditProfileUiEvent.SelectNewProfileImage(selectedNewProfileImage))
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
     EditProfileScreen(
@@ -119,13 +125,16 @@ internal fun EditProfileScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            EditProfileContent(updatedUserDetail = uiState.updatedUserDetail,
+            EditProfileContent(
+                updatedUserDetail = uiState.updatedUserDetail,
+                selectedNewProfileImage = uiState.selectedNewProfileImage,
                 onEvent = onEvent,
                 onClickChangeProfilePhoto = {
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.expand()
                     }
-                })
+                }
+            )
 
             if (uiState.isLoading) {
                 CircularProgressIndicator(
@@ -139,6 +148,7 @@ internal fun EditProfileScreen(
 @Composable
 private fun EditProfileContent(
     updatedUserDetail: UserDetail,
+    selectedNewProfileImage: Uri? = null,
     onEvent: (EditProfileUiEvent) -> Unit,
     onClickChangeProfilePhoto: () -> Unit
 ) {
@@ -148,8 +158,9 @@ private fun EditProfileContent(
             .padding(top = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val profileImage = selectedNewProfileImage ?: updatedUserDetail.profilePictureUrl
         CircleProfileImage(
-            imageUrl = updatedUserDetail.profilePictureUrl
+            imageUrl = profileImage
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Text(modifier = Modifier

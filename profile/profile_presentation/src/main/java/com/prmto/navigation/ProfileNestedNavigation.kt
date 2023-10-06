@@ -37,7 +37,15 @@ fun NavGraphBuilder.profileNestedNavigation(
             onNavigateToNestedAuth = onNavigateToNestedAuth
         )
         profileCameraNavigation(
-            onPopBacStack = { navController.popBackStack() }
+            onPopBacStack = {
+                navController.popBackStack()
+            },
+            onPopBackStackWithSelectedUri = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("selectedPhotoUri", it.toString())
+                navController.popBackStack()
+            }
         )
         selectProfileImageGalleryNavigation(onPopBacStack = { navController.popBackStack() })
     }

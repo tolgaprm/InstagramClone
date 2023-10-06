@@ -11,11 +11,13 @@ fun NavGraphBuilder.editProfileNavigation(
     onNavigateToProfileCamera: () -> Unit,
     onNavigateToGallery: () -> Unit,
 ) {
-    composable(ProfileNestedScreens.EditProfile.route) {
+    composable(ProfileNestedScreens.EditProfile.route) { entry ->
+        val selectedNewProfileUriString = entry.savedStateHandle.get<String>("selectedPhotoUri")
         EditProfileRoute(
             onPopBackStack = onPopBackStack,
             onNavigateToProfileCamera = onNavigateToProfileCamera,
-            onNavigateToGallery = onNavigateToGallery
+            onNavigateToGallery = onNavigateToGallery,
+            selectedNewProfileImage = selectedNewProfileUriString
         )
     }
 }
