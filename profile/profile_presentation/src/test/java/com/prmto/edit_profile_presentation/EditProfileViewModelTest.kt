@@ -1,7 +1,9 @@
 package com.prmto.edit_profile_presentation
 
+import android.net.Uri
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserData
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
@@ -14,8 +16,10 @@ import com.prmto.core_testing.userData
 import com.prmto.core_testing.util.MainDispatcherRule
 import com.prmto.core_testing.util.TestConstants
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
+import com.prmto.profile_presentation.R
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -38,6 +42,7 @@ class EditProfileViewModelTest {
 
     @Before
     fun setUp() {
+        mockkStatic(Uri::class)
         authCoreRepository = mockk<FirebaseAuthCoreRepository>()
         coreUserPreferencesRepository = CoreUserPreferencesRepositoryFake()
         firebaseUserCoreRepository = FakeFirebaseUserCoreRepository()
@@ -115,6 +120,31 @@ class EditProfileViewModelTest {
             assertThat(uiState.updatedUserDetail.webSite).isEqualTo("website")
             assertThat(uiState.isShowSaveButton).isTrue()
         }
+    }
+
+    @Test
+    fun eventIsSelectNewProfileImage_stateUpdated() = runTest {
+        val uri = "exampleUriString"
+        val event =
+            EditProfileUiEvent.SelectNewProfileImage(selectNewProfileUriString = uri)
+        every { Uri.parse(any()) } returns mockk { every { lastPathSegment } returns uri }
+        viewModel.onEvent(event)
+        viewModel.uiState.test {
+            val uiState = awaitItem()
+            assertThat(uiState.selectedNewProfileImage).isEqualTo(Uri.parse(uri))
+            assertThat(uiState.isShowSaveButton).isTrue()
+        }
+    }
+
+    @Test
+    fun eventIsUpdateProfileInfo_usernameOrNameIsBlank_AddUiEvent() = runTest {
+        viewModel.onEvent(EditProfileUiEvent.EnteredName(""))
+        viewModel.onEvent(EditProfileUiEvent.UpdateProfileInfo)
+        assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
+            UiEvent.ShowMessage(
+                UiText.StringResource(R.string.username_or_name_fields_are_not_empty)
+            )
+        )
     }
 
     @Test

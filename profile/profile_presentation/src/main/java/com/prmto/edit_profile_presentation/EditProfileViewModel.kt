@@ -11,6 +11,7 @@ import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
+import com.prmto.profile_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +63,7 @@ class EditProfileViewModel @Inject constructor(
                     handleUpdateProfileInfo()
                 } else {
                     addConsumableViewEvent(
-                        UiEvent.ShowMessage(UiText.DynamicString("Username or name fields are not empty!"))
+                        UiEvent.ShowMessage(UiText.StringResource(R.string.username_or_name_fields_are_not_empty))
                     )
                 }
             }

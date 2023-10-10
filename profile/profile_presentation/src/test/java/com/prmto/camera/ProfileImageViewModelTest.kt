@@ -48,6 +48,17 @@ class ProfileImageViewModelTest {
     }
 
     @Test
+    fun eventIsPhotoCropped_stateUpdated() = runTest {
+        val sampleCroppedPhotoUri = Uri.parse(SAMPLE_IMAGE_URI)
+        val event = ProfileCameraScreenEvent.PhotoCropped(croppedUri = sampleCroppedPhotoUri)
+        viewModel.onEvent(event)
+        viewModel.uiState.test {
+            val uiState = awaitItem()
+            assertThat(uiState.croppedUri).isEqualTo(sampleCroppedPhotoUri)
+        }
+    }
+
+    @Test
     fun eventIsClickedFlashMode_stateUpdated() = runTest {
         val event = ProfileCameraScreenEvent.ClickedFlashMode
         // CameraFlashMode currently is [CameraFlashMode.OFF], must updated to [CameraFlashMode.ON]
