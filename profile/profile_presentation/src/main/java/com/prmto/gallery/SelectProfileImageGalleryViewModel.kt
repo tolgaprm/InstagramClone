@@ -34,6 +34,9 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
             }
 
             is SelectProfileImageGalleryEvent.AllPermissionsGranted -> handleAllPermissionGranted()
+            is SelectProfileImageGalleryEvent.CropImage -> {
+                _uiState.update { it.copy(croppedImageUri = event.croppedImage) }
+            }
         }
     }
 
@@ -91,5 +94,6 @@ data class SelectProfileImageGalleryUiState(
     val selectedAlbumName: String = "",
     val urisInSelectedAlbum: List<Uri> = emptyList(),
     val errorMessage: UiText? = null,
-    val selectedImageUri: Uri? = null
+    val selectedImageUri: Uri? = null,
+    val croppedImageUri: Uri? = null
 )

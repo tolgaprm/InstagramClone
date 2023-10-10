@@ -27,10 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -87,7 +89,7 @@ internal fun EditProfileRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun EditProfileScreen(
     modifier: Modifier = Modifier,
@@ -97,6 +99,8 @@ internal fun EditProfileScreen(
     onNavigateToGallery: () -> Unit,
     onEvent: (EditProfileUiEvent) -> Unit
 ) {
+    val keyboardManager = LocalSoftwareKeyboardController.current
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState()
     )
@@ -111,6 +115,7 @@ internal fun EditProfileScreen(
                 isShowSaveButton = uiState.isShowSaveButton,
                 onClickClose = onPopBackStack,
                 onClickSave = {
+                    keyboardManager?.hide()
                     onEvent(EditProfileUiEvent.UpdateProfileInfo)
                 }
             )
@@ -172,29 +177,36 @@ private fun EditProfileContent(
             text = stringResource(R.string.change_profile_photo),
             color = Color.InstaBlue,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold))
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_name_section),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_name_section),
             value = updatedUserDetail.name,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredName(it))
-            })
+            }
+        )
 
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_username),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_username),
             value = updatedUserDetail.username,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredUsername(it))
-            })
+            }
+        )
 
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_bio),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_bio),
             value = updatedUserDetail.bio,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredBio(it))
-            })
+            }
+        )
 
         EditProfileSection(sectionName = stringResource(R.string.edit_profile_website),
             value = updatedUserDetail.webSite,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredWebsite(it))
-            })
+            }
+        )
     }
 }
 

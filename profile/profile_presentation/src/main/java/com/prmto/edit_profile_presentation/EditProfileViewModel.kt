@@ -2,14 +2,17 @@ package com.prmto.edit_profile_presentation
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
+import com.prmto.core_domain.repository.storage.StorageRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +24,8 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val firebaseStorageRepository: StorageRepository
 ) : CommonViewModel<UiEvent>() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
@@ -52,9 +56,15 @@ class EditProfileViewModel @Inject constructor(
             }
 
             EditProfileUiEvent.UpdateProfileInfo -> {
-                _uiState.update { it.copy(isLoading = true) }
                 trimUpdatedUserDetail()
-                handleUpdateProfileInfo()
+                if (uiState.value.updatedUserDetail.name.isNotBlank() && uiState.value.updatedUserDetail.username.isNotBlank()) {
+                    _uiState.update { it.copy(isLoading = true) }
+                    handleUpdateProfileInfo()
+                } else {
+                    addConsumableViewEvent(
+                        UiEvent.ShowMessage(UiText.DynamicString("Username or name fields are not empty!"))
+                    )
+                }
             }
         }
     }
@@ -84,10 +94,32 @@ class EditProfileViewModel @Inject constructor(
     private fun handleUpdateProfileInfo() {
         viewModelScope.launch {
             getCurrentUserUseCase()?.let { currentUser ->
+                if (uiState.value.selectedNewProfileImage != null) {
+                    updateProfileImage(uiState.value.selectedNewProfileImage ?: return@let).await()
+                }
                 updateProfileInfoToFirebase(userUid = currentUser.uid)
             } ?: _uiState.update { it.copy(isLoading = false) }
         }
     }
+
+    private fun updateProfileImage(photoUri: Uri) =
+        viewModelScope.async {
+            handleResourceWithCallbacks(
+                resourceSupplier = { firebaseStorageRepository.updatedProfileImage(photoUri) },
+                onSuccessCallback = { photoUploadUrl ->
+                    _uiState.update {
+                        it.copy(
+                            updatedUserDetail = it.updatedUserDetail.copy(
+                                profilePictureUrl = photoUploadUrl
+                            )
+                        )
+                    }
+                },
+                onErrorCallback = {
+                    addConsumableViewEvent(UiEvent.ShowMessage(it))
+                }
+            )
+        }
 
     private fun updateProfileInfoToPreferences() {
         viewModelScope.launch {

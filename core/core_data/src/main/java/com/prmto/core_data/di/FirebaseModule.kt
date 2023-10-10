@@ -2,6 +2,7 @@ package com.prmto.core_data.di
 
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,5 +18,11 @@ object FirebaseModule {
         firebaseApp: FirebaseApp
     ): FirebaseAuth {
         return FirebaseAuth.getInstance(firebaseApp)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
     }
 }

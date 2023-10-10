@@ -1,6 +1,7 @@
 package com.prmto.gallery.navigation
 
 import android.Manifest
+import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,7 +27,8 @@ import com.prmto.permission.util.HandlePermissionStatus
 internal fun ProfileImageGalleryRoute(
     modifier: Modifier = Modifier,
     viewModel: SelectProfileImageGalleryViewModel = hiltViewModel(),
-    onPopBacStack: () -> Unit
+    onPopBacStack: () -> Unit,
+    onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val permissionsToRequest = getPermissionToRequest()
@@ -54,6 +56,12 @@ internal fun ProfileImageGalleryRoute(
     LaunchedEffect(key1 = Unit) {
         if (!permissionState.status.isGranted) {
             permissionState.launchPermissionRequest()
+        }
+    }
+
+    LaunchedEffect(key1 = uiState.croppedImageUri) {
+        uiState.croppedImageUri?.let {
+            onPopBackStackWithSelectedUri(it)
         }
     }
 

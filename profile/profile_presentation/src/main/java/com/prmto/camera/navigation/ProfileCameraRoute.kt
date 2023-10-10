@@ -46,6 +46,16 @@ internal fun ProfileCameraRoute(
                 )
             }
         }
+
+    val cropActivityLauncher = rememberLauncherForActivityResult(
+        contract = CropActivityResultContract(isCircle = true)
+    ) { croppedUri ->
+        croppedUri?.let {
+            viewModel.onEvent(ProfileCameraScreenEvent.PhotoCropped(croppedUri))
+            onPopBackStackWithSelectedUri(croppedUri)
+        }
+    }
+
     ProfileCameraScreen(
         modifier = modifier,
         profileCameraUiState = profileCameraUiState.value,
@@ -82,15 +92,6 @@ internal fun ProfileCameraRoute(
     LaunchedEffect(key1 = Unit) {
         if (!permissionState.allPermissionsGranted) {
             permissionState.launchMultiplePermissionRequest()
-        }
-    }
-
-    val cropActivityLauncher = rememberLauncherForActivityResult(
-        contract = CropActivityResultContract(isCircle = true)
-    ) { croppedUri ->
-        croppedUri?.let {
-            viewModel.onEvent(ProfileCameraScreenEvent.PhotoCropped(croppedUri))
-            onPopBackStackWithSelectedUri(croppedUri)
         }
     }
 

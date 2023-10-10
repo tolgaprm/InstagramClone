@@ -5,3 +5,7 @@ plugins {
 android {
     namespace = "com.prmto.core_domain"
 }
+
+dependencies {
+    implementation(libs.firebase.storage.ktx)
+}

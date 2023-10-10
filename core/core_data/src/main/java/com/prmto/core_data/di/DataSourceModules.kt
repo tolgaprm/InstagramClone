@@ -4,10 +4,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.prmto.core_data.local.datasource.preferences.CoreUserPreferencesLocalDataSource
 import com.prmto.core_data.local.datasource.preferences.CoreUserPreferencesLocalDataSourceImpl
 import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
 import com.prmto.core_data.remote.datasource.auth.FirebaseCoreAuthRemoteDataSource
+import com.prmto.core_data.remote.datasource.storage.FirebaseStorageDataSourceImpl
+import com.prmto.core_data.remote.datasource.storage.StorageDataSource
 import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSource
 import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSourceImpl
 import dagger.Module
@@ -43,5 +46,13 @@ object DataSourceModules {
         dataStore: DataStore<Preferences>
     ): CoreUserPreferencesLocalDataSource {
         return CoreUserPreferencesLocalDataSourceImpl(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorageDataSource(
+        firebaseStorage: FirebaseStorage
+    ): StorageDataSource {
+        return FirebaseStorageDataSourceImpl(firebaseStorage)
     }
 }

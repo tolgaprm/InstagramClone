@@ -8,6 +8,7 @@ import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
+import com.prmto.core_testing.fake_repository.storage.StorageRepositoryFake
 import com.prmto.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
 import com.prmto.core_testing.userData
 import com.prmto.core_testing.util.MainDispatcherRule
@@ -33,6 +34,7 @@ class EditProfileViewModelTest {
     private lateinit var firebaseUserCoreRepository: FakeFirebaseUserCoreRepository
     private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
     private lateinit var authCoreRepository: FirebaseAuthCoreRepository
+    private lateinit var storageRepository: StorageRepositoryFake
 
     @Before
     fun setUp() {
@@ -42,10 +44,12 @@ class EditProfileViewModelTest {
         getCurrentUserUseCase = GetCurrentUserUseCase(
             authCoreRepository = authCoreRepository
         )
+        storageRepository = StorageRepositoryFake()
         viewModel = EditProfileViewModel(
             coreUserPreferencesRepository = coreUserPreferencesRepository,
             firebaseUserCoreRepository = firebaseUserCoreRepository,
-            getCurrentUserUseCase = getCurrentUserUseCase
+            getCurrentUserUseCase = getCurrentUserUseCase,
+            firebaseStorageRepository = storageRepository
         )
         setDefaultUserDetail(TestConstants.listOfUserData.map { it.userDetail })
     }
