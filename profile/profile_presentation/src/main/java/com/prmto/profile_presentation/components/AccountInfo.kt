@@ -1,5 +1,6 @@
 package com.prmto.profile_presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +29,8 @@ import com.prmto.core_presentation.R as CoreR
 fun AccountInfo(
     statistics: Statistics,
     userDetail: UserDetail,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onWebSiteTextClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -50,7 +52,8 @@ fun AccountInfo(
         AccountNameAndBio(
             name = userDetail.name,
             bio = userDetail.bio,
-            webSite = userDetail.webSite
+            webSite = userDetail.webSite,
+            onWebSiteTextClick = onWebSiteTextClick
         )
     }
 }
@@ -106,7 +109,8 @@ fun StatisticColumn(
 fun AccountNameAndBio(
     name: String,
     bio: String,
-    webSite: String
+    webSite: String,
+    onWebSiteTextClick: () -> Unit
 ) {
     Text(
         modifier = Modifier.padding(start = 8.dp),
@@ -127,7 +131,9 @@ fun AccountNameAndBio(
     }
     if (webSite.isNotBlank()) {
         Text(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .clickable { onWebSiteTextClick() },
             text = webSite,
             style = MaterialTheme.typography.bodySmall.copy(
                 color = Color.InstaBlue

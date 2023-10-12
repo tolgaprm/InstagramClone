@@ -1,5 +1,7 @@
 package com.prmto.profile_presentation
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,9 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.core_presentation.previews.UiModePreview
@@ -76,6 +80,7 @@ internal fun ProfileScreen(
     onNavigateToEditProfileScreen: () -> Unit
 ) {
     val userData = uiState.userData
+    val context = LocalContext.current
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -99,15 +104,18 @@ internal fun ProfileScreen(
             )
         },
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column {
                 AccountInfo(
                     userDetail = userData.userDetail,
-                    statistics = userData.statistics
+                    statistics = userData.statistics,
+                    modifier = Modifier.padding(it),
+                    onWebSiteTextClick = {
+                        intentToWebSite(
+                            url = userData.userDetail.webSite,
+                            context = context
+                        )
+                    }
                 )
                 if (uiState.isOwnProfile) {
                     EditProfileButton(
@@ -149,6 +157,15 @@ fun EditProfileButton(
         onClick = onClick
     ) {
         Text(text = stringResource(id = R.string.edit_profile))
+    }
+}
+
+private fun intentToWebSite(url: String, context: Context) {
+    Intent().apply {
+        data = android.net.Uri.parse(url)
+        action = Intent.ACTION_VIEW
+    }.also {
+        startActivity(context, it, null)
     }
 }
 
