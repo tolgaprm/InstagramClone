@@ -95,8 +95,8 @@ fun LoginScreen(
     Scaffold { paddingValues ->
         Column(
             modifier = modifier
-                .padding(paddingValues)
                 .fillMaxSize()
+                .padding(paddingValues)
                 .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 16.dp)
                 .padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally

@@ -99,12 +99,15 @@ internal fun ProfileScreen(
             )
         },
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
             Column {
                 AccountInfo(
                     userDetail = userData.userDetail,
-                    statistics = userData.statistics,
-                    modifier = Modifier.padding(it)
+                    statistics = userData.statistics
                 )
                 if (uiState.isOwnProfile) {
                     EditProfileButton(

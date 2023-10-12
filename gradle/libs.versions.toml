@@ -1,6 +1,6 @@
 [versions]
 accompoints_version = "0.31.4-beta"
-activity-compose = "1.7.2"
+activity-compose = "1.8.0"
 androidx-test-ext-junit = "1.1.5"
 androidxComposeCompiler = "1.5.2"
 appcompat = "1.6.1"
@@ -39,7 +39,6 @@ work_version = "2.8.1"
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompoints_version" }
-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompoints_version" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "com-android-application" }
 androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
@@ -113,7 +112,6 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 [bundles]
 ui-related = [
     "accompanist-permissions",
-    "accompanist-systemuicontroller",
     "activity-compose",
     "core-ktx",
     "icons-extended",
