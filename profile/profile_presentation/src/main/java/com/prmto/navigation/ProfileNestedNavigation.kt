@@ -1,5 +1,6 @@
 package com.prmto.navigation
 
+import android.net.Uri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
@@ -37,12 +38,31 @@ fun NavGraphBuilder.profileNestedNavigation(
             onNavigateToNestedAuth = onNavigateToNestedAuth
         )
         profileCameraNavigation(
-            onPopBacStack = { navController.popBackStack() }
+            onPopBacStack = {
+                navController.popBackStack()
+            },
+            onPopBackStackWithSelectedUri = {
+                navController.addSelectedPhotoUriToSavedState(it)
+            }
         )
-        selectProfileImageGalleryNavigation(onPopBacStack = { navController.popBackStack() })
+        selectProfileImageGalleryNavigation(
+            onPopBacStack = { navController.popBackStack() },
+            onPopBackStackWithSelectedUri = {
+                navController.addSelectedPhotoUriToSavedState(it)
+            }
+        )
     }
 }
 
 fun NavController.navigateToProfileNested() {
     navigate(NestedNavigation.Profile.route)
+}
+
+fun NavController.addSelectedPhotoUriToSavedState(
+    uri: Uri
+) {
+    this.previousBackStackEntry
+        ?.savedStateHandle
+        ?.set("selectedPhotoUri", uri.toString())
+    this.popBackStack()
 }

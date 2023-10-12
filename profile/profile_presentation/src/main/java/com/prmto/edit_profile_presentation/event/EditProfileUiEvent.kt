@@ -9,5 +9,7 @@ sealed interface EditProfileUiEvent {
 
     data class EnteredWebsite(val website: String) : EditProfileUiEvent
 
+    data class SelectNewProfileImage(val selectNewProfileUriString: String) : EditProfileUiEvent
+
     data object UpdateProfileInfo : EditProfileUiEvent
 }

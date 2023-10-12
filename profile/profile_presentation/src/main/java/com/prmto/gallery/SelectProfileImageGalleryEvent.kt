@@ -8,4 +8,6 @@ sealed interface SelectProfileImageGalleryEvent {
     data class SelectImage(val uri: Uri) : SelectProfileImageGalleryEvent
 
     data object AllPermissionsGranted : SelectProfileImageGalleryEvent
+
+    data class CropImage(val croppedImage: Uri) : SelectProfileImageGalleryEvent
 }

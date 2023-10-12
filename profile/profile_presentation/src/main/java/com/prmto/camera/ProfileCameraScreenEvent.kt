@@ -6,6 +6,8 @@ import androidx.camera.core.ImageCapture
 sealed interface ProfileCameraScreenEvent {
     data class PhotoTaken(val photoUri: Uri) : ProfileCameraScreenEvent
 
+    data class PhotoCropped(val croppedUri: Uri) : ProfileCameraScreenEvent
+
     data object ClickedFlashMode : ProfileCameraScreenEvent
 
     data class ChangeCameraSelector(

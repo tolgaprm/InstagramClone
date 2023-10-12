@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(libs.bundles.cameraX)
     implementation(libs.timber)
+    implementation(libs.ucrop)
 }

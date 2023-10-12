@@ -1,6 +1,7 @@
 package com.prmto.gallery
 
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.prmto.camera.crop.CropActivityResultContract
 import com.prmto.common.components.ProfileTopBar
 import com.prmto.core_presentation.components.TransformableAsyncImage
 import com.prmto.core_presentation.previews.UiModePreview
@@ -61,6 +63,19 @@ internal fun ProfileImageGalleryScreen(
     onEvent: (SelectProfileImageGalleryEvent) -> Unit,
     handlePermission: @Composable () -> Unit = {},
 ) {
+    val cropActivityLauncher =
+        rememberLauncherForActivityResult(
+            contract = CropActivityResultContract(isCircle = true),
+            onResult = { croppedImage ->
+                croppedImage?.let {
+                    onEvent(
+                        SelectProfileImageGalleryEvent.CropImage(
+                            croppedImage = croppedImage
+                        )
+                    )
+                }
+            }
+        )
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
@@ -83,9 +98,22 @@ internal fun ProfileImageGalleryScreen(
                     )
                 },
                 actions = {
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(
+                        onClick = {
+                            uiState.selectedImageUri?.let {
+                                cropActivityLauncher.launch(it)
+                            } ?: run {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.please_select_an_image),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    ) {
                         Text(
-                            text = stringResource(R.string.next), color = Color.InstaBlue
+                            text = stringResource(R.string.next),
+                            color = Color.InstaBlue
                         )
                     }
                 }

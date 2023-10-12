@@ -58,7 +58,8 @@ fun InstagramBottomNavigation(
                             Icon(
                                 painter = painterResource(
                                     id = setBottomNavigationIcon(
-                                        navigationItem
+                                        navigationBottomItem = navigationItem,
+                                        currentBackStackEntry = currentBackStackEntry
                                     )
                                 ),
                                 contentDescription = stringResource(id = navigationItem.contentDescription),
@@ -77,9 +78,10 @@ fun InstagramBottomNavigation(
 
 
 private fun setBottomNavigationIcon(
-    navigationBottomItem: NavigationBottomItem
+    navigationBottomItem: NavigationBottomItem,
+    currentBackStackEntry: NavBackStackEntry?,
 ): Int {
-    return if (navigationBottomItem.selected) {
+    return if (navigationBottomItem.selected && currentBackStackEntry?.destination?.route == navigationBottomItem.route) {
         navigationBottomItem.selectedIcon
     } else {
         navigationBottomItem.unselectedIcon

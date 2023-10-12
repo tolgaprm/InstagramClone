@@ -62,13 +62,10 @@ fun ShowAlertDialogForPermission(
             },
             confirmButton = {
                 if (isPermanentlyDeclined) {
-                    PermanentlyDeclinedButton(
-                        context = context,
-                        onOkClick = {
-                            openAppSettings(context = context)
-                            isVisible = false
-                        }
-                    )
+                    PermanentlyDeclinedButton {
+                        openAppSettings(context = context)
+                        isVisible = false
+                    }
                 } else {
                     RationaleButton(onOkClick = {
                         onOkClick()
@@ -106,7 +103,6 @@ fun ShowAlertDialogForPermission(
 
 @Composable
 private fun PermanentlyDeclinedButton(
-    context: Context,
     onOkClick: () -> Unit
 ) {
     Button(

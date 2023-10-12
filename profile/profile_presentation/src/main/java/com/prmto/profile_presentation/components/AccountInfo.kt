@@ -116,18 +116,22 @@ fun AccountNameAndBio(
             color = colorResource(id = CoreR.color.secondTextColor)
         )
     )
-    Text(
-        modifier = Modifier.padding(start = 8.dp),
-        text = bio,
-        style = MaterialTheme.typography.bodySmall.copy(
-            color = colorResource(id = CoreR.color.secondTextColor)
+    if (bio.isNotBlank()) {
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = bio,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = colorResource(id = CoreR.color.secondTextColor)
+            )
         )
-    )
-    Text(
-        modifier = Modifier.padding(start = 8.dp),
-        text = webSite,
-        style = MaterialTheme.typography.bodySmall.copy(
-            color = Color.InstaBlue
+    }
+    if (webSite.isNotBlank()) {
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = webSite,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = Color.InstaBlue
+            )
         )
-    )
+    }
 }

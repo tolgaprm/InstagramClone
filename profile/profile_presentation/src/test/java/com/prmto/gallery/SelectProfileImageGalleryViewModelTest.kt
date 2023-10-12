@@ -87,6 +87,14 @@ class SelectProfileImageGalleryViewModelTest {
     }
 
     @Test
+    fun eventIsCropImage_stateUpdated() = runTest {
+        viewModel.onEvent(SelectProfileImageGalleryEvent.CropImage(croppedImage = Uri.parse("file_name")))
+        viewModel.uiState.test {
+            assertThat(awaitItem().croppedImageUri).isEqualTo(Uri.parse("file_name"))
+        }
+    }
+
+    @Test
     fun eventIsSelectImage_updateSelectedImageUri() = runTest {
         viewModel.onEvent(SelectProfileImageGalleryEvent.SelectImage(uri = Uri.parse("file_name")))
         viewModel.uiState.test {

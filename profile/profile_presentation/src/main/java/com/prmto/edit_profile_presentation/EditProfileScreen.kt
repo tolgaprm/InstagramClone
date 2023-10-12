@@ -1,5 +1,6 @@
 package com.prmto.edit_profile_presentation
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,10 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,10 +59,15 @@ import kotlinx.coroutines.launch
 internal fun EditProfileRoute(
     modifier: Modifier = Modifier,
     viewModel: EditProfileViewModel = hiltViewModel(),
+    selectedNewProfileImage: String?,
     onPopBackStack: () -> Unit,
     onNavigateToProfileCamera: () -> Unit,
     onNavigateToGallery: () -> Unit
 ) {
+    selectedNewProfileImage?.let {
+        viewModel.onEvent(EditProfileUiEvent.SelectNewProfileImage(selectedNewProfileImage))
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
     EditProfileScreen(
@@ -81,7 +89,7 @@ internal fun EditProfileRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun EditProfileScreen(
     modifier: Modifier = Modifier,
@@ -91,6 +99,8 @@ internal fun EditProfileScreen(
     onNavigateToGallery: () -> Unit,
     onEvent: (EditProfileUiEvent) -> Unit
 ) {
+    val keyboardManager = LocalSoftwareKeyboardController.current
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState()
     )
@@ -105,6 +115,7 @@ internal fun EditProfileScreen(
                 isShowSaveButton = uiState.isShowSaveButton,
                 onClickClose = onPopBackStack,
                 onClickSave = {
+                    keyboardManager?.hide()
                     onEvent(EditProfileUiEvent.UpdateProfileInfo)
                 }
             )
@@ -119,13 +130,16 @@ internal fun EditProfileScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            EditProfileContent(updatedUserDetail = uiState.updatedUserDetail,
+            EditProfileContent(
+                updatedUserDetail = uiState.updatedUserDetail,
+                selectedNewProfileImage = uiState.selectedNewProfileImage,
                 onEvent = onEvent,
                 onClickChangeProfilePhoto = {
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.expand()
                     }
-                })
+                }
+            )
 
             if (uiState.isLoading) {
                 CircularProgressIndicator(
@@ -139,6 +153,7 @@ internal fun EditProfileScreen(
 @Composable
 private fun EditProfileContent(
     updatedUserDetail: UserDetail,
+    selectedNewProfileImage: Uri? = null,
     onEvent: (EditProfileUiEvent) -> Unit,
     onClickChangeProfilePhoto: () -> Unit
 ) {
@@ -148,8 +163,9 @@ private fun EditProfileContent(
             .padding(top = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val profileImage = selectedNewProfileImage ?: updatedUserDetail.profilePictureUrl
         CircleProfileImage(
-            imageUrl = updatedUserDetail.profilePictureUrl
+            imageUrl = profileImage
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Text(modifier = Modifier
@@ -161,29 +177,36 @@ private fun EditProfileContent(
             text = stringResource(R.string.change_profile_photo),
             color = Color.InstaBlue,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold))
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_name_section),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_name_section),
             value = updatedUserDetail.name,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredName(it))
-            })
+            }
+        )
 
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_username),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_username),
             value = updatedUserDetail.username,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredUsername(it))
-            })
+            }
+        )
 
-        EditProfileSection(sectionName = stringResource(R.string.edit_profile_bio),
+        EditProfileSection(
+            sectionName = stringResource(R.string.edit_profile_bio),
             value = updatedUserDetail.bio,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredBio(it))
-            })
+            }
+        )
 
         EditProfileSection(sectionName = stringResource(R.string.edit_profile_website),
             value = updatedUserDetail.webSite,
             onValueChange = {
                 onEvent(EditProfileUiEvent.EnteredWebsite(it))
-            })
+            }
+        )
     }
 }
 
