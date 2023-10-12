@@ -1,6 +1,5 @@
 package com.prmto.instagramclone.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -18,13 +17,15 @@ import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
 import com.prmto.share_presentation.navigation.shareNavigation
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SetupNavigation(
     navController: NavHostController,
     startDestination: String
 ) {
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
         homeNavigation(
             modifier = Modifier.testTag(HomeTestTags.HOME_SCREEN),
             onNavigateToMessageScreen = { }, // TODO

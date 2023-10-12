@@ -21,7 +21,6 @@ internal fun Project.commonPresentationLayerDependencies(
             addImplementation(libs.findLibrary("material3").get())
             addImplementation(libs.findLibrary("viewmodel-compose").get())
             addImplementation(libs.findLibrary("material").get())
-            addImplementation(libs.findLibrary("accompanist-systemuicontroller").get())
             addImplementation(libs.findLibrary("icons-extended").get())
             addImplementation(libs.findLibrary("accompanist-permissions").get())
 
