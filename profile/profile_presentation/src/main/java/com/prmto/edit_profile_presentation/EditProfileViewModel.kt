@@ -7,6 +7,7 @@ import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.storage.StorageRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
+import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
@@ -20,13 +21,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.prmto.core_domain.R as CoreDomainR
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val firebaseStorageRepository: StorageRepository
+    private val firebaseStorageRepository: StorageRepository,
+    private val checkIfExistUserWithTheSameUsernameUseCase: CheckIfExistUserWithTheSameUsernameUseCase
 ) : CommonViewModel<UiEvent>() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
@@ -94,12 +97,19 @@ class EditProfileViewModel @Inject constructor(
 
     private fun handleUpdateProfileInfo() {
         viewModelScope.launch {
-            getCurrentUserUseCase()?.let { currentUser ->
-                if (uiState.value.selectedNewProfileImage != null) {
-                    updateProfileImage(uiState.value.selectedNewProfileImage ?: return@let).await()
+            handleResourceWithCallbacks(
+                resourceSupplier = { checkIfExistUserWithTheSameUsernameUseCase(uiState.value.updatedUserDetail.username) },
+                onSuccessCallback = { ifExistUserWithTheSameUsername ->
+                    if (ifExistUserWithTheSameUsername && uiState.value.userDetail.username != uiState.value.updatedUserDetail.username) {
+                        handleUsernameExists()
+                    } else {
+                        handleProfileUpdate()
+                    }
+                },
+                onErrorCallback = {
+                    addConsumableViewEvent(UiEvent.ShowMessage(it))
                 }
-                updateProfileInfoToFirebase(userUid = currentUser.uid)
-            } ?: _uiState.update { it.copy(isLoading = false) }
+            )
         }
     }
 
@@ -121,6 +131,27 @@ class EditProfileViewModel @Inject constructor(
                 }
             )
         }
+
+    private fun handleProfileUpdate() {
+        viewModelScope.launch {
+            val currentUser = getCurrentUserUseCase()
+            if (currentUser != null) {
+                if (uiState.value.selectedNewProfileImage != null) {
+                    updateProfileImage(
+                        uiState.value.selectedNewProfileImage ?: return@launch
+                    ).await()
+                }
+                updateProfileInfoToFirebase(userUid = currentUser.uid)
+            } else {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    private fun handleUsernameExists() {
+        _uiState.update { it.copy(isLoading = false) }
+        addConsumableViewEvent(UiEvent.ShowMessage(UiText.StringResource(CoreDomainR.string.username_already_exists)))
+    }
 
     private fun updateProfileInfoToPreferences() {
         viewModelScope.launch {
