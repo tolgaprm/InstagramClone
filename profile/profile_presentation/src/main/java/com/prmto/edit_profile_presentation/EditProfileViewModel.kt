@@ -7,11 +7,10 @@ import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
 import com.prmto.core_domain.repository.storage.StorageRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
-import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
-import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
+import com.prmto.profile_domain.usecase.EditProfileUseCases
 import com.prmto.profile_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -27,9 +26,8 @@ import com.prmto.core_domain.R as CoreDomainR
 class EditProfileViewModel @Inject constructor(
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val firebaseStorageRepository: StorageRepository,
-    private val checkIfExistUserWithTheSameUsernameUseCase: CheckIfExistUserWithTheSameUsernameUseCase
+    private val editProfileUseCases: EditProfileUseCases
 ) : CommonViewModel<UiEvent>() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
@@ -62,8 +60,18 @@ class EditProfileViewModel @Inject constructor(
             EditProfileUiEvent.UpdateProfileInfo -> {
                 trimUpdatedUserDetail()
                 if (uiState.value.updatedUserDetail.name.isNotBlank() && uiState.value.updatedUserDetail.username.isNotBlank()) {
-                    _uiState.update { it.copy(isLoading = true) }
-                    handleUpdateProfileInfo()
+                    if (uiState.value.updatedUserDetail.webSite.isNotBlank() && !isValidWebSite()) {
+                        addConsumableViewEvent(
+                            UiEvent.ShowMessage(
+                                UiText.StringResource(
+                                    R.string.invalid_website
+                                )
+                            )
+                        )
+                    } else {
+                        _uiState.update { it.copy(isLoading = true) }
+                        handleUpdateProfileInfo()
+                    }
                 } else {
                     addConsumableViewEvent(
                         UiEvent.ShowMessage(UiText.StringResource(R.string.username_or_name_fields_are_not_empty))
@@ -98,7 +106,7 @@ class EditProfileViewModel @Inject constructor(
     private fun handleUpdateProfileInfo() {
         viewModelScope.launch {
             handleResourceWithCallbacks(
-                resourceSupplier = { checkIfExistUserWithTheSameUsernameUseCase(uiState.value.updatedUserDetail.username) },
+                resourceSupplier = { editProfileUseCases.checkIfExistUserWithTheSameUsername(uiState.value.updatedUserDetail.username) },
                 onSuccessCallback = { ifExistUserWithTheSameUsername ->
                     if (ifExistUserWithTheSameUsername && uiState.value.userDetail.username != uiState.value.updatedUserDetail.username) {
                         handleUsernameExists()
@@ -134,7 +142,7 @@ class EditProfileViewModel @Inject constructor(
 
     private fun handleProfileUpdate() {
         viewModelScope.launch {
-            val currentUser = getCurrentUserUseCase()
+            val currentUser = editProfileUseCases.getCurrentUser()
             if (currentUser != null) {
                 if (uiState.value.selectedNewProfileImage != null) {
                     updateProfileImage(
@@ -189,6 +197,10 @@ class EditProfileViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    private fun isValidWebSite(): Boolean {
+        return editProfileUseCases.validateWebSiteUrl(websiteUrl = uiState.value.updatedUserDetail.webSite)
     }
 
     private fun handleEnteredName(name: String) {
