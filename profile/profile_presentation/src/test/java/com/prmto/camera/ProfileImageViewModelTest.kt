@@ -3,6 +3,8 @@ package com.prmto.camera
 import android.net.Uri
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import com.prmto.camera.usecase.GetNewFlashModeUseCase
+import com.prmto.camera.util.CameraFlashMode
 import com.prmto.core_testing.util.MainDispatcherRule
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -23,7 +25,7 @@ class ProfileImageViewModelTest {
     fun setUp() {
         mockkStatic(Uri::class)
         every { Uri.parse(SAMPLE_IMAGE_URI).lastPathSegment } returns SAMPLE_IMAGE_URI
-        viewModel = ProfileImageViewModel()
+        viewModel = ProfileImageViewModel(getNewFlashModeUseCase = GetNewFlashModeUseCase())
     }
 
     @Test
