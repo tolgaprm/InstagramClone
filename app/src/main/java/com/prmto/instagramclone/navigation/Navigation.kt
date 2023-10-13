@@ -15,7 +15,7 @@ import com.prmto.home_presentation.util.HomeTestTags
 import com.prmto.navigation.profileNestedNavigation
 import com.prmto.reels_presentation.navigation.reelsNavigation
 import com.prmto.search_presentation.navigation.searchNavigation
-import com.prmto.share_presentation.navigation.shareNavigation
+import com.prmto.share_presentation.navigation.shareNestedNavigation
 
 @Composable
 fun SetupNavigation(
@@ -30,7 +30,7 @@ fun SetupNavigation(
             modifier = Modifier.testTag(HomeTestTags.HOME_SCREEN),
             onNavigateToMessageScreen = { }, // TODO
         )
-        shareNavigation()
+        shareNestedNavigation()
 
         profileNestedNavigation(
             navController = navController,

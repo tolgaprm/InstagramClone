@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import com.prmto.core_presentation.components.CircleProfileImage
 import com.prmto.core_presentation.navigation.NestedNavigation
-import com.prmto.core_presentation.navigation.Screen
 import com.prmto.navigation.ProfileNestedScreens
 
 @Composable
@@ -96,7 +95,7 @@ private fun ShowBottomNavigation(
     val currentRoute = currentBackStackEntry?.destination?.route
 
     if (bottomNavigationItems.any { it.route == currentRoute } &&
-        currentRoute != Screen.Share.route
+        currentRoute != NestedNavigation.Share.route
         || currentRoute == ProfileNestedScreens.Setting.route
         || (currentBackStackEntry?.destination?.parent?.route == NestedNavigation.Profile.route && currentRoute != ProfileNestedScreens.EditProfile.route)
     ) {

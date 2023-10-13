@@ -34,7 +34,7 @@ val bottomNavigationItems = listOf(
         contentDescription = R.string.search
     ),
     NavigationBottomItem(
-        route = Screen.Share.route,
+        route = NestedNavigation.Share.route,
         selectedIcon = R.drawable.new_post_selected,
         unselectedIcon = R.drawable.new_post_unselected,
         contentDescription = R.string.add_post
