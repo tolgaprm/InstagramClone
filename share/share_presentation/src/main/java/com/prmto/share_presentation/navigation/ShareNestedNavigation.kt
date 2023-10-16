@@ -6,12 +6,18 @@ import androidx.navigation.navigation
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.share_presentation.postCamera.navigation.postCameraNavigation
 
-fun NavGraphBuilder.shareNestedNavigation() {
+fun NavGraphBuilder.shareNestedNavigation(
+    navController: NavController,
+    onNavigateToHome: () -> Unit,
+) {
     navigation(
         route = NestedNavigation.Share.route,
-        startDestination = ShareNestedScreens.PostGalleryScreen.route
+        startDestination = ShareNestedScreens.PostCameraScreen.route
     ) {
-        postCameraNavigation()
+        postCameraNavigation(
+            onNavigateToHome = onNavigateToHome,
+            onNavigateToPostGallery = {}//navController::navigateToPostGallery
+        )
     }
 }
 

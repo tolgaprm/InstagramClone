@@ -6,9 +6,15 @@ import androidx.navigation.compose.composable
 import com.prmto.share_presentation.navigation.ShareNestedScreens
 import com.prmto.share_presentation.postCamera.PostCameraRoute
 
-internal fun NavGraphBuilder.postCameraNavigation() {
+internal fun NavGraphBuilder.postCameraNavigation(
+    onNavigateToHome: () -> Unit,
+    onNavigateToPostGallery: () -> Unit
+) {
     composable(ShareNestedScreens.PostCameraScreen.route) {
-        PostCameraRoute()
+        PostCameraRoute(
+            onNavigateToHome = onNavigateToHome,
+            onNavigateToPostGallery = onNavigateToPostGallery
+        )
     }
 }
 

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close">Close</string>
+    <string name="settings">Settings</string>
+    <string name="post">Post</string>
+    <string name="story">Story</string>
+    <string name="reels">Reels</string>
+    <string name="change_camera">Change Camera</string>
 </resources>

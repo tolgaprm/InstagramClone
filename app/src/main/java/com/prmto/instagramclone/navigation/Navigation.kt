@@ -30,7 +30,17 @@ fun SetupNavigation(
             modifier = Modifier.testTag(HomeTestTags.HOME_SCREEN),
             onNavigateToMessageScreen = { }, // TODO
         )
-        shareNestedNavigation()
+
+        shareNestedNavigation(
+            navController = navController,
+            onNavigateToHome = {
+                navController.navigateToHome {
+                    popUpTo(NestedNavigation.Share.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
 
         profileNestedNavigation(
             navController = navController,

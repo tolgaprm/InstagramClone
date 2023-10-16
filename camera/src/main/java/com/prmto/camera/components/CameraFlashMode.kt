@@ -6,8 +6,10 @@ import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.prmto.camera.R
 import com.prmto.camera.util.CameraFlashMode
@@ -16,6 +18,7 @@ import com.prmto.camera.util.CameraFlashMode
 fun CameraFlashModeButton(
     modifier: Modifier = Modifier,
     isVisibleCameraFlashMode: Boolean = true,
+    tint: Color = MaterialTheme.colorScheme.onBackground,
     cameraFlashMode: CameraFlashMode,
     onClickFlashMode: () -> Unit
 ) {
@@ -37,7 +40,9 @@ fun CameraFlashModeButton(
             modifier = modifier
         ) {
             Icon(
-                imageVector = newFlashIcon, contentDescription = newFlashContentDescription
+                imageVector = newFlashIcon,
+                contentDescription = newFlashContentDescription,
+                tint = tint
             )
         }
     }
