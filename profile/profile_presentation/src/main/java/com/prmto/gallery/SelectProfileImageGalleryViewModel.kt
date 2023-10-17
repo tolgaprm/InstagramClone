@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
-import com.prmto.profile_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectProfileImageGalleryViewModel @Inject constructor(
+    private val getImageUrisByFirstAlbumNameUseCase: GetImageUrisByFirstAlbumNameUseCase,
     private val mediaAlbumProvider: MediaAlbumProvider,
     private val dispatcherProvider: DispatcherProvider
 ) : CommonViewModel<UiEvent>() {
@@ -42,24 +43,23 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
 
     private fun handleAllPermissionGranted() {
         viewModelScope.launch(dispatcherProvider.IO) {
-            val mediaAlbums = getAllAlbumNames().await()
-            if (mediaAlbums.isEmpty()) {
-                _uiState.update {
-                    it.copy(
-                        errorMessage = UiText.StringResource(R.string.no_albums_found)
-                    )
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    getImageUrisByFirstAlbumNameUseCase(viewModelScope)
+                },
+                onSuccessCallback = { result ->
+                    _uiState.update {
+                        it.copy(
+                            mediaAlbumNames = result.albumNames,
+                            urisInSelectedAlbum = result.uriInFirstAlbum,
+                            selectedAlbumName = result.albumNames.first()
+                        )
+                    }
+                },
+                onErrorCallback = { error ->
+                    _uiState.update { it.copy(errorMessage = error) }
                 }
-                return@launch
-            }
-            val urisInAlbum = getImageUriByAlbumName(mediaAlbums.first()).await()
-
-            _uiState.update {
-                it.copy(
-                    mediaAlbumNames = mediaAlbums,
-                    urisInSelectedAlbum = urisInAlbum,
-                    selectedAlbumName = mediaAlbums.first()
-                )
-            }
+            )
         }
     }
 
@@ -77,10 +77,6 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun getAllAlbumNames() = viewModelScope.async(dispatcherProvider.IO) {
-        mediaAlbumProvider.getAllAlbumNames().toList()
     }
 
     private fun getImageUriByAlbumName(albumName: String) =

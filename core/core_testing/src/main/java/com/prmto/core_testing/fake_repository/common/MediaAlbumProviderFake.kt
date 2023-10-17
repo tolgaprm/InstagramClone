@@ -16,4 +16,8 @@ class MediaAlbumProviderFake : MediaAlbumProvider {
     override suspend fun getAllUrisForAlbum(albumName: String): Set<Uri> {
         return albumsAndUris.filter { it.key == albumName }.values.flatten().toSet()
     }
+
+    override suspend fun getLastUriOfTheImage(): Uri {
+        TODO("Not yet implemented")
+    }
 }
