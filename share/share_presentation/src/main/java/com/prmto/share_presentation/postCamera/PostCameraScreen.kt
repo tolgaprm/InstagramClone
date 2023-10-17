@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlipCameraAndroid
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -45,6 +44,7 @@ import com.prmto.camera.rememberCameraControllerWithImageCapture
 import com.prmto.camera.util.CameraFlashMode
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.share_presentation.R
+import com.prmto.share_presentation.components.CloseButton
 
 @Composable
 internal fun PostCameraRoute(
@@ -145,14 +145,7 @@ private fun PostCameraTopSection(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = onCloseClick) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                imageVector = Icons.Default.Close,
-                contentDescription = stringResource(id = R.string.close),
-                tint = Color.White
-            )
-        }
+        CloseButton(onCloseClick = onCloseClick)
 
         CameraFlashModeButton(
             cameraFlashMode = flashMode,
