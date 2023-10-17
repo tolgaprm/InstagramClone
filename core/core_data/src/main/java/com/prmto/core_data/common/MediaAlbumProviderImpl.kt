@@ -79,4 +79,40 @@ class MediaAlbumProviderImpl @Inject constructor(
             uris
         }
     }
+
+    override suspend fun getLastUriOfTheImage(): Uri {
+        var uri: Uri? = null
+        return withContext(dispatcherProvider.IO) {
+            val projection = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATE_ADDED
+            )
+
+            val queryArgs = Bundle().apply {
+                putString(
+                    ContentResolver.QUERY_ARG_SQL_SORT_ORDER,
+                    MediaStore.Images.Media.DATE_ADDED
+                )
+            }
+
+            val cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                queryArgs,
+                null
+            )
+            cursor?.let {
+                if (cursor.moveToNext()) {
+                    cursor.use {
+                        val uriIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+                        uri = Uri.withAppendedPath(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            cursor.getString(uriIndex)
+                        )
+                    }
+                }
+            }
+            uri ?: Uri.EMPTY
+        }
+    }
 }
