@@ -10,4 +10,9 @@
     <string name="next">Next</string>
     <string name="select_multiple_images_or_videos">Select multiple images or videos</string>
     <string name="navigate_to_post_camera_screen">Navigate to Post Camera Screen</string>
+    <string name="please_you_select_an_image">Please you select an image</string>
+    <string name="select_album">Select album</string>
+    <string name="albums">Albums</string>
+    <string name="favorites">Favorites</string>
+    <string name="videos">Videos</string>
 </resources>

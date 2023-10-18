@@ -23,7 +23,8 @@ fun NavGraphBuilder.shareNestedNavigation(
         )
 
         postGalleryNavigation(
-            onNavigateToPostCamera = navController::navigateToPostCameraScreen
+            onNavigateToPostCamera = navController::navigateToPostCameraScreen,
+            onPopBackStack = navController::popBackStack
         )
     }
 }

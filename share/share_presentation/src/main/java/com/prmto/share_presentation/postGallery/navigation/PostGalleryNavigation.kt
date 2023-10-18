@@ -7,11 +7,13 @@ import com.prmto.share_presentation.navigation.ShareNestedScreens
 import com.prmto.share_presentation.postGallery.PostGalleryRoute
 
 internal fun NavGraphBuilder.postGalleryNavigation(
-    onNavigateToPostCamera: () -> Unit
+    onNavigateToPostCamera: () -> Unit,
+    onPopBackStack: () -> Unit
 ) {
     composable(ShareNestedScreens.PostGalleryScreen.route) {
         PostGalleryRoute(
-            onNavigateToPostCamera = onNavigateToPostCamera
+            onNavigateToPostCamera = onNavigateToPostCamera,
+            onPopBackStack = onPopBackStack
         )
     }
 }
