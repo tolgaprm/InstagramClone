@@ -1,5 +1,7 @@
 package com.prmto.share_presentation.postGallery
 
+import android.content.Context
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.clickable
@@ -29,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,6 +61,7 @@ import com.prmto.core_domain.usecase.AlbumAndCoverImage
 import com.prmto.core_presentation.components.GalleryDropDownButton
 import com.prmto.core_presentation.components.GalleryScreenBoxInPostGallery
 import com.prmto.core_presentation.previews.UiModePreview
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.permission.provider.getPermissionInfoProvider
@@ -78,6 +82,7 @@ fun PostGalleryRoute(
     val context = LocalContext.current
     val viewModel: PostGalleryViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
     val permissionState = handleFilePermissionAccess()
     val permissionProvider = getPermissionInfoProvider(permissionToRequestForFile())
     val cropActivityLauncher = rememberLauncherForActivityResult(
@@ -98,15 +103,14 @@ fun PostGalleryRoute(
         onClickedCameraButton = onNavigateToPostCamera,
         onCloseClick = onPopBackStack,
         onNextClick = {
-            uiState.selectedImageUri?.let {
-                cropActivityLauncher.launch(it)
-            } ?: run {
-                Toast.makeText(
-                    context,
-                    warningMessage,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            handleOnNextClick(
+                context = context,
+                isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
+                selectedImageUri = uiState.selectedImageUri,
+                selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
+                warningMessage = warningMessage,
+                onLaunchCropActivity = { uri -> cropActivityLauncher.launch(uri) }
+            )
         },
         onEvent = viewModel::onEvent,
         handlePermission = {
@@ -116,6 +120,39 @@ fun PostGalleryRoute(
             )
         }
     )
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableViewEvents,
+        onEventNavigate = {},
+        onEventConsumed = viewModel::onEventConsumed
+    )
+}
+
+private fun handleOnNextClick(
+    context: Context,
+    isEnabledMultipleSelectMode: Boolean,
+    selectedImageUri: Uri?,
+    selectedUrisInEnabledMultipleSelectMode: List<Uri>,
+    warningMessage: String,
+    onLaunchCropActivity: (Uri) -> Unit
+) {
+    if (isEnabledMultipleSelectMode) {
+        if (selectedUrisInEnabledMultipleSelectMode.isNotEmpty()) {
+            selectedUrisInEnabledMultipleSelectMode.forEach {
+                onLaunchCropActivity(it)
+            }
+        }
+    } else {
+        selectedImageUri?.let {
+            onLaunchCropActivity(it)
+        } ?: run {
+            Toast.makeText(
+                context,
+                warningMessage,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,7 +168,10 @@ fun PostGalleryScreen(
     handlePermission: @Composable () -> Unit = {},
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false,
+        )
     )
     val coroutineScope = rememberCoroutineScope()
     BottomSheetScaffold(

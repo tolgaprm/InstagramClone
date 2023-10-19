@@ -20,16 +20,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.prmto.core_domain.constants.UiText
+import com.prmto.core_presentation.R
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.util.asString
 
@@ -73,6 +76,7 @@ fun GalleryScreenBoxInPostGallery(
                             ImageItemInEnabledMultipleSelection(
                                 uri = uri,
                                 index = selectedUrisInEnabledMultipleSelectMode.indexOf(uri),
+                                selectedUrisInEnabledMultipleSelectMode = selectedUrisInEnabledMultipleSelectMode,
                                 onClickImageItem = onClickImageItem
                             )
                         } else {
@@ -103,21 +107,39 @@ private fun ImageItemInEnabledMultipleSelection(
     modifier: Modifier = Modifier,
     uri: Uri,
     index: Int,
+    selectedUrisInEnabledMultipleSelectMode: List<Uri>,
     onClickImageItem: (selectedUri: Uri) -> Unit
 ) {
+    val context = LocalContext.current
     val defaultColor = Color.White.copy(alpha = 0.5f)
-    val color = remember { mutableStateOf(defaultColor) }
+    val color = rememberSaveable(
+        stateSaver = Saver(
+            save = { defaultColor.toArgb() },
+            restore = { Color(it) }
+        )
+    ) { mutableStateOf(defaultColor) }
+
     Box(
         modifier = modifier.size(120.dp)
     ) {
         ImageItemInDisabledMultipleSelection(
             uri = uri,
             onClickImageItem = {
-                color.value = when (color.value) {
-                    defaultColor -> Color.InstaBlue
-                    else -> defaultColor
+                if (selectedUrisInEnabledMultipleSelectMode.size >= 10
+                    && !selectedUrisInEnabledMultipleSelectMode.contains(uri)
+                ) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.the_limit_is_10_photos_or_videos),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    color.value = when (color.value) {
+                        defaultColor -> Color.InstaBlue
+                        else -> defaultColor
+                    }
+                    onClickImageItem(it)
                 }
-                onClickImageItem(it)
             }
         )
         Box(

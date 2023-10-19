@@ -53,9 +53,7 @@ class PostGalleryViewModel @Inject constructor(
 
     fun onEvent(event: PostGalleryEvent) {
         when (event) {
-            is PostGalleryEvent.OnImageCropped -> {
-                _uiState.update { it.copy(croppedImageUri = event.uri) }
-            }
+            is PostGalleryEvent.OnImageCropped -> handleCroppedImage(event.uri)
 
             PostGalleryEvent.OnClickMultipleSelectButton -> {
                 _uiState.update {
@@ -92,6 +90,24 @@ class PostGalleryViewModel @Inject constructor(
             is PostGalleryEvent.OnClickAlbumItem -> {
                 getAllUrisForAlbum(event.albumName)
             }
+        }
+    }
+
+    private fun handleCroppedImage(uri: Uri) {
+        if (uiState.value.isActiveMultipleSelection) {
+            _uiState.update {
+                it.copy(
+                    croppedImageUris = uiState.value.croppedImageUris.plus(uri)
+                )
+            }
+            if (uiState.value.croppedImageUris.last() == uri) {
+                // TODO add Navigate event to navigate to PostPreviewScreen
+                /*  addConsumableViewEvent(
+                      UiEvent.Navigate()
+                  )*/
+            }
+        } else {
+            _uiState.update { it.copy(croppedImageUri = uri) }
         }
     }
 
@@ -139,6 +155,7 @@ data class PostGalleryUiState(
     val selectedImageUri: Uri? = null,
     val selectedUrisInEnabledMultipleSelectMode: List<Uri> = emptyList(),
     val croppedImageUri: Uri? = null,
+    val croppedImageUris: List<Uri> = emptyList(),
     val isActiveMultipleSelection: Boolean = false,
     val albumAndCoverImages: List<AlbumAndCoverImage> = emptyList()
 )
