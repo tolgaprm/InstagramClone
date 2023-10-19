@@ -19,7 +19,7 @@ fun CameraFlashModeButton(
     modifier: Modifier = Modifier,
     isVisibleCameraFlashMode: Boolean = true,
     tint: Color = MaterialTheme.colorScheme.onBackground,
-    cameraFlashMode: CameraFlashMode,
+    cameraFlashMode: CameraFlashMode = CameraFlashMode.OFF,
     onClickFlashMode: () -> Unit
 ) {
     if (isVisibleCameraFlashMode) {

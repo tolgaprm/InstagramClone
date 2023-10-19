@@ -9,6 +9,8 @@ class MediaAlbumProviderFake : MediaAlbumProvider {
 
     var albumsAndUris = mapOf<String, List<Uri>>()
 
+    lateinit var lastUri: Uri
+
     override suspend fun getAllAlbumNames(): Set<String> {
         return albumNames.toSet()
     }
@@ -18,6 +20,10 @@ class MediaAlbumProviderFake : MediaAlbumProvider {
     }
 
     override suspend fun getLastUriOfTheImage(): Uri {
+        return lastUri
+    }
+
+    override suspend fun getFirstImageUriOfTheAlbum(albumName: String): Uri {
         TODO("Not yet implemented")
     }
 }

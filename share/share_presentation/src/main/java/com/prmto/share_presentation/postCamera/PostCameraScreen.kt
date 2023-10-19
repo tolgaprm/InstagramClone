@@ -145,7 +145,10 @@ private fun PostCameraTopSection(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        CloseButton(onCloseClick = onCloseClick)
+        CloseButton(
+            onCloseClick = onCloseClick,
+            color = Color.White
+        )
 
         CameraFlashModeButton(
             cameraFlashMode = flashMode,
