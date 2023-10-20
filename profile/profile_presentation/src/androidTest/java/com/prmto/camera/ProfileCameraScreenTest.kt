@@ -11,8 +11,9 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
+import com.prmto.camera.R
+import com.prmto.camera.util.CameraFlashMode
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
-import com.prmto.profile_presentation.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

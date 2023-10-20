@@ -3,6 +3,8 @@ package com.prmto.camera
 import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.prmto.camera.usecase.GetNewFlashModeUseCase
+import com.prmto.camera.util.CameraFlashMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +13,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileImageViewModel @Inject constructor() : ViewModel() {
+class ProfileImageViewModel @Inject constructor(
+    private val getNewFlashModeUseCase: GetNewFlashModeUseCase
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileCameraUiState())
     val uiState: StateFlow<ProfileCameraUiState> = _uiState.asStateFlow()
 
@@ -27,7 +31,11 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
                 _uiState.update { it.copy(croppedUri = event.croppedUri) }
             }
 
-            is ProfileCameraScreenEvent.ClickedFlashMode -> setNewFlashMode()
+            is ProfileCameraScreenEvent.ClickedFlashMode -> {
+                val newFlashMode = getNewFlashModeUseCase(_uiState.value.cameraFlashMode)
+                _uiState.update { it.copy(cameraFlashMode = newFlashMode) }
+            }
+
             is ProfileCameraScreenEvent.ChangeCameraSelector -> {
                 _uiState.update {
                     it.copy(
@@ -47,15 +55,6 @@ class ProfileImageViewModel @Inject constructor() : ViewModel() {
                 }
             }
         }
-    }
-
-    private fun setNewFlashMode() {
-        val newFlashMode = when (uiState.value.cameraFlashMode) {
-            CameraFlashMode.OFF -> CameraFlashMode.ON
-            CameraFlashMode.ON -> CameraFlashMode.AUTO
-            CameraFlashMode.AUTO -> CameraFlashMode.OFF
-        }
-        _uiState.value = _uiState.value.copy(cameraFlashMode = newFlashMode)
     }
 }
 

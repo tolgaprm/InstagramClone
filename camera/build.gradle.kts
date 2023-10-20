@@ -5,6 +5,9 @@ plugins {
 
 android {
     namespace = "com.prmto.camera"
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

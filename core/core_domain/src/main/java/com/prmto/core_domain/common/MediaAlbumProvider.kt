@@ -6,4 +6,8 @@ interface MediaAlbumProvider {
     suspend fun getAllAlbumNames(): Set<String>
 
     suspend fun getAllUrisForAlbum(albumName: String): Set<Uri>
+
+    suspend fun getLastUriOfTheImage(): Uri
+
+    suspend fun getFirstImageUriOfTheAlbum(albumName: String): Uri
 }

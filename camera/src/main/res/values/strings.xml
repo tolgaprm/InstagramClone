@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flash_off">Camera flash is off</string>
+    <string name="flash_on">Camera flash is on\n</string>
+    <string name="flash_auto">Camera flash is auto</string>
+    <string name="flip_camera">Flip Camera</string>
+</resources>

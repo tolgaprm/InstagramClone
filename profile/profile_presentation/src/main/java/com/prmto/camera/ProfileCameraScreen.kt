@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material.icons.filled.FlashAuto
-import androidx.compose.material.icons.filled.FlashOff
-import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FlipCameraAndroid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,11 +34,14 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.prmto.camera.components.CameraFlashModeButton
+import com.prmto.camera.util.CameraFlashMode
 import com.prmto.common.components.ProfileTopBar
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.permission.provider.getPermissionInfoProvider
 import com.prmto.permission.util.HandleMultiplePermissionStatus
 import com.prmto.profile_presentation.R
+import com.prmto.camera.R as CameraR
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -154,35 +154,18 @@ private fun InstaCameraSection(
         ) {
             Icon(
                 imageVector = Icons.Default.FlipCameraAndroid,
-                contentDescription = stringResource(R.string.flip_camera)
+                contentDescription = stringResource(CameraR.string.flip_camera)
             )
         }
 
-        if (isVisibleCameraFlashMode) {
-            val newFlashIcon = when (cameraFlashMode) {
-                CameraFlashMode.OFF -> Icons.Default.FlashOff
-                CameraFlashMode.ON -> Icons.Default.FlashOn
-                CameraFlashMode.AUTO -> Icons.Default.FlashAuto
-            }
-
-            val newFlashContentDescription = when (cameraFlashMode) {
-                CameraFlashMode.OFF -> stringResource(R.string.flash_off)
-                CameraFlashMode.ON -> stringResource(R.string.flash_on)
-                CameraFlashMode.AUTO -> stringResource(R.string.flash_auto)
-            }
-
-            IconButton(
-                onClick = onClickFlashMode,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-
-            ) {
-                Icon(
-                    imageVector = newFlashIcon, contentDescription = newFlashContentDescription
-                )
-            }
-        }
+        CameraFlashModeButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            isVisibleCameraFlashMode = isVisibleCameraFlashMode,
+            cameraFlashMode = cameraFlashMode,
+            onClickFlashMode = onClickFlashMode
+        )
     }
 }
 

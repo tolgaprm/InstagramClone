@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
 import com.prmto.core_testing.dispatcher.TestDispatcher
 import com.prmto.core_testing.fake_repository.common.MediaAlbumProviderFake
 import com.prmto.core_testing.util.MainDispatcherRule
@@ -34,7 +35,13 @@ class SelectProfileImageGalleryViewModelTest {
         mockkStatic(Uri::class)
         mediaAlbumProvider = MediaAlbumProviderFake()
         dispatcherProvider = TestDispatcher()
-        viewModel = SelectProfileImageGalleryViewModel(mediaAlbumProvider, dispatcherProvider)
+        val getImageUrisByFirstAlbumNameUseCase =
+            GetImageUrisByFirstAlbumNameUseCase(mediaAlbumProvider)
+        viewModel = SelectProfileImageGalleryViewModel(
+            getImageUrisByFirstAlbumNameUseCase = getImageUrisByFirstAlbumNameUseCase,
+            mediaAlbumProvider = mediaAlbumProvider,
+            dispatcherProvider = dispatcherProvider
+        )
         every { Uri.parse(any()) } returns mockk { every { lastPathSegment } returns "file_name" }
     }
 

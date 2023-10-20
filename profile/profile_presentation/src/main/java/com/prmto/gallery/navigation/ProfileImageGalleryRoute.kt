@@ -1,8 +1,6 @@
 package com.prmto.gallery.navigation
 
-import android.Manifest
 import android.net.Uri
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -15,12 +13,13 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.prmto.gallery.ProfileImageGalleryScreen
 import com.prmto.gallery.SelectProfileImageGalleryEvent
 import com.prmto.gallery.SelectProfileImageGalleryViewModel
 import com.prmto.permission.provider.getPermissionInfoProvider
 import com.prmto.permission.util.HandlePermissionStatus
+import com.prmto.permission.util.handleFilePermissionAccess
+import com.prmto.permission.util.permissionToRequestForFile
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -31,13 +30,8 @@ internal fun ProfileImageGalleryRoute(
     onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val permissionsToRequest = getPermissionToRequest()
-    val permissionState = rememberPermissionState(permission = permissionsToRequest) {
-        if (it) {
-            viewModel.onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
-        }
-    }
-    val permissionProvider = getPermissionInfoProvider(permissionsToRequest)
+    val permissionState = handleFilePermissionAccess()
+    val permissionProvider = getPermissionInfoProvider(permissionToRequestForFile())
     ProfileImageGalleryScreen(
         modifier = modifier,
         uiState = uiState,
@@ -52,13 +46,6 @@ internal fun ProfileImageGalleryRoute(
         }
     )
 
-    // Request permission when the composable is first launched and if the permission is not granted
-    LaunchedEffect(key1 = Unit) {
-        if (!permissionState.status.isGranted) {
-            permissionState.launchPermissionRequest()
-        }
-    }
-
     LaunchedEffect(key1 = uiState.croppedImageUri) {
         uiState.croppedImageUri?.let {
             onPopBackStackWithSelectedUri(it)
@@ -69,14 +56,6 @@ internal fun ProfileImageGalleryRoute(
         permissionIsGranted = permissionState.status.isGranted,
         onEvent = viewModel::onEvent
     )
-}
-
-private fun getPermissionToRequest(): String {
-    return if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    } else {
-        Manifest.permission.READ_MEDIA_IMAGES
-    }
 }
 
 /***

@@ -21,7 +21,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     }
 
                     defaultConfig.targetSdk = 33
-                    compileSdk = 33
+                    compileSdk = 34
 
                     compileOptions {
                         sourceCompatibility = JavaVersion.VERSION_17
