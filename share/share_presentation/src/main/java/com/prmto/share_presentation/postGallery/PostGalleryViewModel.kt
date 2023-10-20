@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.constants.UiText
-import com.prmto.core_domain.dispatcher.DefaultDispatcherProvider
+import com.prmto.core_domain.dispatcher.DispatcherProvider
 import com.prmto.core_domain.usecase.AlbumAndCoverImage
 import com.prmto.core_domain.usecase.GetAlbumAndCoverImagesUseCase
 import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostGalleryViewModel @Inject constructor(
     private val getImageUrisByFirstAlbumNameUseCase: GetImageUrisByFirstAlbumNameUseCase,
-    private val dispatcherProvider: DefaultDispatcherProvider,
+    private val dispatcherProvider: DispatcherProvider,
     private val getAlbumAndCoverImagesUseCase: GetAlbumAndCoverImagesUseCase,
     private val mediaAlbumProvider: MediaAlbumProvider
 ) : CommonViewModel<UiEvent>() {
@@ -32,7 +32,7 @@ class PostGalleryViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.IO) {
             handleResourceWithCallbacks(
                 resourceSupplier = {
-                    getImageUrisByFirstAlbumNameUseCase(viewModelScope)
+                    getImageUrisByFirstAlbumNameUseCase()
                 },
                 onSuccessCallback = { result ->
                     _uiState.update {

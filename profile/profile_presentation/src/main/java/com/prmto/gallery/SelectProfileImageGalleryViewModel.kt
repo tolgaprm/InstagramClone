@@ -45,7 +45,7 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.IO) {
             handleResourceWithCallbacks(
                 resourceSupplier = {
-                    getImageUrisByFirstAlbumNameUseCase(viewModelScope)
+                    getImageUrisByFirstAlbumNameUseCase()
                 },
                 onSuccessCallback = { result ->
                     _uiState.update {

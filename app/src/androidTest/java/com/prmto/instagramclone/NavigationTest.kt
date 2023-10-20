@@ -47,10 +47,10 @@ class NavigationTest : InstaAndroidTest() {
     }
 
     @Test
-    fun backFromDestinationReturnsToForYou() {
+    fun backFromDestinationReturnsToHomeScreen() {
         setContentWithUserLoggedIn()
         composeTestRule.onNodeWithTag(Screen.Search.route).performClick()
-        composeTestRule.onNodeWithTag(Screen.Share.route).performClick()
+        composeTestRule.onNodeWithTag(Screen.Reels.route).performClick()
         // WHEN the user uses the system button/gesture to go back,
         Espresso.pressBack()
         // THEN the app shows the Home destination
