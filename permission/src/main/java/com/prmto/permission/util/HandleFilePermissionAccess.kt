@@ -12,7 +12,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun handleFilePermissionAccess(
-    onPermissionResult: (Boolean) -> Unit = {}
+    onPermissionResult: (Boolean) -> Unit = {},
+    onPermissionGranted: () -> Unit
 ): PermissionState {
     val permissionToRequest = permissionToRequestForFile()
     val permissionState = rememberPermissionState(
@@ -24,6 +25,14 @@ fun handleFilePermissionAccess(
     LaunchedEffect(key1 = Unit) {
         if (!permissionState.status.isGranted) {
             permissionState.launchPermissionRequest()
+        }
+    }
+
+    LaunchedEffect(
+        key1 = permissionState.status
+    ) {
+        if (permissionState.status.isGranted) {
+            onPermissionGranted()
         }
     }
 

@@ -52,7 +52,8 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
                         it.copy(
                             mediaAlbumNames = result.albumNames,
                             urisInSelectedAlbum = result.uriInFirstAlbum,
-                            selectedAlbumName = result.albumNames.first()
+                            selectedAlbumName = result.albumNames.first(),
+                            selectedImageUri = result.uriInFirstAlbum.firstOrNull()
                         )
                     }
                 },

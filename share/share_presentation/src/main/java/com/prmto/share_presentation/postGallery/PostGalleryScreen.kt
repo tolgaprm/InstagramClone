@@ -83,7 +83,11 @@ fun PostGalleryRoute(
     val viewModel: PostGalleryViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
-    val permissionState = handleFilePermissionAccess()
+    val permissionState = handleFilePermissionAccess(
+        onPermissionGranted = {
+            viewModel.onEvent(PostGalleryEvent.AllPermissionGranted)
+        }
+    )
     val permissionProvider = getPermissionInfoProvider(permissionToRequestForFile())
     val cropActivityLauncher = rememberLauncherForActivityResult(
         contract = CropActivityResultContract(),

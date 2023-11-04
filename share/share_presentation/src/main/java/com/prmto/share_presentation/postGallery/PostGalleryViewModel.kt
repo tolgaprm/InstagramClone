@@ -28,29 +28,6 @@ class PostGalleryViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PostGalleryUiState())
     val uiState: StateFlow<PostGalleryUiState> = _uiState.asStateFlow()
 
-    init {
-        viewModelScope.launch(dispatcherProvider.IO) {
-            handleResourceWithCallbacks(
-                resourceSupplier = {
-                    getImageUrisByFirstAlbumNameUseCase()
-                },
-                onSuccessCallback = { result ->
-                    _uiState.update {
-                        it.copy(
-                            mediaAlbumNames = result.albumNames,
-                            urisInSelectedAlbum = result.uriInFirstAlbum,
-                            selectedAlbumName = result.albumNames.first(),
-                            selectedImageUri = result.uriInFirstAlbum.first()
-                        )
-                    }
-                },
-                onErrorCallback = { error ->
-                    _uiState.update { it.copy(errorMessage = error) }
-                }
-            )
-        }
-    }
-
     fun onEvent(event: PostGalleryEvent) {
         when (event) {
             is PostGalleryEvent.OnImageCropped -> handleCroppedImage(event.uri)
@@ -87,9 +64,9 @@ class PostGalleryViewModel @Inject constructor(
                 }
             }
 
-            is PostGalleryEvent.OnClickAlbumItem -> {
-                getAllUrisForAlbum(event.albumName)
-            }
+            is PostGalleryEvent.OnClickAlbumItem -> getAllUrisForAlbum(event.albumName)
+
+            PostGalleryEvent.AllPermissionGranted -> getImageUrisByFirstAlbum()
         }
     }
 
@@ -143,6 +120,29 @@ class PostGalleryViewModel @Inject constructor(
                 )
             }
             _uiState.update { it.copy(selectedImageUri = uiState.value.urisInSelectedAlbum.first()) }
+        }
+    }
+
+    private fun getImageUrisByFirstAlbum() {
+        viewModelScope.launch(dispatcherProvider.IO) {
+            handleResourceWithCallbacks(
+                resourceSupplier = {
+                    getImageUrisByFirstAlbumNameUseCase()
+                },
+                onSuccessCallback = { result ->
+                    _uiState.update {
+                        it.copy(
+                            mediaAlbumNames = result.albumNames,
+                            urisInSelectedAlbum = result.uriInFirstAlbum,
+                            selectedAlbumName = result.albumNames.first(),
+                            selectedImageUri = result.uriInFirstAlbum.first()
+                        )
+                    }
+                },
+                onErrorCallback = { error ->
+                    _uiState.update { it.copy(errorMessage = error) }
+                }
+            )
         }
     }
 }

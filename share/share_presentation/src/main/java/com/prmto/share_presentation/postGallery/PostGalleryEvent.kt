@@ -12,4 +12,6 @@ sealed interface PostGalleryEvent {
     data object OnOpenBottomSheet : PostGalleryEvent
 
     data class OnClickAlbumItem(val albumName: String) : PostGalleryEvent
+
+    data object AllPermissionGranted : PostGalleryEvent
 }
