@@ -34,6 +34,7 @@ import coil.compose.AsyncImage
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_presentation.R
 import com.prmto.core_presentation.ui.theme.InstaBlue
+import com.prmto.core_presentation.ui.theme.White40
 import com.prmto.core_presentation.util.asString
 
 @Composable
@@ -111,13 +112,12 @@ private fun ImageItemInEnabledMultipleSelection(
     onClickImageItem: (selectedUri: Uri) -> Unit
 ) {
     val context = LocalContext.current
-    val defaultColor = Color.White.copy(alpha = 0.5f)
     val color = rememberSaveable(
         stateSaver = Saver(
-            save = { defaultColor.toArgb() },
+            save = { it.toArgb() },
             restore = { Color(it) }
         )
-    ) { mutableStateOf(defaultColor) }
+    ) { mutableStateOf(Color.White40) }
 
     Box(
         modifier = modifier.size(120.dp)
@@ -135,8 +135,8 @@ private fun ImageItemInEnabledMultipleSelection(
                     ).show()
                 } else {
                     color.value = when (color.value) {
-                        defaultColor -> Color.InstaBlue
-                        else -> defaultColor
+                        Color.White40 -> Color.InstaBlue
+                        else -> Color.White40
                     }
                     onClickImageItem(it)
                 }
