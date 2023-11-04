@@ -1,4 +1,4 @@
-package com.prmto.core_domain.common
+package com.prmto.core_domain.repository.mediafile
 
 import android.net.Uri
 

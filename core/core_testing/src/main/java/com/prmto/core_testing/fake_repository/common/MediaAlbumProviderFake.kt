@@ -1,7 +1,7 @@
 package com.prmto.core_testing.fake_repository.common
 
 import android.net.Uri
-import com.prmto.core_domain.common.MediaAlbumProvider
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 
 class MediaAlbumProviderFake : MediaAlbumProvider {
 

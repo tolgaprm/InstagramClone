@@ -1,9 +1,9 @@
 package com.prmto.core_data.di
 
 import android.content.Context
-import com.prmto.core_data.common.MediaAlbumProviderImpl
-import com.prmto.core_domain.common.MediaAlbumProvider
+import com.prmto.core_data.repository.mediafile.MediaAlbumProviderImpl
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

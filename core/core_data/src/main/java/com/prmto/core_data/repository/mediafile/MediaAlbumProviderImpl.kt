@@ -1,12 +1,12 @@
-package com.prmto.core_data.common
+package com.prmto.core_data.repository.mediafile
 
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

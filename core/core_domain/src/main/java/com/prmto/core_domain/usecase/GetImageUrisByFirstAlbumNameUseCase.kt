@@ -2,9 +2,9 @@ package com.prmto.core_domain.usecase
 
 import android.net.Uri
 import com.prmto.core_domain.R
-import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.UiText
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
@@ -32,7 +32,6 @@ class GetImageUrisByFirstAlbumNameUseCase @Inject constructor(
                 Resource.Success(result)
             }
         }
-
     }
 }
 

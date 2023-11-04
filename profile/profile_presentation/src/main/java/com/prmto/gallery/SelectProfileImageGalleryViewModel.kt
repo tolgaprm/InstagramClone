@@ -2,9 +2,9 @@ package com.prmto.gallery
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent

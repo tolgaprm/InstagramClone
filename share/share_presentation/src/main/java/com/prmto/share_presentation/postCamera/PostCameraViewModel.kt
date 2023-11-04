@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prmto.camera.usecase.GetNewFlashModeUseCase
 import com.prmto.camera.util.CameraFlashMode
-import com.prmto.core_domain.common.MediaAlbumProvider
 import com.prmto.core_domain.dispatcher.DispatcherProvider
+import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
