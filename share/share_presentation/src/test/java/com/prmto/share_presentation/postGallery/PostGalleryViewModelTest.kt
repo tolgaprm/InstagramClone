@@ -47,27 +47,29 @@ class PostGalleryViewModelTest {
     }
 
     @Test
-    fun whenViewModelInit_getImageUrisByFirstAlbumNameUseCase_stateUpdated() = runTest {
-        setMockUri()
-        mediaAlbumProvider.albumNames = listOf("album1", "album2")
-        mediaAlbumProvider.albumsAndUris = mapOf(
-            "album1" to listOf(Uri.parse("uri1"), Uri.parse("uri2")),
-            "album2" to listOf((Uri.parse("uri3")), Uri.parse("uri4"))
-        )
-        advanceUntilIdle()
-        viewModel.uiState.test {
-            val uiState = awaitItem()
-            assertThat(uiState.mediaAlbumNames).isEqualTo(listOf("album1", "album2"))
-            assertThat(uiState.urisInSelectedAlbum).isEqualTo(
-                listOf(
-                    Uri.parse("uri1"),
-                    Uri.parse("uri2")
-                )
+    fun whenViewModelEventAllPermissionGranted_getImageUrisByFirstAlbumNameUseCase_stateUpdated() =
+        runTest {
+            setMockUri()
+            mediaAlbumProvider.albumNames = listOf("album1", "album2")
+            mediaAlbumProvider.albumsAndUris = mapOf(
+                "album1" to listOf(Uri.parse("uri1"), Uri.parse("uri2")),
+                "album2" to listOf((Uri.parse("uri3")), Uri.parse("uri4"))
             )
-            assertThat(uiState.selectedAlbumName).isEqualTo("album1")
-            assertThat(uiState.selectedImageUri).isEqualTo(Uri.parse("uri1"))
+            viewModel.onEvent(PostGalleryEvent.AllPermissionGranted)
+            advanceUntilIdle()
+            viewModel.uiState.test {
+                val uiState = awaitItem()
+                assertThat(uiState.mediaAlbumNames).isEqualTo(listOf("album1", "album2"))
+                assertThat(uiState.urisInSelectedAlbum).isEqualTo(
+                    listOf(
+                        Uri.parse("uri1"),
+                        Uri.parse("uri2")
+                    )
+                )
+                assertThat(uiState.selectedAlbumName).isEqualTo("album1")
+                assertThat(uiState.selectedImageUri).isEqualTo(Uri.parse("uri1"))
+            }
         }
-    }
 
     @Test
     fun whenEventOnClickedMultipleSelection_stateUpdated() = runTest {
@@ -79,6 +81,21 @@ class PostGalleryViewModelTest {
             assertThat(awaitItem().isActiveMultipleSelection).isFalse()
         }
     }
+
+    @Test
+    fun whenEventOnClickedMultipleSelection_MultipleSelectionModeEnabled_ThenSelectedUrisInEnabledMultipleSelectMode_updateEmptyList() =
+        runTest {
+            viewModel.onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
+            viewModel.onEvent(PostGalleryEvent.OnClickImageItem(Uri.parse("uri")))
+            viewModel.onEvent(PostGalleryEvent.OnClickMultipleSelectButton) // enable multiple selection mode
+            viewModel.onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
+            //This event is to disable multiple selection mode, but before this is updated in the viewModel
+            // we make the SelectedUrisInEnabledMultipleSelectMode variable empty
+
+            viewModel.uiState.test {
+                assertThat(awaitItem().selectedUrisInEnabledMultipleSelectMode).isEmpty()
+            }
+        }
 
     @Test
     fun whenEventOnImageCropped_ThenActiveMultipleSelection_stateUpdated() = runTest {
@@ -116,8 +133,9 @@ class PostGalleryViewModelTest {
         viewModel.onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
         viewModel.onEvent(PostGalleryEvent.OnClickImageItem(Uri.parse("uri")))
         viewModel.uiState.test {
-            assertThat(awaitItem().selectedImageUri).isEqualTo(Uri.parse("uri"))
-            assertThat(awaitItem().selectedUrisInEnabledMultipleSelectMode).contains(Uri.parse("uri"))
+            val uiState = awaitItem()
+            assertThat(uiState.selectedImageUri).isEqualTo(Uri.parse("uri"))
+            assertThat(uiState.selectedUrisInEnabledMultipleSelectMode).contains(Uri.parse("uri"))
         }
     }
 
@@ -128,8 +146,8 @@ class PostGalleryViewModelTest {
             viewModel.onEvent(PostGalleryEvent.OnClickImageItem(Uri.parse("uri")))
             viewModel.onEvent(PostGalleryEvent.OnClickImageItem(Uri.parse("uri")))
             viewModel.uiState.test {
-                assertThat(awaitItem().selectedImageUri).isEqualTo(Uri.parse("uri"))
                 val uiState = awaitItem()
+                assertThat(uiState.selectedImageUri).isEqualTo(Uri.parse("uri"))
                 assertThat(uiState.selectedUrisInEnabledMultipleSelectMode).doesNotContain(
                     Uri.parse("uri")
                 )

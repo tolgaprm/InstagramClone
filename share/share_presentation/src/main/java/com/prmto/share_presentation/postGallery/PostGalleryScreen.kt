@@ -75,19 +75,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostGalleryRoute(
-    modifier: Modifier = Modifier,
-    onNavigateToPostCamera: () -> Unit,
-    onPopBackStack: () -> Unit
+    modifier: Modifier = Modifier, onNavigateToPostCamera: () -> Unit, onPopBackStack: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: PostGalleryViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val consumableViewEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
-    val permissionState = handleFilePermissionAccess(
-        onPermissionGranted = {
-            viewModel.onEvent(PostGalleryEvent.AllPermissionGranted)
-        }
-    )
+    val permissionState = handleFilePermissionAccess(onPermissionGranted = {
+        viewModel.onEvent(PostGalleryEvent.AllPermissionGranted)
+    })
     val permissionProvider = getPermissionInfoProvider(permissionToRequestForFile())
     val cropActivityLauncher = rememberLauncherForActivityResult(
         contract = CropActivityResultContract(),
@@ -95,35 +91,28 @@ fun PostGalleryRoute(
             croppedUri?.let {
                 viewModel.onEvent(PostGalleryEvent.OnImageCropped(it))
             }
-        }
-    )
-    val warningMessage =
-        stringResource(R.string.please_you_select_an_image)
+        })
+    val warningMessage = stringResource(R.string.please_you_select_an_image)
 
-    PostGalleryScreen(
-        modifier = modifier,
+    PostGalleryScreen(modifier = modifier,
         uiState = uiState,
         permissionIsGranted = permissionState.status.isGranted,
         onClickedCameraButton = onNavigateToPostCamera,
         onCloseClick = onPopBackStack,
         onNextClick = {
-            handleOnNextClick(
-                context = context,
+            handleOnNextClick(context = context,
                 isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
                 selectedImageUri = uiState.selectedImageUri,
                 selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
                 warningMessage = warningMessage,
-                onLaunchCropActivity = { uri -> cropActivityLauncher.launch(uri) }
-            )
+                onLaunchCropActivity = { uri -> cropActivityLauncher.launch(uri) })
         },
         onEvent = viewModel::onEvent,
         handlePermission = {
             HandlePermissionStatus(
-                permissionState = permissionState,
-                permissionProvider = permissionProvider
+                permissionState = permissionState, permissionProvider = permissionProvider
             )
-        }
-    )
+        })
 
     HandleConsumableViewEvents(
         consumableViewEvents = consumableViewEvents,
@@ -151,9 +140,7 @@ private fun handleOnNextClick(
             onLaunchCropActivity(it)
         } ?: run {
             Toast.makeText(
-                context,
-                warningMessage,
-                Toast.LENGTH_SHORT
+                context, warningMessage, Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -178,64 +165,52 @@ fun PostGalleryScreen(
         )
     )
     val coroutineScope = rememberCoroutineScope()
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent = {
-            PostGallerySheetContent(
-                albumsAndCoverImage = uiState.albumAndCoverImages,
-                onClickedAlbumItem = {
-                    onEvent(PostGalleryEvent.OnClickAlbumItem(it))
-                    coroutineScope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.hide()
-                    }
+    BottomSheetScaffold(scaffoldState = bottomSheetScaffoldState, sheetContent = {
+        PostGallerySheetContent(albumsAndCoverImage = uiState.albumAndCoverImages,
+            onClickedAlbumItem = {
+                onEvent(PostGalleryEvent.OnClickAlbumItem(it))
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.hide()
                 }
-            )
-        },
-        topBar = {
-            PostGalleryTopSection(
-                onCloseClick = onCloseClick,
-                onNextClick = onNextClick
-            )
-        },
-        content = {
-            GalleryScreenBoxInPostGallery(
-                modifier = modifier,
-                permissionIsGranted = permissionIsGranted,
-                selectedImageUriShowOnTransformableImage = uiState.selectedImageUri,
-                urisInSelectedAlbum = uiState.urisInSelectedAlbum,
-                selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
-                isEnableMultipleSelection = uiState.isActiveMultipleSelection,
-                onClickImageItem = { selectedUri ->
-                    onEvent(PostGalleryEvent.OnClickImageItem(selectedUri))
-                },
-                errorMessage = uiState.errorMessage,
-                addComposableOfTheCenter = {
-                    PostGalleryCenterSection(
-                        selectedDirectoryName = uiState.selectedAlbumName,
-                        isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
-                        onClickedDropDown = {
-                            onEvent(PostGalleryEvent.OnOpenBottomSheet)
-                            coroutineScope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        onClickedCameraButton = onClickedCameraButton,
-                        onClickMultipleSelectButton = {
-                            onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
+            })
+    }, topBar = {
+        PostGalleryTopSection(
+            onCloseClick = onCloseClick, onNextClick = onNextClick
+        )
+    }, content = {
+        GalleryScreenBoxInPostGallery(
+            modifier = modifier,
+            permissionIsGranted = permissionIsGranted,
+            selectedImageUriShowOnTransformableImage = uiState.selectedImageUri,
+            urisInSelectedAlbum = uiState.urisInSelectedAlbum,
+            selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
+            isEnableMultipleSelection = uiState.isActiveMultipleSelection,
+            onClickImageItem = { selectedUri ->
+                onEvent(PostGalleryEvent.OnClickImageItem(selectedUri))
+            },
+            errorMessage = uiState.errorMessage,
+            addComposableOfTheCenter = {
+                PostGalleryCenterSection(selectedDirectoryName = uiState.selectedAlbumName,
+                    isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
+                    onClickedDropDown = {
+                        onEvent(PostGalleryEvent.OnOpenBottomSheet)
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
                         }
-                    )
-                },
-                handlePermission = handlePermission
-            )
-        }
-    )
+                    },
+                    onClickedCameraButton = onClickedCameraButton,
+                    onClickMultipleSelectButton = {
+                        onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
+                    })
+            },
+            handlePermission = handlePermission
+        )
+    })
 }
 
 @Composable
 private fun PostGalleryTopSection(
-    modifier: Modifier = Modifier,
-    onCloseClick: () -> Unit,
-    onNextClick: () -> Unit
+    modifier: Modifier = Modifier, onCloseClick: () -> Unit, onNextClick: () -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -281,8 +256,7 @@ private fun PostGalleryCenterSection(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         GalleryDropDownButton(
-            selectedDirectoryName = selectedDirectoryName,
-            onClicked = onClickedDropDown
+            selectedDirectoryName = selectedDirectoryName, onClicked = onClickedDropDown
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -292,8 +266,7 @@ private fun PostGalleryCenterSection(
             )
             Spacer(modifier = Modifier.width(4.dp))
             IconButton(
-                onClick = onClickedCameraButton,
-                colors = IconButtonDefaults.iconButtonColors(
+                onClick = onClickedCameraButton, colors = IconButtonDefaults.iconButtonColors(
                     containerColor = Color.White.copy(alpha = 0.4f)
                 )
             ) {
@@ -308,17 +281,13 @@ private fun PostGalleryCenterSection(
 
 @Composable
 private fun MultipleSelectedButton(
-    modifier: Modifier = Modifier,
-    isEnabledMultipleSelectMode: Boolean = false,
-    onClicked: () -> Unit
+    modifier: Modifier = Modifier, isEnabledMultipleSelectMode: Boolean, onClicked: () -> Unit
 ) {
     val containerColor =
         if (isEnabledMultipleSelectMode) Color.InstaBlue else Color.White.copy(alpha = 0.4f)
     val contentColor = if (isEnabledMultipleSelectMode) Color.White else Color.Black
     IconButton(
-        modifier = modifier,
-        onClick = onClicked,
-        colors = IconButtonDefaults.iconButtonColors(
+        modifier = modifier, onClick = onClicked, colors = IconButtonDefaults.iconButtonColors(
             containerColor = containerColor, contentColor = contentColor
         )
     ) {
@@ -346,8 +315,7 @@ fun PostGallerySheetContent(
 
         Column(
             modifier = Modifier.padding(
-                horizontal = 16.dp,
-                vertical = 16.dp
+                horizontal = 16.dp, vertical = 16.dp
             )
         ) {
             CommonAlbumsSectionInSheetContent()
@@ -364,10 +332,8 @@ fun PostGallerySheetContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(albumsAndCoverImage, key = { it.albumName }) {
-                    AlbumAndCoverItem(
-                        albumAndCoverImage = it,
-                        onClickedItem = { onClickedAlbumItem(it.albumName) }
-                    )
+                    AlbumAndCoverItem(albumAndCoverImage = it,
+                        onClickedItem = { onClickedAlbumItem(it.albumName) })
                 }
             }
         }
@@ -382,21 +348,17 @@ private fun CommonAlbumsSectionInSheetContent(modifier: Modifier = Modifier) {
             .padding(vertical = 30.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CommonAlbumButton(
-            title = stringResource(R.string.favorites),
+        CommonAlbumButton(title = stringResource(R.string.favorites),
             icon = Icons.Outlined.FavoriteBorder,
             contentDescription = stringResource(R.string.favorites),
-            onClicked = {}
-        )
+            onClicked = {})
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        CommonAlbumButton(
-            title = stringResource(R.string.videos),
+        CommonAlbumButton(title = stringResource(R.string.videos),
             icon = Icons.Outlined.PlayCircle,
             contentDescription = stringResource(R.string.videos),
-            onClicked = {}
-        )
+            onClicked = {})
     }
 }
 
@@ -410,8 +372,7 @@ private fun CommonAlbumButton(
 ) {
     Column {
         IconButton(
-            modifier = modifier
-                .padding(8.dp),
+            modifier = modifier.padding(8.dp),
             onClick = onClicked,
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
@@ -430,9 +391,7 @@ private fun CommonAlbumButton(
 
 @Composable
 fun AlbumAndCoverItem(
-    modifier: Modifier = Modifier,
-    albumAndCoverImage: AlbumAndCoverImage,
-    onClickedItem: () -> Unit
+    modifier: Modifier = Modifier, albumAndCoverImage: AlbumAndCoverImage, onClickedItem: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -460,13 +419,11 @@ fun AlbumAndCoverItem(
 fun PostGalleryScreenPreview() {
     InstagramCloneTheme {
         Surface {
-            PostGalleryScreen(
-                onClickedCameraButton = {},
+            PostGalleryScreen(onClickedCameraButton = {},
                 onCloseClick = {},
                 onNextClick = {},
                 uiState = PostGalleryUiState(),
-                onEvent = {}
-            )
+                onEvent = {})
         }
     }
 }
@@ -476,10 +433,7 @@ fun PostGalleryScreenPreview() {
 fun BottomSheetPreview() {
     InstagramCloneTheme {
         Surface {
-            PostGallerySheetContent(
-                albumsAndCoverImage = emptyList(),
-                onClickedAlbumItem = {}
-            )
+            PostGallerySheetContent(albumsAndCoverImage = emptyList(), onClickedAlbumItem = {})
         }
     }
 }

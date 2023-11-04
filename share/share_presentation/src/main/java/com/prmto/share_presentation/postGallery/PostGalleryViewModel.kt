@@ -33,6 +33,13 @@ class PostGalleryViewModel @Inject constructor(
             is PostGalleryEvent.OnImageCropped -> handleCroppedImage(event.uri)
 
             PostGalleryEvent.OnClickMultipleSelectButton -> {
+                if (uiState.value.isActiveMultipleSelection) {
+                    _uiState.update {
+                        it.copy(
+                            selectedUrisInEnabledMultipleSelectMode = emptyList()
+                        )
+                    }
+                }
                 _uiState.update {
                     it.copy(
                         isActiveMultipleSelection = !it.isActiveMultipleSelection
