@@ -12,7 +12,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -51,8 +50,6 @@ class SelectProfileImageGalleryViewModelTest {
         viewModel.onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
 
         viewModel.uiState.test {
-            awaitItem()
-            advanceUntilIdle()
             val uiState = awaitItem()
             assertThat(uiState.mediaAlbumNames).isEqualTo(listOf("Album1", "Album2", "Album3"))
             assertThat(uiState.urisInSelectedAlbum).isEqualTo(listOf(Uri.parse("file_name")))
@@ -66,8 +63,6 @@ class SelectProfileImageGalleryViewModelTest {
         viewModel.onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
 
         viewModel.uiState.test {
-            awaitItem()
-            advanceUntilIdle()
             val uiState = awaitItem()
             assertThat(uiState.mediaAlbumNames).isEmpty()
             assertThat(uiState.errorMessage).isEqualTo(UiText.StringResource(R.string.no_albums_found))
@@ -82,9 +77,9 @@ class SelectProfileImageGalleryViewModelTest {
         )
         viewModel.onEvent(SelectProfileImageGalleryEvent.SelectAlbum(albumName = "Album2"))
         viewModel.uiState.test {
-            assertThat(awaitItem().selectedAlbumName).isEqualTo("Album2")
-            advanceUntilIdle()
-            assertThat(awaitItem().urisInSelectedAlbum).isEqualTo(listOf(Uri.parse("file_name")))
+            val uiState = awaitItem()
+            assertThat(uiState.selectedAlbumName).isEqualTo("Album2")
+            assertThat(uiState.urisInSelectedAlbum).isEqualTo(listOf(Uri.parse("file_name")))
         }
     }
 
