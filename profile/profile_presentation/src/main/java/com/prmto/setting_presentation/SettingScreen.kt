@@ -70,13 +70,11 @@ internal fun SettingScreenRoute(
     )
 
     HandleConsumableViewEvents(
-        consumableViewEvents = consumableViewEvents,
-        onEventNavigate = { route ->
+        consumableViewEvents = consumableViewEvents, onEventNavigate = { route ->
             when (route) {
                 NestedNavigation.Auth.route -> onNavigateToNestedAuth()
             }
-        },
-        onEventConsumed = viewModel::onEventConsumed
+        }, onEventConsumed = viewModel::onEventConsumed
     )
 }
 
@@ -90,21 +88,17 @@ internal fun SettingScreen(
     onEvent: (SettingScreenEvent) -> Unit
 ) {
     var isShowAlertDialog by remember { mutableStateOf(false) }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = modifier.shadow(elevation = 8.dp),
-                title = { Text(text = stringResource(R.string.settings)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack, contentDescription = null
-                        )
-                    }
+    Scaffold(topBar = {
+        TopAppBar(modifier = modifier.shadow(elevation = 8.dp),
+            title = { Text(text = stringResource(R.string.settings)) },
+            navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack, contentDescription = null
+                    )
                 }
-            )
-        }
-    ) {
+            })
+    }) {
         Box(
             modifier = Modifier
                 .padding(it)
@@ -122,9 +116,11 @@ internal fun SettingScreen(
                         onClickSettingItem = onNavigateToEditProfile
                     )
 
-                    SettingItem(imageVector = ImageVector.vectorResource(id = R.drawable.outline_password_24),
+                    SettingItem(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.outline_password_24),
                         settingName = stringResource(R.string.change_password),
-                        onClickSettingItem = { })
+                        onClickSettingItem = { }
+                    )
 
                     Row(
                         modifier = Modifier
@@ -158,35 +154,47 @@ internal fun SettingScreen(
                 SettingSection(
                     sectionName = stringResource(R.string.other_settings)
                 ) {
-                    SettingItem(imageVector = ImageVector.vectorResource(com.prmto.core_presentation.R.drawable.save),
+                    SettingItem(
+                        imageVector = ImageVector.vectorResource(com.prmto.core_presentation.R.drawable.save),
                         settingName = stringResource(R.string.saved),
-                        onClickSettingItem = {})
+                        onClickSettingItem = {}
+                    )
 
-                    SettingItem(imageVector = Icons.Outlined.FavoriteBorder,
+                    SettingItem(
+                        imageVector = Icons.Outlined.FavoriteBorder,
                         settingName = stringResource(R.string.liked_your_posts),
-                        onClickSettingItem = { })
+                        onClickSettingItem = { }
+                    )
 
-                    SettingItem(imageVector = Icons.Outlined.Delete,
+                    SettingItem(
+                        imageVector = Icons.Outlined.Delete,
                         settingName = stringResource(R.string.clear_the_search_history),
                         textColor = Color.InstaBlue,
-                        onClickSettingItem = { })
+                        onClickSettingItem = { }
+                    )
                 }
 
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                SettingSection(sectionName = stringResource(R.string.login)) {
-                    SettingItem(imageVector = Icons.Outlined.ExitToApp,
+                SettingSection(
+                    sectionName = stringResource(R.string.login)
+                ) {
+                    SettingItem(
+                        imageVector = Icons.Outlined.ExitToApp,
                         settingName = stringResource(R.string.logout),
                         textColor = Color.InstaBlue,
                         onClickSettingItem = {
                             isShowAlertDialog = true
-                        })
+                        }
+                    )
                 }
             }
 
             if (uiState.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(alignment = Alignment.Center),
+                    modifier = Modifier.align(
+                        alignment = Alignment.Center
+                    ),
                     color = Color.InstaBlue
                 )
             }
@@ -212,8 +220,7 @@ internal fun SettingScreen(
                     }
                 },
                 dismissButton = {
-                    Button(
-                        onClick = { isShowAlertDialog = false }) {
+                    Button(onClick = { isShowAlertDialog = false }) {
                         Text(
                             text = stringResource(id = R.string.cancel),
                             style = MaterialTheme.typography.bodySmall

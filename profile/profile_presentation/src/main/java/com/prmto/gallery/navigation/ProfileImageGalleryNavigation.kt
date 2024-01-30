@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.prmto.navigation.ProfileNestedScreens
 
-fun NavGraphBuilder.selectProfileImageGalleryNavigation(
+internal fun NavGraphBuilder.selectProfileImageGalleryNavigation(
     onPopBacStack: () -> Unit,
     onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit
 ) {
@@ -18,6 +18,6 @@ fun NavGraphBuilder.selectProfileImageGalleryNavigation(
     }
 }
 
-fun NavController.navigateToProfileImageGallery() {
+internal fun NavController.navigateToProfileImageGallery() {
     navigate(ProfileNestedScreens.SelectProfileImageGallery.route)
 }

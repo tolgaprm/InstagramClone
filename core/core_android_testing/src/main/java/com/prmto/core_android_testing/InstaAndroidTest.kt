@@ -14,7 +14,7 @@ abstract class InstaAndroidTest {
     protected lateinit var context: Context
 
     @Before
-    fun setUp() {
+    open fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         hiltAndroidRule.inject()
     }

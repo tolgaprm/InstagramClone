@@ -4,9 +4,7 @@ import android.net.Uri
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.prmto.core_domain.constants.UiText
-import com.prmto.core_domain.dispatcher.DispatcherProvider
 import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
-import com.prmto.core_testing.dispatcher.TestDispatcher
 import com.prmto.core_testing.fake_repository.common.MediaAlbumProviderFake
 import com.prmto.core_testing.util.MainDispatcherRule
 import com.prmto.profile_presentation.R
@@ -28,19 +26,16 @@ class SelectProfileImageGalleryViewModelTest {
 
     private lateinit var viewModel: SelectProfileImageGalleryViewModel
     private lateinit var mediaAlbumProvider: MediaAlbumProviderFake
-    private lateinit var dispatcherProvider: DispatcherProvider
 
     @Before
     fun setUp() {
         mockkStatic(Uri::class)
         mediaAlbumProvider = MediaAlbumProviderFake()
-        dispatcherProvider = TestDispatcher()
         val getImageUrisByFirstAlbumNameUseCase =
             GetImageUrisByFirstAlbumNameUseCase(mediaAlbumProvider)
         viewModel = SelectProfileImageGalleryViewModel(
             getImageUrisByFirstAlbumNameUseCase = getImageUrisByFirstAlbumNameUseCase,
-            mediaAlbumProvider = mediaAlbumProvider,
-            dispatcherProvider = dispatcherProvider
+            mediaAlbumProvider = mediaAlbumProvider
         )
         every { Uri.parse(any()) } returns mockk { every { lastPathSegment } returns "file_name" }
     }

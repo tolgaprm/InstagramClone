@@ -10,4 +10,5 @@ dependencies {
     implementation(project(":core:core_domain"))
     implementation(libs.coroutines.test)
     implementation(libs.junit)
+    testImplementation(libs.truth.library)
 }

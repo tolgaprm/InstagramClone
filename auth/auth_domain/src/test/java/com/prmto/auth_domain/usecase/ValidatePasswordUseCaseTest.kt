@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class ValidatePasswordUseCases {
+class ValidatePasswordUseCaseTest {
 
     private lateinit var validatePassword: ValidatePasswordUseCase
 

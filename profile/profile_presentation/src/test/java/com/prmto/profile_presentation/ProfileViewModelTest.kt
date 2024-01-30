@@ -12,7 +12,7 @@ import com.prmto.core_testing.userData
 import com.prmto.core_testing.userDetail
 import com.prmto.core_testing.util.MainDispatcherRule
 import com.prmto.core_testing.util.TestConstants
-import com.prmto.navigation.profileArgsUsername
+import com.prmto.profile_presentation.navigation.args.ProfileArgs.Companion.profileArgsUsername
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest

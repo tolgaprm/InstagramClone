@@ -11,7 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.prmto.camera.R
+import com.prmto.camera.components.previewDataProvider.CameraFlashModePreviewData
 import com.prmto.camera.util.CameraFlashMode
 
 @Composable
@@ -46,4 +49,15 @@ fun CameraFlashModeButton(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CameraFlashModeButtonPreview(
+    @PreviewParameter(CameraFlashModePreviewData::class) cameraFlashMode: CameraFlashMode
+) {
+    CameraFlashModeButton(
+        cameraFlashMode = cameraFlashMode,
+        onClickFlashMode = {}
+    )
 }

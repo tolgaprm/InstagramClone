@@ -168,12 +168,13 @@ private fun EditProfileContent(
             imageUrl = profileImage
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        Text(modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .clickable {
-                onClickChangeProfilePhoto()
-            }
-            .padding(8.dp),
+        Text(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable {
+                    onClickChangeProfilePhoto()
+                }
+                .padding(8.dp),
             text = stringResource(R.string.change_profile_photo),
             color = Color.InstaBlue,
             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold))

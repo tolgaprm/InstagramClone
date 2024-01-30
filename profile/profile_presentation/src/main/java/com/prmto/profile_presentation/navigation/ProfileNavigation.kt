@@ -1,14 +1,12 @@
 package com.prmto.profile_presentation.navigation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.prmto.navigation.ProfileNestedScreens
-import com.prmto.navigation.profileArgsUsername
 import com.prmto.profile_presentation.ProfileRoute
 
-fun NavGraphBuilder.profileNavigation(
+internal fun NavGraphBuilder.profileNavigation(
     onNavigateToSettingScreen: () -> Unit,
     onNavigateToEditProfileScreen: () -> Unit
 ) {
@@ -23,12 +21,6 @@ fun NavGraphBuilder.profileNavigation(
     }
 }
 
-fun NavController.navigateToProfile(username: String? = null) {
+internal fun NavController.navigateToProfile(username: String? = null) {
     navigate(ProfileNestedScreens.Profile.passArguments(username))
-}
-
-internal class ProfileArgs(val username: String? = null) {
-    constructor(savedStateHandle: SavedStateHandle) : this(
-        username = savedStateHandle[profileArgsUsername]
-    )
 }

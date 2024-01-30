@@ -10,17 +10,13 @@ class GetAlbumAndCoverImagesUseCase @Inject constructor(
     suspend operator fun invoke(
         albumNames: List<String>
     ): List<AlbumAndCoverImage> {
-        val albumAndCoverImage = mutableListOf<AlbumAndCoverImage>()
-        albumNames.forEach { albumName ->
+        return albumNames.map { albumName ->
             val firstImageUri = mediaAlbumProvider.getFirstImageUriOfTheAlbum(albumName)
-            albumAndCoverImage.add(
-                AlbumAndCoverImage(
-                    albumName = albumName,
-                    firstImageUri = firstImageUri
-                )
+            AlbumAndCoverImage(
+                albumName = albumName,
+                firstImageUri = firstImageUri
             )
         }
-        return albumAndCoverImage
     }
 }
 

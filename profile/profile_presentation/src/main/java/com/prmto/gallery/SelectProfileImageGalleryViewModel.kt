@@ -3,7 +3,6 @@ package com.prmto.gallery
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.constants.UiText
-import com.prmto.core_domain.dispatcher.DispatcherProvider
 import com.prmto.core_domain.repository.mediafile.MediaAlbumProvider
 import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
 import com.prmto.core_presentation.util.CommonViewModel
@@ -20,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectProfileImageGalleryViewModel @Inject constructor(
     private val getImageUrisByFirstAlbumNameUseCase: GetImageUrisByFirstAlbumNameUseCase,
-    private val mediaAlbumProvider: MediaAlbumProvider,
-    private val dispatcherProvider: DispatcherProvider
+    private val mediaAlbumProvider: MediaAlbumProvider
 ) : CommonViewModel<UiEvent>() {
     private val _uiState = MutableStateFlow(SelectProfileImageGalleryUiState())
     val uiState: StateFlow<SelectProfileImageGalleryUiState> = _uiState.asStateFlow()
@@ -42,7 +40,7 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
     }
 
     private fun handleAllPermissionGranted() {
-        viewModelScope.launch(dispatcherProvider.IO) {
+        viewModelScope.launch {
             handleResourceWithCallbacks(
                 resourceSupplier = {
                     getImageUrisByFirstAlbumNameUseCase()
@@ -81,7 +79,7 @@ class SelectProfileImageGalleryViewModel @Inject constructor(
     }
 
     private fun getImageUriByAlbumName(albumName: String) =
-        viewModelScope.async(dispatcherProvider.IO) {
+        viewModelScope.async {
             mediaAlbumProvider.getAllUrisForAlbum(albumName).toList()
         }
 }

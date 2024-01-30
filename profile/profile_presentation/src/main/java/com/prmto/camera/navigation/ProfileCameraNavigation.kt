@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.prmto.navigation.ProfileNestedScreens
 
-fun NavGraphBuilder.profileCameraNavigation(
+internal fun NavGraphBuilder.profileCameraNavigation(
     onPopBacStack: () -> Unit,
     onPopBackStackWithSelectedUri: (selectedPhotoUri: Uri) -> Unit
 
@@ -19,6 +19,6 @@ fun NavGraphBuilder.profileCameraNavigation(
     }
 }
 
-fun NavController.navigateToProfileCamera() {
+internal fun NavController.navigateToProfileCamera() {
     navigate(ProfileNestedScreens.ProfileCamera.route)
 }

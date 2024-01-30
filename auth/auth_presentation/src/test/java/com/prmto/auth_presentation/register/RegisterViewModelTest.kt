@@ -28,7 +28,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `Update state correctly, When event is OnClickTab`() {
-        val selectedTab = SelectedTab.values().random()
+        val selectedTab = SelectedTab.entries.toTypedArray().random()
         val event = RegisterEvent.OnClickTab(position = selectedTab)
 
         viewModel.onEvent(event)

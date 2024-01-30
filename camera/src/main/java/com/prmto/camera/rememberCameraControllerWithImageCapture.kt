@@ -22,7 +22,6 @@ fun rememberCameraControllerWithImageCapture(): CameraController {
         )
     }
 
-
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {

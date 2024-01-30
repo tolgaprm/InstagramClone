@@ -14,4 +14,7 @@ dependencies {
     implementation(libs.bundles.cameraX)
     implementation(libs.timber)
     implementation(libs.ucrop)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.truth.library)
 }

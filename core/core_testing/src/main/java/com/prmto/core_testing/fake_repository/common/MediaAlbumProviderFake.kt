@@ -24,6 +24,6 @@ class MediaAlbumProviderFake : MediaAlbumProvider {
     }
 
     override suspend fun getFirstImageUriOfTheAlbum(albumName: String): Uri {
-        TODO("Not yet implemented")
+        return albumsAndUris[albumName]?.first() ?: Uri.EMPTY
     }
 }

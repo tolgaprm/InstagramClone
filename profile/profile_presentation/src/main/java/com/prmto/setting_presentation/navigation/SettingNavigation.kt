@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import com.prmto.navigation.ProfileNestedScreens
 import com.prmto.setting_presentation.SettingScreenRoute
 
-fun NavGraphBuilder.settingNavigation(
+internal fun NavGraphBuilder.settingNavigation(
     onNavigateToEditProfile: () -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToNestedAuth: () -> Unit
@@ -20,6 +20,6 @@ fun NavGraphBuilder.settingNavigation(
     }
 }
 
-fun NavController.navigateToSetting() {
+internal fun NavController.navigateToSetting() {
     navigate(ProfileNestedScreens.Setting.route)
 }

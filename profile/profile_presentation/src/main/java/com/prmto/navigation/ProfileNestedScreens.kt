@@ -2,16 +2,16 @@ package com.prmto.navigation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-
-const val profileArgsUsername = "username"
+import com.prmto.profile_presentation.navigation.args.ProfileArgs
 
 sealed class ProfileNestedScreens(val route: String) {
-    data object Profile : ProfileNestedScreens("profile_screen?username={$profileArgsUsername}") {
+    data object Profile :
+        ProfileNestedScreens("profile_screen?username={${ProfileArgs.profileArgsUsername}}") {
 
         fun passArguments(username: String? = null) = "profile_screen?username=$username"
 
         val arguments = listOf(
-            navArgument(profileArgsUsername) {
+            navArgument(ProfileArgs.profileArgsUsername) {
                 nullable = true
                 defaultValue = null
                 type = NavType.StringType

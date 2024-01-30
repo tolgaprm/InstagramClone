@@ -21,14 +21,14 @@ class LoginScreenTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun stateIsLoading_AuthButtonIsEnabled() {
+    fun stateIsLoading_AuthButtonIsNotEnabled() {
         setLoginScreen(loginUiState = LoginUiState().copy(isLoading = true))
         composeTestRule.onNodeWithText(context.getString(R.string.login))
             .assertIsNotEnabled()
     }
 
     @Test
-    fun stateIsNotLoading_AuthButtonIsNotEnabled() {
+    fun stateIsNotLoading_AuthButtonIsEnabled() {
         setLoginScreen()
         composeTestRule.onNodeWithText(context.getString(R.string.login), useUnmergedTree = true)
             .assertIsEnabled()

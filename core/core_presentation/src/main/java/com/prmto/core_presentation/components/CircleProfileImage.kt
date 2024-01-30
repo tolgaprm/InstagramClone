@@ -21,7 +21,7 @@ import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 @Composable
 fun CircleProfileImage(
     modifier: Modifier = Modifier,
-    imageUrl: Any,
+    imageUrl: Any?,
     imageSize: Dp = 96.dp,
     borderWidth: Dp = 3.dp
 ) {

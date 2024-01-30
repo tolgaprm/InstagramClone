@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
@@ -17,7 +18,9 @@ import dagger.hilt.testing.TestInstallIn
     replaces = [DataStoreModule::class]
 )
 object DataStoreTestModule {
+
     @Provides
+    @Singleton
     fun provideDataStore(
         @ApplicationContext appContext: Context
     ): DataStore<Preferences> {

@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import com.prmto.edit_profile_presentation.EditProfileRoute
 import com.prmto.navigation.ProfileNestedScreens
 
-fun NavGraphBuilder.editProfileNavigation(
+internal fun NavGraphBuilder.editProfileNavigation(
     onPopBackStack: () -> Unit,
     onNavigateToProfileCamera: () -> Unit,
     onNavigateToGallery: () -> Unit,
@@ -22,6 +22,6 @@ fun NavGraphBuilder.editProfileNavigation(
     }
 }
 
-fun NavController.navigateToEditProfile() {
+internal fun NavController.navigateToEditProfile() {
     navigate(ProfileNestedScreens.EditProfile.route)
 }

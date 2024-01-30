@@ -26,7 +26,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun stateIsOwnProfile_isTrue() {
+    fun stateIsOwnProfileTrue_EditProfileButtonDisplayed() {
         launchProfileScreen(uiState = ProfileUiState(isOwnProfile = true))
         val editProfileText = context.getString(R.string.edit_profile)
         composeTestRule.onNodeWithText(editProfileText).assertIsDisplayed()
@@ -34,7 +34,7 @@ class ProfileScreenTest {
     }
 
     @Test
-    fun stateIsOwnProfile_isFalse() {
+    fun stateIsOwnProfileFalse_EditProfileButtonNotExist() {
         launchProfileScreen(uiState = ProfileUiState(isOwnProfile = false))
         val editProfileText = context.getString(R.string.edit_profile)
         composeTestRule.onNodeWithText(editProfileText).assertDoesNotExist()
@@ -59,6 +59,7 @@ class ProfileScreenTest {
         composeTestRule.onNodeWithText("test_name").assertIsDisplayed()
         composeTestRule.onNodeWithText("test_bio").assertIsDisplayed()
         composeTestRule.onNodeWithText("test_website").assertIsDisplayed()
+            .assertHasClickAction()
     }
 
     @Test

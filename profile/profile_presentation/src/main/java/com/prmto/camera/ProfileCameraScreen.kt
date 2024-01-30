@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -106,12 +105,10 @@ fun ProfileImageCameraContent(
     onTakePhoto: () -> Unit,
     onClickFlashMode: () -> Unit
 ) {
-    var halfHeightOfTheParent by remember { mutableStateOf(0.dp) }
-
     BoxWithConstraints(
         modifier = modifier
     ) {
-        halfHeightOfTheParent = maxHeight / 2
+        val halfHeightOfTheParent by remember { mutableStateOf(maxHeight / 2) }
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
