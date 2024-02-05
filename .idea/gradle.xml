@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="GradleMigrationSettings" migrationVersion="1" />
+=======
+>>>>>>> refactor/profile_image
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -40,6 +43,10 @@
             <option value="$PROJECT_DIR$/home/home_presentation" />
             <option value="$PROJECT_DIR$/permission" />
             <option value="$PROJECT_DIR$/profile" />
+<<<<<<< HEAD
+=======
+            <option value="$PROJECT_DIR$/profile/profile_data" />
+>>>>>>> refactor/profile_image
             <option value="$PROJECT_DIR$/profile/profile_domain" />
             <option value="$PROJECT_DIR$/profile/profile_presentation" />
             <option value="$PROJECT_DIR$/reels" />
@@ -47,8 +54,11 @@
             <option value="$PROJECT_DIR$/search" />
             <option value="$PROJECT_DIR$/search/search_presentation" />
             <option value="$PROJECT_DIR$/share" />
+<<<<<<< HEAD
             <option value="$PROJECT_DIR$/share/share_data" />
             <option value="$PROJECT_DIR$/share/share_domain" />
+=======
+>>>>>>> refactor/profile_image
             <option value="$PROJECT_DIR$/share/share_presentation" />
           </set>
         </option>

@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.constants.UiText
 import com.prmto.core_domain.model.UserDetail
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
-import com.prmto.core_domain.repository.storage.StorageRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
+import com.prmto.profile_domain.repository.ProfileRepository
 import com.prmto.profile_domain.usecase.EditProfileUseCases
 import com.prmto.profile_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ import com.prmto.core_domain.R as CoreDomainR
 class EditProfileViewModel @Inject constructor(
     private val coreUserPreferencesRepository: CoreUserPreferencesRepository,
     private val firebaseUserCoreRepository: FirebaseUserCoreRepository,
-    private val firebaseStorageRepository: StorageRepository,
+    private val profileRepository: ProfileRepository,
     private val editProfileUseCases: EditProfileUseCases
 ) : CommonViewModel<UiEvent>() {
 
@@ -124,7 +124,7 @@ class EditProfileViewModel @Inject constructor(
     private fun updateProfileImage(photoUri: Uri) =
         viewModelScope.async {
             handleResourceWithCallbacks(
-                resourceSupplier = { firebaseStorageRepository.updatedProfileImage(photoUri) },
+                resourceSupplier = { profileRepository.updateProfileImage(photoUri) },
                 onSuccessCallback = { photoUploadUrl ->
                     _uiState.update {
                         it.copy(
