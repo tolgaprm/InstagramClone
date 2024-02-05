@@ -8,6 +8,9 @@ import com.prmto.share_presentation.postCamera.navigation.navigateToPostCameraSc
 import com.prmto.share_presentation.postCamera.navigation.postCameraNavigation
 import com.prmto.share_presentation.postGallery.navigation.navigateToPostGalleryScreen
 import com.prmto.share_presentation.postGallery.navigation.postGalleryNavigation
+import com.prmto.share_presentation.postPreview.navigation.navigateToPostPreview
+import com.prmto.share_presentation.postPreview.navigation.postPreviewNavigation
+import com.prmto.share_presentation.postShare.navigation.postShareNavigation
 
 fun NavGraphBuilder.shareNestedNavigation(
     navController: NavController,
@@ -19,11 +22,26 @@ fun NavGraphBuilder.shareNestedNavigation(
     ) {
         postCameraNavigation(
             onNavigateToHome = onNavigateToHome,
-            onNavigateToPostGallery = navController::navigateToPostGalleryScreen
+            onNavigateToPostGallery = navController::navigateToPostGalleryScreen,
+            onNavigateToPostShareScreen = navController::navigate
         )
 
         postGalleryNavigation(
             onNavigateToPostCamera = navController::navigateToPostCameraScreen,
+            onNavigateToPostShare = {
+                navController.navigate(route = it)
+            },
+            onPopBackStack = navController::popBackStack
+        )
+
+        postShareNavigation(
+            onPopBackStack = navController::popBackStack,
+            onNavigateToPostPreview = {
+                navController.navigateToPostPreview(it)
+            }
+        )
+
+        postPreviewNavigation(
             onPopBackStack = navController::popBackStack
         )
     }
