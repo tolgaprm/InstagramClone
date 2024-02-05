@@ -1,4 +1,4 @@
-package com.prmto.auth_presentation.components
+package com.prmto.core_presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.height
@@ -14,7 +14,7 @@ import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
 @Composable
-fun AuthButton(
+fun InstaButton(
     modifier: Modifier = Modifier,
     buttonText: String,
     enabled: Boolean = true,
@@ -42,7 +42,7 @@ fun AuthButton(
 @Composable
 fun AuthButtonPreview() {
     InstagramCloneTheme {
-        AuthButton(buttonText = "SignIn") {
+        InstaButton(buttonText = "SignIn") {
 
         }
     }

@@ -41,9 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.auth_presentation.R
-import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.login.event.LoginEvent
+import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.components.InstaProgressIndicator
 import com.prmto.core_presentation.navigation.NestedNavigation
 import com.prmto.core_presentation.previews.UiModePreview
@@ -161,7 +161,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AuthButton(
+            InstaButton(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(id = R.string.login),
                 onClick = {

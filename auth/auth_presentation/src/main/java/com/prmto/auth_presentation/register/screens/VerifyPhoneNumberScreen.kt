@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
-import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.register.event.RegisterEvent
+import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.util.TextFieldState
 
 @Composable
@@ -67,7 +67,7 @@ internal fun VerifyPhoneNumberScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AuthButton(
+        InstaButton(
             modifier = Modifier.fillMaxWidth(),
             buttonText = "Next",
             enabled = verificationCodeValue.isNotBlank(),

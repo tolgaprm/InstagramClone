@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.prmto.auth_presentation.R
-import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.register.RegisterUiStateData
 import com.prmto.auth_presentation.register.RegisterUiStateDataPreviewProvider
@@ -38,6 +37,7 @@ import com.prmto.auth_presentation.register.SelectedTab
 import com.prmto.auth_presentation.register.components.RegisterScreenBottomSection
 import com.prmto.auth_presentation.register.event.RegisterEvent
 import com.prmto.auth_presentation.register.isPhoneNumberSelected
+import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.core_presentation.R as CoreRes
@@ -98,7 +98,7 @@ internal fun RegisterScreen(
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            AuthButton(
+            InstaButton(
                 modifier = Modifier
                     .fillMaxWidth(),
                 enabled = registerUiStateData.isNextButtonEnabled,

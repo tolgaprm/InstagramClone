@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.prmto.core_presentation.components.TextSelectionContainer
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 
@@ -36,10 +34,6 @@ fun EditProfileSection(
     onValueChange: (String) -> Unit,
 ) {
     var isFocus by remember { mutableStateOf(false) }
-    val customTextSelectionColors = TextSelectionColors(
-        handleColor = MaterialTheme.colorScheme.onBackground,
-        backgroundColor = Color.InstaBlue.copy(alpha = 0.4f),
-    )
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -55,9 +49,7 @@ fun EditProfileSection(
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            CompositionLocalProvider(
-                LocalTextSelectionColors provides customTextSelectionColors,
-            ) {
+            TextSelectionContainer {
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()

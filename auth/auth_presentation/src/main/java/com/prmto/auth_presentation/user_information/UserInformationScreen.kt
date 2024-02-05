@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.prmto.auth_presentation.R
-import com.prmto.auth_presentation.components.AuthButton
 import com.prmto.auth_presentation.components.AuthTextField
 import com.prmto.auth_presentation.user_information.event.UserInfoEvents
+import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.components.InstaProgressIndicator
 import com.prmto.core_presentation.navigation.Screen
 import com.prmto.core_presentation.previews.UiModePreview
@@ -142,7 +142,7 @@ internal fun UserInformationScreen(
                 }
             )
 
-            AuthButton(
+            InstaButton(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(R.string.register),
                 enabled = !userInfoUiData.isRegistering,
