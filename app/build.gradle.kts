@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":share:share_presentation"))
     implementation(project(":profile:profile_presentation"))
     implementation(project(":profile:profile_domain"))
+    implementation(project(":profile:profile_data"))
     implementation(project(":search:search_presentation"))
     implementation(project(":reels:reels_presentation"))
     implementation(project(":auth:auth_presentation"))
