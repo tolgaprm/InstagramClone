@@ -1,5 +1,6 @@
 package com.prmto.share_presentation.postCamera
 
+import android.Manifest
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.camera.view.PreviewView
@@ -25,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,23 +39,30 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.prmto.camera.InstaCamera
 import com.prmto.camera.components.CameraFlashModeButton
 import com.prmto.camera.crop.CropActivityResultContract
 import com.prmto.camera.rememberCameraControllerWithImageCapture
 import com.prmto.camera.util.CameraFlashMode
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstagramCloneTheme
 import com.prmto.share_presentation.R
 import com.prmto.share_presentation.components.CloseButton
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun PostCameraRoute(
     modifier: Modifier = Modifier,
     onNavigateToHome: () -> Unit,
-    onNavigateToPostGallery: () -> Unit
+    onNavigateToPostGallery: () -> Unit,
+    onNavigateToPostShare: (String) -> Unit
 ) {
     val viewModel: PostCameraViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val cameraController = rememberCameraControllerWithImageCapture()
     val cropLauncher = rememberLauncherForActivityResult(
         contract = CropActivityResultContract(),
@@ -63,6 +72,21 @@ internal fun PostCameraRoute(
             }
         }
     )
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = viewModel.consumableViewEvents.collectAsStateWithLifecycle().value,
+        onEventNavigate = onNavigateToPostShare,
+        onEventConsumed = viewModel::onEventConsumed
+    )
+
+    LaunchedEffect(
+        key1 = permissionState.status,
+    ) {
+        if (!permissionState.status.isGranted) {
+            permissionState.launchPermissionRequest()
+        }
+    }
+
     PostCameraScreen(
         modifier = modifier,
         uiState = uiState,

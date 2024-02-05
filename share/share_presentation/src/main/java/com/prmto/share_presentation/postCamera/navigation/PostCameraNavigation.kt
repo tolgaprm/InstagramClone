@@ -8,12 +8,14 @@ import com.prmto.share_presentation.postCamera.PostCameraRoute
 
 internal fun NavGraphBuilder.postCameraNavigation(
     onNavigateToHome: () -> Unit,
-    onNavigateToPostGallery: () -> Unit
+    onNavigateToPostGallery: () -> Unit,
+    onNavigateToPostShareScreen: (String) -> Unit
 ) {
     composable(ShareNestedScreens.PostCameraScreen.route) {
         PostCameraRoute(
             onNavigateToHome = onNavigateToHome,
-            onNavigateToPostGallery = onNavigateToPostGallery
+            onNavigateToPostGallery = onNavigateToPostGallery,
+            onNavigateToPostShare = onNavigateToPostShareScreen
         )
     }
 }
