@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -60,6 +61,7 @@ import com.prmto.camera.crop.CropActivityResultContract
 import com.prmto.core_domain.usecase.AlbumAndCoverImage
 import com.prmto.core_presentation.components.GalleryDropDownButton
 import com.prmto.core_presentation.components.GalleryScreenBoxInPostGallery
+import com.prmto.core_presentation.components.InstaIconButton
 import com.prmto.core_presentation.previews.UiModePreview
 import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
@@ -69,13 +71,16 @@ import com.prmto.permission.util.HandlePermissionStatus
 import com.prmto.permission.util.handleFilePermissionAccess
 import com.prmto.permission.util.permissionToRequestForFile
 import com.prmto.share_presentation.R
-import com.prmto.share_presentation.components.CloseButton
+import com.prmto.share_presentation.components.SharePostTopAppBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostGalleryRoute(
-    modifier: Modifier = Modifier, onNavigateToPostCamera: () -> Unit, onPopBackStack: () -> Unit
+    modifier: Modifier = Modifier,
+    onNavigateToPostCamera: () -> Unit,
+    onNavigateToPostShare: (String) -> Unit,
+    onPopBackStack: () -> Unit,
 ) {
     val context = LocalContext.current
     val viewModel: PostGalleryViewModel = hiltViewModel()
@@ -112,11 +117,14 @@ fun PostGalleryRoute(
             HandlePermissionStatus(
                 permissionState = permissionState, permissionProvider = permissionProvider
             )
-        })
+        }
+    )
 
     HandleConsumableViewEvents(
         consumableViewEvents = consumableViewEvents,
-        onEventNavigate = {},
+        onEventNavigate = { route ->
+            onNavigateToPostShare(route)
+        },
         onEventConsumed = viewModel::onEventConsumed
     )
 }
@@ -165,77 +173,73 @@ fun PostGalleryScreen(
         )
     )
     val coroutineScope = rememberCoroutineScope()
-    BottomSheetScaffold(scaffoldState = bottomSheetScaffoldState, sheetContent = {
-        PostGallerySheetContent(albumsAndCoverImage = uiState.albumAndCoverImages,
-            onClickedAlbumItem = {
-                onEvent(PostGalleryEvent.OnClickAlbumItem(it))
-                coroutineScope.launch {
-                    bottomSheetScaffoldState.bottomSheetState.hide()
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            PostGallerySheetContent(
+                albumsAndCoverImage = uiState.albumAndCoverImages,
+                onClickedAlbumItem = {
+                    onEvent(PostGalleryEvent.OnClickAlbumItem(it))
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.hide()
+                    }
                 }
-            })
-    }, topBar = {
-        PostGalleryTopSection(
-            onCloseClick = onCloseClick, onNextClick = onNextClick
-        )
-    }, content = {
-        GalleryScreenBoxInPostGallery(
-            modifier = modifier,
-            permissionIsGranted = permissionIsGranted,
-            selectedImageUriShowOnTransformableImage = uiState.selectedImageUri,
-            urisInSelectedAlbum = uiState.urisInSelectedAlbum,
-            selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
-            isEnableMultipleSelection = uiState.isActiveMultipleSelection,
-            onClickImageItem = { selectedUri ->
-                onEvent(PostGalleryEvent.OnClickImageItem(selectedUri))
-            },
-            errorMessage = uiState.errorMessage,
-            addComposableOfTheCenter = {
-                PostGalleryCenterSection(selectedDirectoryName = uiState.selectedAlbumName,
-                    isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
-                    onClickedDropDown = {
-                        onEvent(PostGalleryEvent.OnOpenBottomSheet)
-                        coroutineScope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
+            )
+        },
+        topBar = {
+            SharePostTopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.new_post),
+                navigationIcon = {
+                    InstaIconButton(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.close),
+                        onClick = onCloseClick
+                    )
+                },
+                actions = {
+                    TextButton(onClick = onNextClick) {
+                        Text(
+                            text = stringResource(R.string.next),
+                            color = Color.InstaBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            )
+        },
+        content = {
+            GalleryScreenBoxInPostGallery(
+                modifier = modifier,
+                permissionIsGranted = permissionIsGranted,
+                selectedImageUriShowOnTransformableImage = uiState.selectedImageUri,
+                urisInSelectedAlbum = uiState.urisInSelectedAlbum,
+                selectedUrisInEnabledMultipleSelectMode = uiState.selectedUrisInEnabledMultipleSelectMode,
+                isEnableMultipleSelection = uiState.isActiveMultipleSelection,
+                onClickImageItem = { selectedUri ->
+                    onEvent(PostGalleryEvent.OnClickImageItem(selectedUri))
+                },
+                errorMessage = uiState.errorMessage,
+                addComposableOfTheCenter = {
+                    PostGalleryCenterSection(
+                        selectedDirectoryName = uiState.selectedAlbumName,
+                        isEnabledMultipleSelectMode = uiState.isActiveMultipleSelection,
+                        onClickedDropDown = {
+                            onEvent(PostGalleryEvent.OnOpenBottomSheet)
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        onClickedCameraButton = onClickedCameraButton,
+                        onClickMultipleSelectButton = {
+                            onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
                         }
-                    },
-                    onClickedCameraButton = onClickedCameraButton,
-                    onClickMultipleSelectButton = {
-                        onEvent(PostGalleryEvent.OnClickMultipleSelectButton)
-                    })
-            },
-            handlePermission = handlePermission
-        )
-    })
-}
-
-@Composable
-private fun PostGalleryTopSection(
-    modifier: Modifier = Modifier, onCloseClick: () -> Unit, onNextClick: () -> Unit
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CloseButton(
-                onCloseClick = onCloseClick
-            )
-            Text(
-                stringResource(R.string.new_post),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                    )
+                },
+                handlePermission = handlePermission
             )
         }
-
-        TextButton(onClick = onNextClick) {
-            Text(
-                text = stringResource(R.string.next),
-                color = Color.InstaBlue,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
+    )
 }
 
 @Composable
@@ -285,7 +289,8 @@ private fun MultipleSelectedButton(
 ) {
     val containerColor =
         if (isEnabledMultipleSelectMode) Color.InstaBlue else Color.White.copy(alpha = 0.4f)
-    val contentColor = if (isEnabledMultipleSelectMode) Color.White else Color.Black
+    val contentColor =
+        if (isEnabledMultipleSelectMode) Color.White else MaterialTheme.colorScheme.onBackground
     IconButton(
         modifier = modifier, onClick = onClicked, colors = IconButtonDefaults.iconButtonColors(
             containerColor = containerColor, contentColor = contentColor

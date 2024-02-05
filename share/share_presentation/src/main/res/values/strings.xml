@@ -6,7 +6,7 @@
     <string name="story">Story</string>
     <string name="reels">Reels</string>
     <string name="change_camera">Change Camera</string>
-    <string name="new_post">New post</string>
+    <string name="new_post">New Post</string>
     <string name="next">Next</string>
     <string name="select_multiple_images_or_videos">Select multiple images or videos</string>
     <string name="navigate_to_post_camera_screen">Navigate to Post Camera Screen</string>
@@ -15,4 +15,10 @@
     <string name="albums">Albums</string>
     <string name="favorites">Favorites</string>
     <string name="videos">Videos</string>
+    <string name="back">back</string>
+    <string name="share">Share</string>
+    <string name="profile_photo">Profile photo</string>
+    <string name="post_image">Post Image</string>
+    <string name="write_a_caption">Write a caption...</string>
+    <string name="preview">Preview</string>
 </resources>

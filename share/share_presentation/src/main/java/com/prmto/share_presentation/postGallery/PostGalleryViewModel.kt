@@ -10,6 +10,7 @@ import com.prmto.core_domain.usecase.GetAlbumAndCoverImagesUseCase
 import com.prmto.core_domain.usecase.GetImageUrisByFirstAlbumNameUseCase
 import com.prmto.core_presentation.util.CommonViewModel
 import com.prmto.core_presentation.util.UiEvent
+import com.prmto.share_presentation.navigation.ShareNestedScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -85,14 +86,23 @@ class PostGalleryViewModel @Inject constructor(
                 )
             }
             if (uiState.value.croppedImageUris.last() == uri) {
-                // TODO add Navigate event to navigate to PostPreviewScreen
-                /*  addConsumableViewEvent(
-                      UiEvent.Navigate()
-                  )*/
+                addEventNavigateToPostShareScreenWithPhotoUris(uiState.value.croppedImageUris)
             }
         } else {
             _uiState.update { it.copy(croppedImageUri = uri) }
+            addEventNavigateToPostShareScreenWithPhotoUris(listOf(uri))
         }
+    }
+
+    private fun addEventNavigateToPostShareScreenWithPhotoUris(croppedImageUris: List<Uri>) {
+        val event = UiEvent.Navigate(
+            ShareNestedScreens.PostShareScreen.passArguments(
+                photoUris = croppedImageUris.map {
+                    it.toString()
+                }.toTypedArray()
+            )
+        )
+        addConsumableViewEvent(event)
     }
 
     private fun toggleSelectedUri(selectedUri: Uri) {
