@@ -9,7 +9,8 @@ import com.prmto.share_presentation.postShare.PostShareRoute
 
 internal fun NavGraphBuilder.postShareNavigation(
     onPopBackStack: () -> Unit,
-    onNavigateToPostPreview: (List<Uri>) -> Unit
+    onNavigateToPostPreview: (List<Uri>) -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
     composable(
         route = ShareNestedScreens.PostShareScreen.route,
@@ -17,7 +18,8 @@ internal fun NavGraphBuilder.postShareNavigation(
     ) {
         PostShareRoute(
             onPopBackStack = onPopBackStack,
-            onNavigateToPostPreview = onNavigateToPostPreview
+            onNavigateToPostPreview = onNavigateToPostPreview,
+            onNavigateToHome = onNavigateToHome
         )
     }
 }

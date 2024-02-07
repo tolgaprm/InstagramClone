@@ -38,7 +38,8 @@ fun NavGraphBuilder.shareNestedNavigation(
             onPopBackStack = navController::popBackStack,
             onNavigateToPostPreview = {
                 navController.navigateToPostPreview(it)
-            }
+            },
+            onNavigateToHome = onNavigateToHome
         )
 
         postPreviewNavigation(

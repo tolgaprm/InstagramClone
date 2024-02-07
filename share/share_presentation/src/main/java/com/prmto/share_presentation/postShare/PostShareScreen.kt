@@ -32,7 +32,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.components.InstaIconButton
+import com.prmto.core_presentation.components.InstaProgressIndicator
 import com.prmto.core_presentation.components.TextSelectionContainer
+import com.prmto.core_presentation.navigation.Screen
+import com.prmto.core_presentation.ui.HandleConsumableViewEvents
 import com.prmto.core_presentation.ui.theme.InstaBlue
 import com.prmto.share_presentation.R
 import com.prmto.share_presentation.components.SharePostTopAppBar
@@ -42,9 +45,11 @@ internal fun PostShareRoute(
     modifier: Modifier = Modifier,
     viewModel: PostShareViewModel = hiltViewModel(),
     onPopBackStack: () -> Unit,
-    onNavigateToPostPreview: (List<Uri>) -> Unit
+    onNavigateToPostPreview: (List<Uri>) -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
     val postShareUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val consumableEvents by viewModel.consumableViewEvents.collectAsStateWithLifecycle()
 
     PostShareScreen(
         modifier = modifier,
@@ -56,6 +61,16 @@ internal fun PostShareRoute(
                 postShareUiState.selectedPostImageUris
             )
         }
+    )
+
+    HandleConsumableViewEvents(
+        consumableViewEvents = consumableEvents,
+        onEventNavigate = { route ->
+            if (route == Screen.Home.route) {
+                onNavigateToHome()
+            }
+        },
+        onEventConsumed = viewModel::onEventConsumed
     )
 }
 
@@ -87,10 +102,14 @@ internal fun PostShareScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 buttonText = stringResource(id = R.string.share),
+                enabled = postShareUiState.isPostUploading.not(),
                 onClick = { onEvent(PostShareEvent.OnPostShareClicked) },
             )
         }
     ) {
+        if (postShareUiState.isPostUploading) {
+            InstaProgressIndicator()
+        }
         PostShareContent(
             modifier = Modifier.padding(paddingValues = it),
             caption = postShareUiState.caption,
@@ -178,7 +197,7 @@ private fun PostImageSmallPreview(
 ) {
     Box(
         modifier = modifier
-            .size(250.dp) // 70
+            .size(250.dp)
             .clickable(
                 onClick = onClick
             )

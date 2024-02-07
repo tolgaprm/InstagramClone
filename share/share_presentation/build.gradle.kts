@@ -12,4 +12,5 @@ dependencies {
     implementation(project(":camera"))
     implementation(project(":permission"))
     implementation(libs.bundles.cameraX)
+    implementation(project(":share:share_domain"))
 }
