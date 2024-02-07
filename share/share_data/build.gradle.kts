@@ -7,4 +7,6 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:core_data"))
+    implementation(project(":share:share_domain"))
 }

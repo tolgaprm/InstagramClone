@@ -5,3 +5,7 @@ plugins {
 android {
     namespace = "com.prmto.share_domain"
 }
+
+dependencies {
+    implementation(project(":core:core_domain"))
+}
