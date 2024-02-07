@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.prmto.core_domain.util.toUris
 import com.prmto.core_presentation.components.InstaButton
 import com.prmto.core_presentation.components.InstaIconButton
 import com.prmto.core_presentation.components.InstaProgressIndicator
@@ -58,7 +59,7 @@ internal fun PostShareRoute(
         onEvent = viewModel::onEvent,
         onNavigateToPostPreview = {
             onNavigateToPostPreview(
-                postShareUiState.selectedPostImageUris
+                postShareUiState.selectedPostImageUris.toUris()
             )
         }
     )
@@ -113,7 +114,7 @@ internal fun PostShareScreen(
         PostShareContent(
             modifier = Modifier.padding(paddingValues = it),
             caption = postShareUiState.caption,
-            selectedPostImageUris = postShareUiState.selectedPostImageUris,
+            selectedPostImageUris = postShareUiState.selectedPostImageUris.toUris(),
             onCaptionChange = {
                 onEvent(PostShareEvent.OnCaptionChanged(it))
             },

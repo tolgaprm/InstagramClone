@@ -1,6 +1,5 @@
 package com.prmto.share_presentation.postShare
 
-import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.prmto.core_domain.constants.UiText
@@ -35,7 +34,6 @@ class PostShareViewModel @Inject constructor(
     private fun getSelectedPostImageUris() {
         val selectedUrisForPost = PostShareArgs(savedStateHandle).postSharePhotoUris.first()
             .split(",")
-            .map { Uri.parse(it) }
         _uiState.update { it.copy(selectedPostImageUris = selectedUrisForPost) }
     }
 
@@ -79,7 +77,7 @@ class PostShareViewModel @Inject constructor(
 }
 
 data class PostShareUiState(
-    val selectedPostImageUris: List<Uri> = emptyList(),
+    val selectedPostImageUris: List<String> = emptyList(),
     val caption: String = "",
     val isPostUploading: Boolean = false,
 )
