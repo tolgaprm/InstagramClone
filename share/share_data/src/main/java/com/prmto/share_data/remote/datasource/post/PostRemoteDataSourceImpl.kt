@@ -25,7 +25,7 @@ class PostRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadImage(imageUri: Uri): Resource<String> {
-        return storage.uploadImage(imageUri, CollectionNames.POST_IMAGES_COLLECTION)
+    override suspend fun uploadImage(imageUri: String): Resource<String> {
+        return storage.uploadImage(Uri.parse(imageUri), CollectionNames.POST_IMAGES_COLLECTION)
     }
 }

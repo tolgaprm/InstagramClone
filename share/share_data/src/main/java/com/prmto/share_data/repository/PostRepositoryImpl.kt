@@ -1,6 +1,5 @@
 package com.prmto.share_data.repository
 
-import android.net.Uri
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.share_data.remote.datasource.post.PostRemoteDataSource
@@ -16,7 +15,7 @@ class PostRepositoryImpl @Inject constructor(
         return postRemoteDataSource.sharePost(postDto = post.toPostDto())
     }
 
-    override suspend fun uploadImage(imageUri: Uri): Resource<String> {
+    override suspend fun uploadImage(imageUri: String): Resource<String> {
         return postRemoteDataSource.uploadImage(imageUri = imageUri)
     }
 }

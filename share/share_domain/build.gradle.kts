@@ -8,4 +8,5 @@ android {
 
 dependencies {
     implementation(project(":core:core_domain"))
+    implementation(project(":core:core_testing"))
 }

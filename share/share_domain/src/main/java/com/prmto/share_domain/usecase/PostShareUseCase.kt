@@ -1,6 +1,5 @@
 package com.prmto.share_domain.usecase
 
-import android.net.Uri
 import com.prmto.core_domain.constants.Resource
 import com.prmto.core_domain.constants.SimpleResource
 import com.prmto.core_domain.constants.UiText
@@ -18,7 +17,7 @@ class PostShareUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
-        selectedPostImageUris: List<Uri>,
+        selectedPostImageUris: List<String>,
         caption: String
     ): SimpleResource {
         if (selectedPostImageUris.isEmpty()) {
@@ -52,7 +51,7 @@ class PostShareUseCase @Inject constructor(
 
 
     private suspend fun sharePostWithOneImage(
-        postImageUri: Uri,
+        postImageUri: String,
         caption: String,
         currentUserId: String
     ): SimpleResource {
@@ -74,7 +73,7 @@ class PostShareUseCase @Inject constructor(
     }
 
     private suspend fun sharePostWithMultipleImages(
-        selectedPostImageUris: List<Uri>,
+        selectedPostImageUris: List<String>,
         caption: String,
         currentUserId: String
     ): SimpleResource {
