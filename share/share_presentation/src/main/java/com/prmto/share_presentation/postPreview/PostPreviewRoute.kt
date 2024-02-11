@@ -39,7 +39,7 @@ internal fun PostPreviewRoute(
 }
 
 @Composable
-internal fun PostPreviewScreen(
+fun PostPreviewScreen(
     modifier: Modifier = Modifier,
     postPreviewPhotoUris: List<Uri>,
     onCloseClick: () -> Unit
