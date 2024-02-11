@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 fun SharePostTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
-    navigationIcon: @Composable () -> Unit,
+    navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
