@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_image_selected">No image selected</string>
+    <string name="user_not_logged">User is not logged</string>
+</resources>

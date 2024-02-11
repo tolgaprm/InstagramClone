@@ -1,6 +1,7 @@
 package com.prmto.camera.components
 
 import android.content.Context
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -46,5 +47,48 @@ class CameraFlashModeTest {
         }
         val contentDescription = context.getString(R.string.flash_on)
         composeTestRule.onNodeWithContentDescription(contentDescription).assertIsDisplayed()
+    }
+
+    @Test
+    fun isVisibleCameraFlashModeTrue_cameraFlashModeOn() {
+        composeTestRule.setContent {
+            CameraFlashModeButton(
+                isVisibleCameraFlashMode = true,
+                cameraFlashMode = CameraFlashMode.ON,
+                onClickFlashMode = {}
+            )
+        }
+        val cameraFlashModeOn = context.getString(com.prmto.camera.R.string.flash_on)
+        composeTestRule.onNodeWithContentDescription(cameraFlashModeOn).assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun isVisibleCameraFlashModeTrue_cameraFlashModeOff() {
+        composeTestRule.setContent {
+            CameraFlashModeButton(
+                isVisibleCameraFlashMode = true,
+                cameraFlashMode = CameraFlashMode.OFF,
+                onClickFlashMode = {}
+            )
+        }
+        val cameraFlashModeOn = context.getString(com.prmto.camera.R.string.flash_off)
+        composeTestRule.onNodeWithContentDescription(cameraFlashModeOn).assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun isVisibleCameraFlashModeTrue_cameraFlashModeAuto() {
+        composeTestRule.setContent {
+            CameraFlashModeButton(
+                isVisibleCameraFlashMode = true,
+                cameraFlashMode = CameraFlashMode.AUTO,
+                onClickFlashMode = {}
+            )
+        }
+
+        val cameraFlashModeOn = context.getString(com.prmto.camera.R.string.flash_auto)
+        composeTestRule.onNodeWithContentDescription(cameraFlashModeOn).assertIsDisplayed()
+            .assertHasClickAction()
     }
 }

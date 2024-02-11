@@ -11,7 +11,6 @@ import com.prmto.core_domain.usecase.CheckIfExistUserWithTheSameUsernameUseCase
 import com.prmto.core_domain.usecase.GetCurrentUserUseCase
 import com.prmto.core_presentation.util.UiEvent
 import com.prmto.core_testing.fake_repository.preferences.CoreUserPreferencesRepositoryFake
-import com.prmto.core_testing.fake_repository.storage.StorageRepositoryFake
 import com.prmto.core_testing.fake_repository.user.FakeFirebaseUserCoreRepository
 import com.prmto.core_testing.userData
 import com.prmto.core_testing.util.MainDispatcherRule
@@ -20,6 +19,7 @@ import com.prmto.edit_profile_presentation.event.EditProfileUiEvent
 import com.prmto.profile_domain.usecase.EditProfileUseCases
 import com.prmto.profile_domain.usecase.ValidateWebSiteUrlUseCase
 import com.prmto.profile_presentation.R
+import com.repository.FakeProfileRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -40,7 +40,6 @@ class EditProfileViewModelTest {
     private lateinit var coreUserPreferencesRepository: CoreUserPreferencesRepositoryFake
     private lateinit var firebaseUserCoreRepository: FakeFirebaseUserCoreRepository
     private lateinit var authCoreRepository: FirebaseAuthCoreRepository
-    private lateinit var storageRepository: StorageRepositoryFake
     private lateinit var editProfileUseCases: EditProfileUseCases
 
     @Before
@@ -58,11 +57,10 @@ class EditProfileViewModelTest {
             ),
             validateWebSiteUrl = ValidateWebSiteUrlUseCase()
         )
-        storageRepository = StorageRepositoryFake()
         viewModel = EditProfileViewModel(
             coreUserPreferencesRepository = coreUserPreferencesRepository,
             firebaseUserCoreRepository = firebaseUserCoreRepository,
-            firebaseStorageRepository = storageRepository,
+            profileRepository = FakeProfileRepository(),
             editProfileUseCases = editProfileUseCases
         )
         setDefaultUserDetail(TestConstants.listOfUserData.map { it.userDetail })
@@ -175,8 +173,6 @@ class EditProfileViewModelTest {
         // Set up expectations to test ViewModel's UI state.
         viewModel.uiState.test {
             awaitItem()
-            // Check if the expected loading state is true.
-            advanceUntilIdle()
             val uiState = awaitItem()
             assertThat(uiState.isLoading).isFalse()
             assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(

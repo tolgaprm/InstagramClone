@@ -15,6 +15,7 @@ import com.prmto.setting_presentation.event.SettingScreenEvent
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -59,6 +60,7 @@ class SettingViewModelTest {
             coreUserPreferencesRepository.saveUserDetail(userDetail())
             viewModel.onEvent(SettingScreenEvent.Logout)
             viewModel.uiState.test {
+                advanceUntilIdle()
                 assertThat(coreUserPreferencesRepository.userDetailList).isEmpty()
                 cancelAndIgnoreRemainingEvents()
             }
@@ -71,6 +73,7 @@ class SettingViewModelTest {
             coreUserPreferencesRepository.isReturnError = true
             viewModel.onEvent(SettingScreenEvent.Logout)
             viewModel.consumableViewEvents.test {
+                awaitItem()
                 assertThat(awaitItem().first()).isInstanceOf(UiEvent.ShowMessage::class.java)
             }
         }
@@ -84,6 +87,7 @@ class SettingViewModelTest {
                 NestedNavigation.Auth.route
             )
             viewModel.consumableViewEvents.test {
+                awaitItem()
                 assertThat(awaitItem().first()).isEqualTo(expectedViewEvent)
             }
         }

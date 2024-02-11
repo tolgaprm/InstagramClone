@@ -50,6 +50,7 @@ class SelectProfileImageGalleryViewModelTest {
         viewModel.onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
 
         viewModel.uiState.test {
+            awaitItem() // initial state
             val uiState = awaitItem()
             assertThat(uiState.mediaAlbumNames).isEqualTo(listOf("Album1", "Album2", "Album3"))
             assertThat(uiState.urisInSelectedAlbum).isEqualTo(listOf(Uri.parse("file_name")))
@@ -63,6 +64,7 @@ class SelectProfileImageGalleryViewModelTest {
         viewModel.onEvent(SelectProfileImageGalleryEvent.AllPermissionsGranted)
 
         viewModel.uiState.test {
+            awaitItem() // initial state
             val uiState = awaitItem()
             assertThat(uiState.mediaAlbumNames).isEmpty()
             assertThat(uiState.errorMessage).isEqualTo(UiText.StringResource(R.string.no_albums_found))
@@ -73,10 +75,13 @@ class SelectProfileImageGalleryViewModelTest {
     fun eventIsSelectAlbum_getImageUriByAlbumName_updateUrisInSelectedAlbum() = runTest {
         mediaAlbumProvider.albumNames = listOf("Album1", "Album2")
         mediaAlbumProvider.albumsAndUris = mapOf(
-            "Album1" to emptyList(), "Album2" to listOf(Uri.parse("file_name"))
+            "Album1" to emptyList(),
+            "Album2" to listOf(Uri.parse("file_name"))
         )
         viewModel.onEvent(SelectProfileImageGalleryEvent.SelectAlbum(albumName = "Album2"))
         viewModel.uiState.test {
+            awaitItem() // initial state
+            awaitItem()
             val uiState = awaitItem()
             assertThat(uiState.selectedAlbumName).isEqualTo("Album2")
             assertThat(uiState.urisInSelectedAlbum).isEqualTo(listOf(Uri.parse("file_name")))

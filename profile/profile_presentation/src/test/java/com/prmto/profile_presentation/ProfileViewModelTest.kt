@@ -100,10 +100,10 @@ class ProfileViewModelTest {
         val userDetail = userDetail()
         coreUserPreferencesRepository.userDetailList = listOf(userDetail)
         viewModel.uiState.test {
+            awaitItem()
             val firstEmittedValue = awaitItem()
             assertThat(firstEmittedValue.isOwnProfile).isTrue()
             assertThat(firstEmittedValue.isLoading).isTrue()
-            advanceUntilIdle()
             val secondEmittedValue = awaitItem()
             assertThat(secondEmittedValue.isLoading).isFalse()
             assertThat(secondEmittedValue.userData).isEqualTo(UserData(userDetail = userDetail))

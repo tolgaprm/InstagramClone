@@ -2,15 +2,12 @@ package com.prmto.core_data.di
 
 import com.prmto.core_data.local.datasource.preferences.CoreUserPreferencesLocalDataSource
 import com.prmto.core_data.remote.datasource.auth.CoreAuthRemoteDataSource
-import com.prmto.core_data.remote.datasource.storage.StorageDataSource
 import com.prmto.core_data.remote.datasource.user.FirebaseUserDataSource
 import com.prmto.core_data.repository.auth.FirebaseAuthCoreRepositoryRepoImpl
 import com.prmto.core_data.repository.preferences.CoreUserPreferencesRepositoryImpl
-import com.prmto.core_data.repository.storage.FirebaseStorageRepositoryImpl
 import com.prmto.core_data.repository.user.FirebaseUserCoreRepositoryImpl
 import com.prmto.core_domain.repository.auth.FirebaseAuthCoreRepository
 import com.prmto.core_domain.repository.preferences.CoreUserPreferencesRepository
-import com.prmto.core_domain.repository.storage.StorageRepository
 import com.prmto.core_domain.repository.user.FirebaseUserCoreRepository
 import dagger.Module
 import dagger.Provides
@@ -45,13 +42,5 @@ object RepositoryModule {
         coreUserPreferencesLocalDataSource: CoreUserPreferencesLocalDataSource
     ): CoreUserPreferencesRepository {
         return CoreUserPreferencesRepositoryImpl(coreUserPreferencesLocalDataSource)
-    }
-
-    @Provides
-    @Singleton
-    fun provideFirebaseStorageRepository(
-        storageDataSource: StorageDataSource
-    ): StorageRepository {
-        return FirebaseStorageRepositoryImpl(storageDataSource = storageDataSource)
     }
 }

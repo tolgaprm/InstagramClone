@@ -116,6 +116,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginEvent.OnLoginClicked)
             viewModel.uiState.test {
+                awaitItem()
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()
@@ -133,6 +134,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginEvent.OnLoginClicked)
             viewModel.uiState.test {
+                awaitItem()
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()
@@ -149,6 +151,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginEvent.OnLoginClicked)
             viewModel.uiState.test {
+                awaitItem()
                 val state = awaitItem()
                 // LoginWithUsername function is working
                 assertThat(state.isLoading).isTrue()
@@ -177,6 +180,7 @@ class LoginViewModelTest {
             viewModel.onEvent(LoginEvent.EnteredPassword(TestConstants.ENTERED_VALID_PASSWORD))
             viewModel.onEvent(LoginEvent.OnLoginClicked)
             viewModel.uiState.test {
+                awaitItem()
                 assertThat(awaitItem().isLoading).isTrue()
                 advanceUntilIdle()
                 val uiState = awaitItem()
