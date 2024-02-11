@@ -173,8 +173,6 @@ class EditProfileViewModelTest {
         // Set up expectations to test ViewModel's UI state.
         viewModel.uiState.test {
             awaitItem()
-            // Check if the expected loading state is true.
-            advanceUntilIdle()
             val uiState = awaitItem()
             assertThat(uiState.isLoading).isFalse()
             assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
