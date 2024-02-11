@@ -188,6 +188,7 @@ class UserInformationViewModelTest {
             viewModel.onEvent(UserInfoEvents.Register)
 
             viewModel.state.test {
+                awaitItem() // Initial state
                 val state = awaitItem()
                 assertThat(state.usernameTextField.error).isEqualTo(TextFieldError.UsernameAlreadyExists)
             }
@@ -205,7 +206,10 @@ class UserInformationViewModelTest {
             viewModel.onEvent(UserInfoEvents.EnterPassword(password))
             viewModel.onEvent(UserInfoEvents.Register)
 
-            assertThat(viewModel.state.value.usernameTextField.error).isEqualTo(TextFieldError.UsernameAlreadyExists)
+            viewModel.state.test {
+                awaitItem() // Initial state
+                assertThat(awaitItem().usernameTextField.error).isEqualTo(TextFieldError.UsernameAlreadyExists)
+            }
         }
 
     @Test
@@ -227,9 +231,9 @@ class UserInformationViewModelTest {
             viewModel.onEvent(UserInfoEvents.EnterPassword(password))
             viewModel.onEvent(UserInfoEvents.Register)
 
-            viewModel.state.test {
-                val state = awaitItem()
-                assertThat(viewModel.consumableViewEvents.value.first()).isEqualTo(
+            viewModel.consumableViewEvents.test {
+                awaitItem() // Initial state
+                assertThat(awaitItem().first()).isEqualTo(
                     UiEvent.Navigate(
                         Screen.Home.route
                     )
