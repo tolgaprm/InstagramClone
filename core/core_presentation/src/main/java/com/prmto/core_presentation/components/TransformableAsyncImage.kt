@@ -61,7 +61,6 @@ fun TransformableAsyncImage(
                     scaleY = scale,
                     rotationZ = rotation,
                     translationX = offset.x,
-                    translationY = offset.y
                 )
                 // add transformable to listen to multitouch transformation events
                 // after offset
