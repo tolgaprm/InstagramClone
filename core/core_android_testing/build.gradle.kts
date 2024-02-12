@@ -1,3 +1,6 @@
+import com.prmto.convention.dependencyHandlerExt.module.coreDomainModule
+import com.prmto.convention.dependencyHandlerExt.module.coreTestingModule
+
 plugins {
     id("instagram.android.layer.domain")
     id("instagram.android.layer.data")
@@ -8,8 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_domain"))
-    implementation(project(":core:core_testing"))
+    coreDomainModule()
+    coreTestingModule()
     implementation(libs.datastore.preferences)
     implementation(libs.coroutines.test)
     implementation(libs.junit)

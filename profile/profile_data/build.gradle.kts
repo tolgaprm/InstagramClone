@@ -1,3 +1,6 @@
+import com.prmto.convention.dependencyHandlerExt.module.coreDataModule
+import com.prmto.convention.dependencyHandlerExt.module.profileDomainModule
+
 plugins {
     id("instagram.android.layer.data")
 }
@@ -7,6 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_data"))
-    implementation(project(":profile:profile_domain"))
+    coreDataModule()
+    profileDomainModule()
 }

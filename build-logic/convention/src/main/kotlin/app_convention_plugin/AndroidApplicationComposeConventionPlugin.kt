@@ -1,3 +1,5 @@
+package app_convention_plugin
+
 import com.android.build.api.dsl.ApplicationExtension
 import com.prmto.convention.configureAndroidCompose
 import org.gradle.api.Plugin

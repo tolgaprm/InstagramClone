@@ -2,8 +2,7 @@ package layer_plugin
 
 import com.android.build.api.dsl.LibraryExtension
 import com.prmto.convention.commonDependenciesForEachModule
-import com.prmto.convention.commonPresentationLayerDependencies
-import com.prmto.convention.dependencyHandler.addModule
+import com.prmto.convention.dependencyHandlerExt.module.coreDomainModule
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -18,10 +17,9 @@ class AndroidPresentationLayerConventionPlugin : Plugin<Project> {
             }
             val extension = extensions.getByType<LibraryExtension>()
             extension.apply {
-                commonPresentationLayerDependencies(this)
                 commonDependenciesForEachModule(this)
                 dependencies {
-                    addModule(":core:core_domain")
+                    coreDomainModule()
                     "testImplementation"(project(":core:core_testing"))
                     "androidTestImplementation"(project(":core:core_testing"))
                     "androidTestImplementation"(project(":core:core_android_testing"))

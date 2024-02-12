@@ -47,24 +47,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":home:home_data"))
-    implementation(project(":home:home_presentation"))
-    implementation(project(":core:core_presentation"))
-    implementation(project(":core:core_domain"))
-    implementation(project(":core:core_data"))
-    implementation(project(":share:share_presentation"))
-    implementation(project(":share:share_data"))
-    implementation(project(":share:share_domain"))
-    implementation(project(":profile:profile_presentation"))
-    implementation(project(":profile:profile_domain"))
-    implementation(project(":profile:profile_data"))
-    implementation(project(":search:search_presentation"))
-    implementation(project(":reels:reels_presentation"))
-    implementation(project(":auth:auth_presentation"))
-    implementation(project(":auth:auth_data"))
-    implementation(project(":auth:auth_domain"))
-    implementation(project(":camera"))
-
     implementation(libs.bundles.ui.related)
     implementation(libs.splash)
     implementation(libs.timber)
