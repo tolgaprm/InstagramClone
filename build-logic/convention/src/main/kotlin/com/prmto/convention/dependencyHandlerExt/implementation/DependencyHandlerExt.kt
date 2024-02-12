@@ -1,4 +1,4 @@
-package com.prmto.convention.dependencyHandler
+package com.prmto.convention.dependencyHandlerExt.implementation
 
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.provider.Provider

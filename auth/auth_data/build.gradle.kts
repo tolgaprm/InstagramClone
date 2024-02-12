@@ -1,3 +1,6 @@
+import com.prmto.convention.dependencyHandlerExt.module.authDomainModule
+import com.prmto.convention.dependencyHandlerExt.module.coreDataModule
+
 plugins {
     id("instagram.android.layer.data")
 }
@@ -7,6 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":auth:auth_domain"))
-    implementation(project(":core:core_data"))
+    authDomainModule()
+    coreDataModule()
 }

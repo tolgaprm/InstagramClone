@@ -1,3 +1,5 @@
+import com.prmto.convention.dependencyHandlerExt.module.coreDataModule
+
 plugins {
     id("instagram.android.layer.data")
 }
@@ -7,5 +9,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_data"))
+    coreDataModule()
 }

@@ -2,7 +2,8 @@ package layer_plugin
 
 import com.android.build.gradle.LibraryExtension
 import com.prmto.convention.commonDependenciesForEachModule
-import com.prmto.convention.dependencyHandler.addImplementation
+import com.prmto.convention.dependencyHandlerExt.library.firebaseAuth
+import com.prmto.convention.dependencyHandlerExt.library.firebaseBom
 import com.prmto.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -21,8 +22,8 @@ class AndroidDomainLayerConventionPlugin : Plugin<Project> {
                 commonDependenciesForEachModule(this)
 
                 dependencies {
-                    addImplementation(platform(libs.findLibrary("firebase.bom").get()))
-                    addImplementation(libs.findLibrary("firebase.auth.ktx").get())
+                    firebaseBom(libs)
+                    firebaseAuth(libs)
                 }
             }
         }

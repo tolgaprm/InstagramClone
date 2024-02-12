@@ -1,3 +1,5 @@
+package library_convention_plugin
+
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin

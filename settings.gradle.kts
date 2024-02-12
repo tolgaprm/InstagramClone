@@ -21,29 +21,32 @@ dependencyResolutionManagement {
 
 rootProject.name = "InstagramClone"
 include(":app")
+// Core
+include(":core:core_data")
+include(":core:core_domain")
+include(":core:core_presentation")
+include(":core:core_testing")
+include(":core:core_android_testing")
+// Home
 include(":home:home_data")
 include(":home:home_presentation")
-include(":core")
-include(":core:core_presentation")
-include(":share")
-include(":share:share_presentation")
-include(":profile")
-include(":profile:profile_presentation")
-include(":search")
-include(":search:search_presentation")
-include(":reels")
-include(":reels:reels_presentation")
-include(":auth")
-include(":auth:auth_presentation")
+// Auth
 include(":auth:auth_data")
 include(":auth:auth_domain")
-include(":core:core_domain")
-include(":core:core_data")
-include(":core:core_testing")
+include(":auth:auth_presentation")
+// Camera
 include(":camera")
+// Permission
 include(":permission")
-include(":core:core_android_testing")
-include(":profile:profile_domain")
+// Profile
 include(":profile:profile_data")
+include(":profile:profile_domain")
+include(":profile:profile_presentation")
+// Reels
+include(":reels:reels_presentation")
+// Share
 include(":share:share_data")
 include(":share:share_domain")
+include(":share:share_presentation")
+// Search
+include(":search:search_presentation")

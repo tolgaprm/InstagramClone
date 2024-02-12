@@ -25,27 +25,27 @@ gradlePlugin {
     plugins {
         register("androidApplication") {
             id = "instagram.android.application"
-            implementationClass = "AndroidApplicationConventionPlugin"
+            implementationClass = "app_convention_plugin.AndroidApplicationConventionPlugin"
         }
 
         register("androidApplicationCompose") {
             id = "instagram.android.application.compose"
-            implementationClass = "AndroidApplicationComposeConventionPlugin"
+            implementationClass = "app_convention_plugin.AndroidApplicationComposeConventionPlugin"
         }
 
         register("androidLibraryCompose") {
             id = "instagram.android.library.compose"
-            implementationClass = "AndroidLibraryComposeConventionPlugin"
+            implementationClass = "library_convention_plugin.AndroidLibraryComposeConventionPlugin"
         }
 
         register("androidApplicationFirebase") {
             id = "instagram.android.application.firebase"
-            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+            implementationClass = "app_convention_plugin.AndroidApplicationFirebaseConventionPlugin"
         }
 
         register("androidLibrary") {
             id = "instagram.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
+            implementationClass = "library_convention_plugin.AndroidLibraryConventionPlugin"
         }
 
         register("androidHilt") {

@@ -1,3 +1,5 @@
+package library_convention_plugin
+
 import com.android.build.api.dsl.LibraryExtension
 import com.prmto.convention.commonPresentationLayerDependencies
 import com.prmto.convention.configureAndroidCompose

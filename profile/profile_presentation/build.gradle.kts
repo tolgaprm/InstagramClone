@@ -1,3 +1,8 @@
+import com.prmto.convention.dependencyHandlerExt.module.cameraFeature
+import com.prmto.convention.dependencyHandlerExt.module.corePresentationModule
+import com.prmto.convention.dependencyHandlerExt.module.permissionFeature
+import com.prmto.convention.dependencyHandlerExt.module.profileDomainModule
+
 plugins {
     id("instagram.android.library.compose")
     id("instagram.android.layer.presentation")
@@ -8,10 +13,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_presentation"))
-    implementation(project(":profile:profile_domain"))
-    implementation(project(":camera"))
-    implementation(project(":permission"))
+    corePresentationModule()
+    profileDomainModule()
+    cameraFeature()
+    permissionFeature()
     implementation(libs.firebase.auth.ktx)
     implementation(libs.bundles.cameraX)
 }

@@ -1,3 +1,5 @@
+import com.prmto.convention.dependencyHandlerExt.module.coreDomainModule
+
 plugins {
     id("instagram.android.layer.domain")
 }
@@ -7,7 +9,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_domain"))
+    coreDomainModule()
     implementation(libs.coroutines.test)
     implementation(libs.junit)
     testImplementation(libs.truth.library)

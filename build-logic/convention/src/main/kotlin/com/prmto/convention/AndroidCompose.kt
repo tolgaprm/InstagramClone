@@ -1,9 +1,12 @@
 package com.prmto.convention
 
 import com.android.build.api.dsl.CommonExtension
-import com.prmto.convention.dependencyHandler.addAndroidTestImplementation
-import com.prmto.convention.dependencyHandler.addDebugImplementation
-import com.prmto.convention.dependencyHandler.addImplementation
+import com.prmto.convention.dependencyHandlerExt.library.accompanistPermissions
+import com.prmto.convention.dependencyHandlerExt.library.coil
+import com.prmto.convention.dependencyHandlerExt.library.compose
+import com.prmto.convention.dependencyHandlerExt.library.composeUiTest
+import com.prmto.convention.dependencyHandlerExt.library.coreKtx
+import com.prmto.convention.dependencyHandlerExt.library.lifecycleRuntimeKtx
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
@@ -21,11 +24,12 @@ internal fun Project.configureAndroidCompose(
         }
 
         dependencies {
-            val bom = libs.findLibrary("compose-bom").get()
-            addImplementation(platform(bom))
-            addDebugImplementation(libs.findLibrary("ui-tooling").get())
-            addDebugImplementation(libs.findLibrary("ui-test-manifest").get())
-            addAndroidTestImplementation(platform(bom))
+            coreKtx(libs)
+            lifecycleRuntimeKtx(libs)
+            compose(libs)
+            accompanistPermissions(libs)
+            coil(libs)
+            composeUiTest(libs)
         }
     }
 }

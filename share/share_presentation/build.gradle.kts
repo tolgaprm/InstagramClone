@@ -1,3 +1,8 @@
+import com.prmto.convention.dependencyHandlerExt.module.cameraFeature
+import com.prmto.convention.dependencyHandlerExt.module.corePresentationModule
+import com.prmto.convention.dependencyHandlerExt.module.permissionFeature
+import com.prmto.convention.dependencyHandlerExt.module.shareDomainModule
+
 plugins {
     id("instagram.android.library.compose")
     id("instagram.android.layer.presentation")
@@ -8,9 +13,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core_presentation"))
-    implementation(project(":camera"))
-    implementation(project(":permission"))
+    corePresentationModule()
+    cameraFeature()
+    permissionFeature()
+    shareDomainModule()
     implementation(libs.bundles.cameraX)
-    implementation(project(":share:share_domain"))
 }
